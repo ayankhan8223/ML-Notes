@@ -390,11 +390,16 @@
         <a href="#lecture-18"><span class="num">18</span><span>Web Scraping</span></a>
         <a href="#lecture-19"><span class="num">19</span><span>Understand Data</span></a>
         <a href="#lecture-20"><span class="num">20</span><span>Univariate EDA</span></a>
+        <a href="#lecture-21"><span class="num">21</span><span>Bi/Multi EDA</span></a>
+        <a href="#lecture-22"><span class="num">22</span><span>Pandas Profiling</span></a>
+        <a href="#lecture-23"><span class="num">23</span><span>Feature Engg</span></a>
+        <a href="#lecture-24"><span class="num">24</span><span>Standardization</span></a>
+        <a href="#lecture-25"><span class="num">25</span><span>Normalization</span></a>
       </nav>
       <div class="side-progress">
         <strong>Batch progress</strong>
         <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
-        <span id="progress-label">0 of 20 lectures complete</span>
+        <span id="progress-label">0 of 25 lectures complete</span>
       </div>
     </aside>
 
@@ -2302,8 +2307,361 @@
         </article>
       </section>
 
+      <section class="section searchable" id="lecture-21" data-title="eda bivariate multivariate analysis scatter plot bar plot boxplot heatmap clustermap pairplot lineplot categorical numerical seaborn">
+        <div class="section-head">
+          <div class="section-title-wrap">
+            <span class="section-index">21</span>
+            <div>
+              <h2>EDA: Bivariate &amp; Multivariate Analysis</h2>
+              <p class="section-intro">Bivariate me do columns ka relation study hota hai; multivariate me do se zyada columns ek saath analyse hote hain.</p>
+              <div class="timestamp">Lecture timestamps: 00:00:00 - 00:38:08</div>
+            </div>
+          </div>
+          <label class="lecture-complete"><input type="checkbox" data-lecture="21"> Complete</label>
+        </div>
+
+        <article class="panel">
+          <h3>Column combinations decide the plot</h3>
+          <p>Do variables analyse karte waqt sabse pehla question: dono ka data type kya hai? Numerical-numerical, numerical-categorical, ya categorical-categorical. Plot choice isi se decide hoti hai.</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Combination</th><th>Common plots</th><th>Lecture example</th></tr></thead>
+              <tbody>
+                <tr><td>Numerical + Numerical</td><td>Scatter plot, line plot</td><td>Total bill vs tip, passengers over years.</td></tr>
+                <tr><td>Numerical + Categorical</td><td>Bar plot, box plot</td><td>Passenger class vs age/fare.</td></tr>
+                <tr><td>Categorical + Categorical</td><td>Heatmap, clustermap, cross-tab</td><td>Survived vs Pclass / Sibling-Spouse.</td></tr>
+                <tr><td>Many numerical columns</td><td>Pair plot</td><td>Iris feature relationships.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <div class="grid-2" style="margin-top:15px">
+          <article class="panel">
+            <h3>Scatter plot to multivariate</h3>
+            <p>Scatter plot me har dot ek observation hota hai. Lecture me restaurant tips dataset me <strong>total_bill</strong> vs <strong>tip</strong> relation dikhaya: bill badhe to tip generally badh rahi thi.</p>
+            <div class="flow">
+              <div class="flow-step"><strong>x</strong><small>total_bill</small></div><span class="arrow">+</span>
+              <div class="flow-step"><strong>y</strong><small>tip</small></div><span class="arrow">+</span>
+              <div class="flow-step"><strong>hue</strong><small>sex</small></div><span class="arrow">+</span>
+              <div class="flow-step"><strong>style</strong><small>smoker</small></div><span class="arrow">+</span>
+              <div class="flow-step"><strong>size</strong><small>party size</small></div>
+            </div>
+            <div class="formula">sns.scatterplot(data=tips, x="total_bill", y="tip", hue="sex", style="smoker", size="size")</div>
+          </article>
+          <article class="panel">
+            <h3>Time data: line plot</h3>
+            <p>Line plot tab useful hota hai jab x-axis time based ho: year, month, date etc. Flight dataset me year-wise passengers ka trend line plot se clearly growth dikhata hai.</p>
+            <div class="formula">yearly = flights.groupby("year")["passengers"].sum().reset_index()<br>sns.lineplot(data=yearly, x="year", y="passengers")</div>
+            <div class="callout teal"><strong>Rule:</strong> Scatter plot relation dikhata hai; line plot relation + time trend dikhata hai.</div>
+          </article>
+        </div>
+
+        <article class="panel" style="margin-top:15px">
+          <h3>Quick plot map</h3>
+          <div class="flow">
+            <div class="flow-step"><strong>Bar plot</strong><small>Category wise numerical average</small></div><span class="arrow">|</span>
+            <div class="flow-step"><strong>Box plot</strong><small>Category wise distribution/outliers</small></div><span class="arrow">|</span>
+            <div class="flow-step"><strong>Heatmap</strong><small>Cross-tab values visually</small></div><span class="arrow">|</span>
+            <div class="flow-step"><strong>Clustermap</strong><small>Similar rows/columns grouped</small></div><span class="arrow">|</span>
+            <div class="flow-step"><strong>Pair plot</strong><small>All numerical pairs together</small></div>
+          </div>
+          <p>Pair plot ek graph nahi, scatter plots ka matrix hai. Agar dataset me multiple numerical columns hain, pair plot ek glance me relation patterns aur separability show kar sakta hai.</p>
+        </article>
+
+        <article class="panel" style="margin-top:15px">
+          <h3>One-year-later recap</h3>
+          <div class="quiz">
+            <details><summary>Bivariate vs multivariate?</summary><p>Bivariate me do columns; multivariate me two se zyada variables ek graph/analysis me.</p></details>
+            <details><summary>Numerical vs numerical relation ke liye?</summary><p>Scatter plot. Agar x time based hai to line plot.</p></details>
+            <details><summary>Categorical vs categorical relation ke liye?</summary><p>Cross-tab ke saath heatmap/clustermap useful hote hain.</p></details>
+            <details><summary>Pair plot ka use?</summary><p>Multiple numerical columns ke pairwise scatter plots ek saath dekhna.</p></details>
+          </div>
+        </article>
+      </section>
+
+      <section class="section searchable" id="lecture-22" data-title="pandas profiling ydata profiling profile report automated eda overview variables interactions correlations missing values html report">
+        <div class="section-head">
+          <div class="section-title-wrap">
+            <span class="section-index">22</span>
+            <div>
+              <h2>Pandas Profiling</h2>
+              <p class="section-intro">Pandas Profiling / ydata-profiling automated EDA report banata hai. Ek command se dataset overview, variable summaries, correlations aur missing values report mil sakti hai.</p>
+              <div class="timestamp">Lecture timestamps: 00:00:00 - 00:13:32</div>
+            </div>
+          </div>
+          <label class="lecture-complete"><input type="checkbox" data-lecture="22"> Complete</label>
+        </div>
+
+        <article class="panel">
+          <h3>Automated EDA workflow</h3>
+          <p>Lecture me Titanic dataset par profiling report banayi gayi. Ye manual EDA replace nahi karta, but first-pass understanding ko fast kar deta hai.</p>
+          <div class="flow">
+            <div class="flow-step"><strong>DataFrame</strong><small>Titanic data</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>ProfileReport</strong><small>Automated analysis</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>HTML report</strong><small>Interactive output</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>Observations</strong><small>Notes for EDA/modeling</small></div>
+          </div>
+          <div class="formula">from pandas_profiling import ProfileReport<br><br>profile = ProfileReport(df)<br>profile.to_file("report.html")</div>
+          <div class="callout teal"><strong>Modern note:</strong> Newer ecosystem me package name often <code>ydata-profiling</code> hota hai, but lecture me concept Pandas Profiling ke naam se covered hai.</div>
+        </article>
+
+        <article class="panel" style="margin-top:15px">
+          <h3>Report sections</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Section</th><th>What it gives</th></tr></thead>
+              <tbody>
+                <tr><td>Overview</td><td>Rows, columns, missing cells, duplicate rows, memory size, variable types.</td></tr>
+                <tr><td>Variables</td><td>Har column ka univariate summary: counts, missing, distinct, histogram, common values.</td></tr>
+                <tr><td>Interactions</td><td>Two-column scatter style relation checks.</td></tr>
+                <tr><td>Correlations</td><td>Numerical columns ke correlation heatmaps/coefficients.</td></tr>
+                <tr><td>Missing values</td><td>Missing count/matrix/bar style view.</td></tr>
+                <tr><td>Sample</td><td>First/last/random rows ka quick view.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="panel" style="margin-top:15px">
+          <h3>Use it like a compass</h3>
+          <p>Report warnings quickly batati hain: high cardinality, high missing percentage, duplicate rows, constant columns, skewed values, strong correlations. In observations ko notebook me note karke deeper manual EDA karo.</p>
+          <div class="callout gold"><strong>Important:</strong> Automated report answer nahi hoti; woh investigation ki direction batati hai.</div>
+        </article>
+
+        <article class="panel" style="margin-top:15px">
+          <h3>One-year-later recap</h3>
+          <div class="quiz">
+            <details><summary>Pandas Profiling ka purpose?</summary><p>Dataset ka automated EDA report banana, taaki first-pass understanding fast ho.</p></details>
+            <details><summary>Kaun se sections important?</summary><p>Overview, variables, interactions, correlations, missing values, sample.</p></details>
+            <details><summary>Manual EDA ki zaroorat phir bhi kyon?</summary><p>Report hints deti hai; domain interpretation, decisions aur deeper analysis tumhe karna hota hai.</p></details>
+          </div>
+        </article>
+      </section>
+
+      <section class="section searchable" id="lecture-23" data-title="feature engineering feature transformation construction selection extraction imputation categorical encoding outliers scaling pca mnist titanic family">
+        <div class="section-head">
+          <div class="section-title-wrap">
+            <span class="section-index">23</span>
+            <div>
+              <h2>What is Feature Engineering?</h2>
+              <p class="section-intro">Raw data ko model-friendly features me convert karna feature engineering hai. Good features weak algorithm ko bhi strong bana sakte hain.</p>
+              <div class="timestamp">Lecture timestamps: 00:00:00 - 00:25:13</div>
+            </div>
+          </div>
+          <label class="lecture-complete"><input type="checkbox" data-lecture="23"> Complete</label>
+        </div>
+
+        <article class="panel">
+          <h3>Definition in simple words</h3>
+          <p>Feature engineering = domain knowledge use karke raw data se useful input columns banana, transform karna, select karna ya extract karna, taaki ML algorithm better learn kare.</p>
+          <div class="flow">
+            <div class="flow-step"><strong>Raw data</strong><small>Messy / imperfect columns</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>Feature engineering</strong><small>Prepare useful signal</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>Model</strong><small>Better learning</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>Performance</strong><small>Accuracy/generalization</small></div>
+          </div>
+        </article>
+
+        <article class="panel" style="margin-top:15px">
+          <h3>Feature engineering map</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Type</th><th>Meaning</th><th>Examples from lecture</th></tr></thead>
+              <tbody>
+                <tr><td>Feature transformation</td><td>Existing feature ko better form me convert karna.</td><td>Missing value imputation, categorical encoding, outlier handling, feature scaling.</td></tr>
+                <tr><td>Feature construction</td><td>Existing columns se manually new useful column banana.</td><td>Titanic: <code>sibsp + parch</code> se family size; alone/small/large family.</td></tr>
+                <tr><td>Feature selection</td><td>Useful columns rakhna, weak/noisy columns remove karna.</td><td>MNIST me blank/less useful edge pixels remove karna.</td></tr>
+                <tr><td>Feature extraction</td><td>Original features se algorithmic new feature space banana.</td><td>PCA/LDA style dimensionality reduction.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <div class="grid-2" style="margin-top:15px">
+          <article class="panel">
+            <h3>Construction example</h3>
+            <p>Titanic dataset me <code>SibSp</code> siblings/spouse count aur <code>Parch</code> parents/children count batata hai. In dono ko combine karke family size jaisa more meaningful signal ban sakta hai.</p>
+            <div class="formula">df["family_size"] = df["SibSp"] + df["Parch"] + 1<br>df["family_type"] = ... # alone / small / large</div>
+            <div class="callout teal"><strong>Intuition:</strong> Model ko direct raw columns dene ke bajay real-world meaning wala signal dena often useful hota hai.</div>
+          </article>
+          <article class="panel">
+            <h3>Selection vs extraction</h3>
+            <p><strong>Feature selection</strong> original columns me se best columns choose karta hai. <strong>Feature extraction</strong> original columns ko combine/rotate/compress karke new columns banata hai.</p>
+            <div class="flow">
+              <div class="flow-step"><strong>Selection</strong><small>Keep/drop original features</small></div><span class="arrow">|</span>
+              <div class="flow-step"><strong>Extraction</strong><small>Create new feature space</small></div>
+            </div>
+          </article>
+        </div>
+
+        <article class="panel" style="margin-top:15px">
+          <h3>One-year-later recap</h3>
+          <div class="quiz">
+            <details><summary>Feature engineering kyon important?</summary><p>Model raw data se tabhi achha learn karta hai jab features clean, meaningful aur model-friendly hon.</p></details>
+            <details><summary>Feature transformation me kya aata hai?</summary><p>Imputation, categorical encoding, outlier handling, scaling, transformations.</p></details>
+            <details><summary>Feature construction ka example?</summary><p><code>SibSp</code> + <code>Parch</code> se family size/family type banana.</p></details>
+            <details><summary>Selection aur extraction me difference?</summary><p>Selection original features me choose/drop karta hai; extraction naye transformed features banata hai.</p></details>
+          </div>
+        </article>
+      </section>
+
+      <section class="section searchable" id="lecture-24" data-title="feature scaling standardization standard scaler z score mean zero standard deviation one knn logistic regression pca gradient descent tree algorithms outliers">
+        <div class="section-head">
+          <div class="section-title-wrap">
+            <span class="section-index">24</span>
+            <div>
+              <h2>Feature Scaling: Standardization</h2>
+              <p class="section-intro">Standardization features ko comparable scale par laata hai. Transformed feature ka mean 0 aur standard deviation 1 hota hai.</p>
+              <div class="timestamp">Lecture timestamps: 00:00:00 - 00:33:17</div>
+            </div>
+          </div>
+          <label class="lecture-complete"><input type="checkbox" data-lecture="24"> Complete</label>
+        </div>
+
+        <article class="panel">
+          <h3>Why feature scaling?</h3>
+          <p>Agar ek feature ka range 0-10 hai aur doosra 15000-150000 hai, distance/gradient based algorithms me large-scale feature dominate kar sakta hai. Scaling independent input features ko similar scale par laata hai.</p>
+          <div class="flow">
+            <div class="flow-step"><strong>CGPA</strong><small>0-10 range</small></div><span class="arrow">+</span>
+            <div class="flow-step"><strong>Salary / IQ</strong><small>Large range</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>Unequal influence</strong><small>Model bias risk</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>Scaling</strong><small>Comparable inputs</small></div>
+          </div>
+        </article>
+
+        <article class="panel" style="margin-top:15px">
+          <h3>Standardization formula</h3>
+          <p>Har value se column mean subtract karo aur standard deviation se divide karo. Isko z-score scaling bhi bolte hain.</p>
+          <div class="formula">x_scaled = (x - mean) / standard_deviation</div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Before</th><th>After standardization</th></tr></thead>
+              <tbody>
+                <tr><td>Original distribution ka scale kuch bhi ho sakta hai.</td><td>Mean approximately 0.</td></tr>
+                <tr><td>Standard deviation original units me hota hai.</td><td>Standard deviation approximately 1.</td></tr>
+                <tr><td>Shape mostly preserve hoti hai.</td><td>Outliers outliers hi rehte hain; magically fix nahi hote.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="formula">from sklearn.preprocessing import StandardScaler<br><br>scaler = StandardScaler()<br>X_train_scaled = scaler.fit_transform(X_train)<br>X_test_scaled = scaler.transform(X_test)</div>
+          <div class="callout gold"><strong>Important:</strong> Scaler ko training data par <code>fit</code> karo; test data par sirf <code>transform</code>. Test data se mean/std learn karna data leakage hai.</div>
+        </article>
+
+        <article class="panel" style="margin-top:15px">
+          <h3>Kab standardization useful?</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Usually scale</th><th>Why</th></tr></thead>
+              <tbody>
+                <tr><td>KNN, K-Means</td><td>Distance calculation scale-sensitive hoti hai.</td></tr>
+                <tr><td>PCA</td><td>Variance comparison scale-sensitive hota hai.</td></tr>
+                <tr><td>Gradient descent models</td><td>Convergence faster/stable ho sakti hai.</td></tr>
+                <tr><td>Logistic/Linear regression, SVM, Neural nets</td><td>Weights/optimization scale se affected ho sakte hain.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout"><strong>Tree models:</strong> Decision Tree, Random Forest, XGBoost type tree-based models me scaling usually necessary nahi hoti, kyunki splits comparisons par based hote hain.</div>
+        </article>
+
+        <article class="panel" style="margin-top:15px">
+          <h3>One-year-later recap</h3>
+          <div class="quiz">
+            <details><summary>Standardization formula?</summary><p><code>(x - mean) / standard_deviation</code>.</p></details>
+            <details><summary>Standardized column ka mean/std?</summary><p>Mean 0, standard deviation 1.</p></details>
+            <details><summary>Outliers fix ho jaate hain?</summary><p>Nahi. Standardization scale change karta hai, outliers ko remove/fix nahi karta.</p></details>
+            <details><summary>Tree models me scaling kyon optional?</summary><p>Tree splits value comparisons par based hote hain, distance/gradient scale par nahi.</p></details>
+          </div>
+        </article>
+      </section>
+
+      <section class="section searchable" id="lecture-25" data-title="feature scaling normalization minmax scaler maxabs scaler robust scaler mean normalization formula image processing sparse data outliers standardization comparison">
+        <div class="section-head">
+          <div class="section-title-wrap">
+            <span class="section-index">25</span>
+            <div>
+              <h2>Feature Scaling: Normalization</h2>
+              <p class="section-intro">Normalization numerical columns ko common bounded scale me laata hai. Most common version MinMax scaling hai.</p>
+              <div class="timestamp">Lecture timestamps: 00:00:00 - 00:23:38</div>
+            </div>
+          </div>
+          <label class="lecture-complete"><input type="checkbox" data-lecture="25"> Complete</label>
+        </div>
+
+        <article class="panel">
+          <h3>Normalization ka goal</h3>
+          <p>Numerical quantities different units me ho sakti hain: kg, cm, rupees, pixels etc. Normalization units/ranges ko common scale me laane ki technique hai, without changing relative ordering of values.</p>
+          <div class="flow">
+            <div class="flow-step"><strong>Original units</strong><small>kg, cm, price...</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>Normalize</strong><small>Common bounded scale</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>Model input</strong><small>Comparable numbers</small></div>
+          </div>
+        </article>
+
+        <article class="panel" style="margin-top:15px">
+          <h3>Normalization techniques</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Technique</th><th>Formula / idea</th><th>Output range / use</th></tr></thead>
+              <tbody>
+                <tr><td>MinMax Scaling</td><td><code>(x - min) / (max - min)</code></td><td>Usually 0 to 1. Most common normalization.</td></tr>
+                <tr><td>Mean Normalization</td><td><code>(x - mean) / (max - min)</code></td><td>Centered around 0; rarely used.</td></tr>
+                <tr><td>MaxAbs Scaling</td><td><code>x / max(abs(x))</code></td><td>Good for sparse data with many zeros.</td></tr>
+                <tr><td>Robust Scaling</td><td><code>(x - median) / IQR</code></td><td>Better when outliers are present.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <div class="grid-2" style="margin-top:15px">
+          <article class="panel">
+            <h3>MinMaxScaler intuition</h3>
+            <p>Min value 0 ban jaati hai, max value 1 ban jaati hai, aur baaki values inke beech map hoti hain. Geometry me imagine karo: whole data ko unit square/cube/hypercube ke andar squeeze karna.</p>
+            <div class="formula">from sklearn.preprocessing import MinMaxScaler<br><br>scaler = MinMaxScaler()<br>X_train_scaled = scaler.fit_transform(X_train)<br>X_test_scaled = scaler.transform(X_test)</div>
+            <div class="callout teal"><strong>Good use:</strong> Jab feature ka min/max naturally known ho, jaise image pixels 0-255, MinMax scaling very common hoti hai.</div>
+          </article>
+          <article class="panel">
+            <h3>Outlier issue</h3>
+            <p>MinMax scaling outliers se sensitive hoti hai. Ek extreme max value ho to normal values compressed ho sakti hain. Outliers wale data me RobustScaler try karna useful ho sakta hai.</p>
+            <div class="flow">
+              <div class="flow-step"><strong>Outlier exists</strong><small>Very high/low value</small></div><span class="arrow">-&gt;</span>
+              <div class="flow-step"><strong>MinMax compresses</strong><small>Most points squeezed</small></div><span class="arrow">-&gt;</span>
+              <div class="flow-step"><strong>RobustScaler</strong><small>Median + IQR based</small></div>
+            </div>
+          </article>
+        </div>
+
+        <article class="panel" style="margin-top:15px">
+          <h3>Standardization vs normalization</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Question</th><th>Prefer</th></tr></thead>
+              <tbody>
+                <tr><td>General default when scaling needed?</td><td>Standardization often works well.</td></tr>
+                <tr><td>Known bounded range, e.g. pixels 0-255?</td><td>MinMax normalization.</td></tr>
+                <tr><td>Sparse matrix with many zeros?</td><td>MaxAbsScaler.</td></tr>
+                <tr><td>Outliers present?</td><td>RobustScaler.</td></tr>
+                <tr><td>Not sure?</td><td>Experiment and validate performance.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout"><strong>Practical rule:</strong> Pehle decide karo scaling required hai ya nahi. Required ho to algorithm + data distribution ke according scaler choose karo.</div>
+        </article>
+
+        <article class="panel" style="margin-top:15px">
+          <h3>One-year-later recap</h3>
+          <div class="quiz">
+            <details><summary>MinMax formula?</summary><p><code>(x - min) / (max - min)</code>.</p></details>
+            <details><summary>MinMax output range?</summary><p>Usually 0 se 1 ke beech.</p></details>
+            <details><summary>RobustScaler kab?</summary><p>Jab data me outliers hon; ye median aur IQR use karta hai.</p></details>
+            <details><summary>MaxAbsScaler kab?</summary><p>Sparse data/matrices me, jahan zeros bahut hote hain.</p></details>
+            <details><summary>Scaling ka first question?</summary><p>Kya selected algorithm ko scaling chahiye? Har algorithm ke liye blindly scaling zaroori nahi.</p></details>
+          </div>
+        </article>
+      </section>
+
       <footer class="footer">
-        <p><strong>Next batch:</strong> Lecture 21 ke baad isi file me next lecture section add hoga. Existing notes ko replace nahi kiya jayega, taaki tumhara revision trail bana rahe.</p>
+        <p><strong>Next batch:</strong> Lecture 26 ke baad isi file me next lecture section add hoga. Existing notes ko replace nahi kiya jayega, taaki tumhara revision trail bana rahe.</p>
         <p>Source: provided NoteGPT transcripts. Auto-caption errors ko lecture context ke according clean Hinglish me reorganize kiya gaya hai.</p>
       </footer>
     </main>
