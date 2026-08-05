@@ -383,11 +383,14 @@
         <a href="#lecture-11"><span class="num">11</span><span>Tensors</span></a>
         <a href="#lecture-12"><span class="num">12</span><span>ML Setup Tools</span></a>
         <a href="#lecture-13"><span class="num">13</span><span>Toy Project</span></a>
+        <a href="#lecture-14"><span class="num">14</span><span>Frame ML Problem</span></a>
+        <a href="#lecture-15"><span class="num">15</span><span>CSV Files</span></a>
+        <a href="#lecture-16"><span class="num">16</span><span>JSON &amp; SQL</span></a>
       </nav>
       <div class="side-progress">
         <strong>Batch progress</strong>
         <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
-        <span id="progress-label">0 of 13 lectures complete</span>
+        <span id="progress-label">0 of 16 lectures complete</span>
       </div>
     </aside>
 
@@ -1743,8 +1746,244 @@
         </article>
       </section>
 
+      <section class="section searchable" id="lecture-14" data-title="how to frame machine learning problem business problem netflix churn rate metrics features online offline learning assumptions data science project planning">
+        <div class="section-head">
+          <div class="section-title-wrap">
+            <span class="section-index">14</span>
+            <div>
+              <h2>How to Frame a Machine Learning Problem</h2>
+              <p class="section-intro">Data scientist ka kaam sirf model train karna nahi hota. Pehle business problem ko measurable ML problem me convert karna padta hai.</p>
+              <div class="timestamp">Lecture timestamps: 00:00:00 - 00:22:32</div>
+            </div>
+          </div>
+          <label class="lecture-complete"><input type="checkbox" data-lecture="14"> Complete</label>
+        </div>
+
+        <article class="panel">
+          <h3>Big idea: business language se ML language</h3>
+          <p>Lecture ka main point tha: jab company problem deti hai, use direct code me jump karke solve nahi karna. Pehle clarity lao ki business ko exactly kya improve karna hai, uska measurable target kya hoga, aur ML model ka output kya hoga.</p>
+          <div class="flow">
+            <div class="flow-step"><strong>Business goal</strong><small>Revenue badhana</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>Metric</strong><small>Churn rate reduce</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>ML task</strong><small>Leaving customers identify</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>Action</strong><small>Retention offer / intervention</small></div>
+          </div>
+          <div class="callout teal"><strong>Netflix example:</strong> Revenue badhana vague business goal hai. Isko churn rate reduce karne ke measurable goal me convert kiya gaya, jaise 4% churn ko 3.75% tak lana.</div>
+        </article>
+
+        <article class="panel" style="margin-top:15px">
+          <h3>Netflix churn problem framing</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Question</th><th>Lecture-style answer</th><th>ML meaning</th></tr></thead>
+              <tbody>
+                <tr><td>Problem kya hai?</td><td>Existing customers platform chhod rahe hain.</td><td>Churn ko predict/avoid karna hai.</td></tr>
+                <tr><td>End product kya hoga?</td><td>Customer leave karega ya nahi, ye identify karna.</td><td>Binary classification: churn yes/no.</td></tr>
+                <tr><td>Target action?</td><td>Jo leave karne wale hain unhe timely rokna.</td><td>Prediction ke baad business intervention.</td></tr>
+                <tr><td>Success kaise measure hoga?</td><td>Churn rate target ke comparison me kam hua ya nahi.</td><td>Business metric + model metric dono track.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <div class="grid-2" style="margin-top:15px">
+          <article class="panel">
+            <h3>Features sochna</h3>
+            <p>Feature ka matlab customer ke behavior ka signal. Lecture me Netflix example ke through ye bataya ki model ko useful columns dene ke liye pehle domain sochna padta hai.</p>
+            <ul>
+              <li><strong>Watch time:</strong> user kitna time content dekh raha hai.</li>
+              <li><strong>Browsing time:</strong> user search/browse zyada kar raha hai but watch kam kar raha hai.</li>
+              <li><strong>Failed searches:</strong> user jo content dhoondh raha tha woh mila ya nahi.</li>
+              <li><strong>Drop-off:</strong> movie/series start karke beech me chhod di ya nahi.</li>
+              <li><strong>Recommendation clicks:</strong> suggested content par user click karta hai ya ignore.</li>
+            </ul>
+            <div class="callout"><strong>Note:</strong> Data scientist akela sab raw data nahi nikalta; real company me Data Engineer actual databases se data warehouse ready kar sakta hai.</div>
+          </article>
+          <article class="panel">
+            <h3>Early decisions</h3>
+            <p>Planning stage me kuch decisions pehle clear karne hote hain, kyunki baad me direction change karna costly ho sakta hai.</p>
+            <div class="flow vertical-flow">
+              <div class="flow-step"><strong>Problem type</strong><small>Classification, regression, etc.</small></div>
+              <div class="flow-step"><strong>Model strategy</strong><small>Offline retraining ya online learning</small></div>
+              <div class="flow-step"><strong>Geography check</strong><small>Same model India, US sab par chalega?</small></div>
+              <div class="flow-step"><strong>Data availability</strong><small>Required features actually available hain?</small></div>
+              <div class="flow-step"><strong>Evaluation</strong><small>Model metric + business metric</small></div>
+            </div>
+          </article>
+        </div>
+
+        <article class="panel" style="margin-top:15px">
+          <h3>Offline vs online choice in this problem</h3>
+          <p>Netflix user behavior time ke saath change hota rahega: weekends, holidays, new shows, pricing, competition. Isliye online learning tempting lag sakti hai, but implementation complex hota hai. Practical option weekly/monthly offline retraining bhi ho sakta hai.</p>
+          <div class="flow">
+            <div class="flow-step"><strong>Fresh behavior</strong><small>New viewing/search data</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>Data warehouse</strong><small>Clean signals</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>Retrain / update</strong><small>Online or scheduled batch</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>Churn prediction</strong><small>Retention action</small></div>
+          </div>
+        </article>
+
+        <article class="panel" style="margin-top:15px">
+          <h3>One-year-later recap</h3>
+          <div class="quiz">
+            <details><summary>Business problem ko ML problem me convert karna kyon zaroori?</summary><p>Kyuki "revenue badhao" directly model target nahi hai. Use measurable metric aur prediction target me convert karna padta hai.</p></details>
+            <details><summary>Netflix example me target kya tha?</summary><p>Customers jo platform chhodne wale hain unhe identify karna, taaki churn reduce ho sake.</p></details>
+            <details><summary>Feature decide karte waqt kya sochna hai?</summary><p>Customer behavior ka kaunsa signal churn se related ho sakta hai, aur kya woh data actually available hai.</p></details>
+            <details><summary>Planning stage important kyon?</summary><p>Wrong framing se poori team galat direction me kaam kar sakti hai, jo time aur cost dono waste karta hai.</p></details>
+          </div>
+        </article>
+      </section>
+
+      <section class="section searchable" id="lecture-15" data-title="working with csv files pandas read_csv tsv sep names index_col header usecols skiprows nrows encoding parse_dates converters na_values chunksize">
+        <div class="section-head">
+          <div class="section-title-wrap">
+            <span class="section-index">15</span>
+            <div>
+              <h2>Working with CSV Files</h2>
+              <p class="section-intro">CSV machine learning me sabse common starting data format hai. Lecture ka focus pandas ke <code>read_csv</code> function ko reference ki tarah samajhna tha.</p>
+              <div class="timestamp">Lecture timestamps: 00:00:00 - 00:37:10</div>
+            </div>
+          </div>
+          <label class="lecture-complete"><input type="checkbox" data-lecture="15"> Complete</label>
+        </div>
+
+        <article class="panel">
+          <h3>CSV kya hota hai?</h3>
+          <p><strong>CSV = Comma Separated Values.</strong> Har row ek line me hoti hai, aur values comma se separate hoti hain. TSV me comma ki jagah tab separator hota hai.</p>
+          <div class="flow">
+            <div class="flow-step"><strong>CSV file</strong><small>Rows + comma separated columns</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>pd.read_csv()</strong><small>File / URL read</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>DataFrame</strong><small>Rows and columns in pandas</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>ML workflow</strong><small>Inspect, clean, train</small></div>
+          </div>
+          <div class="formula">import pandas as pd<br>df = pd.read_csv("train.csv")</div>
+        </article>
+
+        <article class="panel" style="margin-top:15px">
+          <h3><code>read_csv</code> practical cheat sheet</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Need</th><th>Parameter / code</th><th>Use case</th></tr></thead>
+              <tbody>
+                <tr><td>Local CSV load</td><td><code>pd.read_csv("file.csv")</code></td><td>Same folder ya path se file read karna.</td></tr>
+                <tr><td>URL se CSV</td><td><code>pd.read_csv(url)</code></td><td>Internet/server par hosted CSV directly load.</td></tr>
+                <tr><td>TSV file</td><td><code>sep="\t"</code></td><td>Tab separated values ko correctly split karna.</td></tr>
+                <tr><td>No header</td><td><code>header=None</code></td><td>File me column names nahi hain.</td></tr>
+                <tr><td>Custom names</td><td><code>names=["a", "b"]</code></td><td>Apne column names assign karna.</td></tr>
+                <tr><td>Index column</td><td><code>index_col="id"</code></td><td>Kisi column ko row index banana.</td></tr>
+                <tr><td>Selected columns</td><td><code>usecols=["A", "B"]</code></td><td>Sirf useful columns load karna.</td></tr>
+                <tr><td>Skip rows</td><td><code>skiprows=[0, 2]</code></td><td>Extra title/metadata rows ignore karna.</td></tr>
+                <tr><td>Only first rows</td><td><code>nrows=100</code></td><td>Large file ka quick preview.</td></tr>
+                <tr><td>Encoding issue</td><td><code>encoding="latin-1"</code></td><td>Special characters load nahi ho rahe.</td></tr>
+                <tr><td>Date columns</td><td><code>parse_dates=["date"]</code></td><td>Date ko string nahi, datetime banana.</td></tr>
+                <tr><td>Missing markers</td><td><code>na_values=["?", "-"]</code></td><td>Custom missing values ko NaN treat karna.</td></tr>
+                <tr><td>Transform while loading</td><td><code>converters={"team": fn}</code></td><td>Column values ko read time par clean/shorten karna.</td></tr>
+                <tr><td>Huge file</td><td><code>chunksize=5000</code></td><td>RAM bachane ke liye file chunks me read karna.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <div class="grid-2" style="margin-top:15px">
+          <article class="panel">
+            <h3>Common loading problems</h3>
+            <p>CSV simple lagta hai, but real datasets me chhote issues aate rehte hain. Lecture ka intention ye tha ki <code>read_csv</code> ke parameters se tum un cases ko handle kar pao.</p>
+            <ul>
+              <li><strong>Wrong separator:</strong> columns ek hi column me aa rahe hain, use <code>sep</code>.</li>
+              <li><strong>Bad header:</strong> column names wrong aa rahe hain, use <code>header</code> / <code>names</code>.</li>
+              <li><strong>Unwanted columns:</strong> memory waste ho rahi hai, use <code>usecols</code>.</li>
+              <li><strong>Date as string:</strong> date operations nahi chalenge, use <code>parse_dates</code>.</li>
+              <li><strong>Custom blanks:</strong> <code>?</code>, <code>-</code>, <code>NA</code> ko missing mark karne ke liye <code>na_values</code>.</li>
+            </ul>
+          </article>
+          <article class="panel">
+            <h3>Chunks for big data</h3>
+            <p>Jab CSV RAM me fit nahi hoti, tab complete file ek saath load karne ke bajay chunks me read karo. Har chunk ek DataFrame hota hai jiske upar loop me operation apply kar sakte ho.</p>
+            <div class="formula">chunks = pd.read_csv("big.csv", chunksize=5000)<br>for chunk in chunks:<br>&nbsp;&nbsp;&nbsp;&nbsp;process(chunk)</div>
+            <div class="callout gold"><strong>Yaad rakhna:</strong> <code>chunksize</code> memory problem ko manageable banata hai, especially jab file millions of rows wali ho.</div>
+          </article>
+        </div>
+
+        <article class="panel" style="margin-top:15px">
+          <h3>One-year-later recap</h3>
+          <div class="quiz">
+            <details><summary>CSV aur TSV me basic difference?</summary><p>CSV me values comma se separate hoti hain; TSV me values tab se separate hoti hain.</p></details>
+            <details><summary><code>usecols</code> kab use karoge?</summary><p>Jab sirf selected columns load karne hon, memory aur clutter dono kam karne ke liye.</p></details>
+            <details><summary><code>parse_dates</code> ka use?</summary><p>Date columns ko proper datetime type me convert karna, taaki date filtering/calculation possible ho.</p></details>
+            <details><summary><code>chunksize</code> kyon useful?</summary><p>Large CSV ko small DataFrames me read karke RAM overload avoid karne ke liye.</p></details>
+          </div>
+        </article>
+      </section>
+
+      <section class="section searchable" id="lecture-16" data-title="working with json sql pandas read_json api mysql connector read_sql dataframe xampp phpmyadmin database query api data source">
+        <div class="section-head">
+          <div class="section-title-wrap">
+            <span class="section-index">16</span>
+            <div>
+              <h2>Working with JSON &amp; SQL</h2>
+              <p class="section-intro">CSV ke baad next common data sources JSON files/APIs aur SQL databases hain. Goal: dono sources se data pandas DataFrame me lana.</p>
+              <div class="timestamp">Lecture timestamps: 00:00:00 - 00:17:06</div>
+            </div>
+          </div>
+          <label class="lecture-complete"><input type="checkbox" data-lecture="16"> Complete</label>
+        </div>
+
+        <article class="panel">
+          <h3>Why JSON and SQL?</h3>
+          <p><strong>JSON</strong> almost har programming language samajh leti hai, isliye APIs ka response often JSON format me milta hai. <strong>SQL</strong> databases me structured tables hoti hain, jahan se query likhkar required data nikala ja sakta hai.</p>
+          <div class="flow">
+            <div class="flow-step"><strong>JSON file / API</strong><small>Nested or records data</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>pd.read_json()</strong><small>DataFrame</small></div><span class="arrow">+</span>
+            <div class="flow-step"><strong>SQL database</strong><small>Tables + queries</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>pd.read_sql()</strong><small>DataFrame</small></div>
+          </div>
+        </article>
+
+        <div class="grid-2" style="margin-top:15px">
+          <article class="panel">
+            <h3>JSON to DataFrame</h3>
+            <p>Lecture me recipe/cuisine dataset ka example tha: JSON file me dishes, id aur ingredients the. Pandas me CSV jaisa hi simple function milta hai.</p>
+            <div class="formula">import pandas as pd<br><br>df = pd.read_json("train.json")<br>df.head()</div>
+            <p>URL/API response ko bhi same tarah read kar sakte ho, bas file name ki jagah URL pass karna hota hai.</p>
+            <div class="formula">df = pd.read_json("https://example.com/api/data")</div>
+            <div class="callout teal"><strong>Use case:</strong> APIs se weather, exchange rate, movies, products, users jaise live data JSON format me mil sakta hai.</div>
+          </article>
+          <article class="panel">
+            <h3>SQL to DataFrame</h3>
+            <p>SQL data ke liye Python aur database ke beech connector chahiye. Lecture me MySQL/XAMPP/phpMyAdmin style setup dikhaya gaya.</p>
+            <div class="formula">import mysql.connector<br><br>conn = mysql.connector.connect(<br>&nbsp;&nbsp;host="localhost",<br>&nbsp;&nbsp;user="root",<br>&nbsp;&nbsp;password="",<br>&nbsp;&nbsp;database="world"<br>)<br><br>df = pd.read_sql("SELECT * FROM city", conn)</div>
+            <p>Query change karke required rows/columns nikal sakte ho.</p>
+            <div class="formula">pd.read_sql("SELECT * FROM city WHERE CountryCode='IND'", conn)</div>
+          </article>
+        </div>
+
+        <article class="panel" style="margin-top:15px">
+          <h3>JSON vs SQL quick comparison</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Source</th><th>Data nature</th><th>Pandas function</th><th>Typical place</th></tr></thead>
+              <tbody>
+                <tr><td>JSON</td><td>Records, nested lists/dicts, API responses</td><td><code>pd.read_json()</code></td><td>Web APIs, Kaggle files, app data</td></tr>
+                <tr><td>SQL</td><td>Structured tables with rows and columns</td><td><code>pd.read_sql()</code></td><td>Company databases, MySQL, PostgreSQL</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout"><strong>Core pattern:</strong> Chahe source CSV ho, JSON ho ya SQL, ML workflow me usually pehla target hota hai data ko clean pandas DataFrame me lana.</div>
+        </article>
+
+        <article class="panel" style="margin-top:15px">
+          <h3>One-year-later recap</h3>
+          <div class="quiz">
+            <details><summary>JSON popular kyon hai?</summary><p>Ye universal data format hai jise almost sab programming languages parse kar sakti hain, isliye APIs me common hai.</p></details>
+            <details><summary>SQL ka role?</summary><p>Database tables se query ke through required data fetch karna.</p></details>
+            <details><summary>Python ko MySQL se connect karne ke liye kya chahiye?</summary><p>Connector library, jaise <code>mysql.connector</code>, jo Python aur database ke beech bridge banati hai.</p></details>
+            <details><summary>Final output kya chahiye hota hai?</summary><p>Pandas DataFrame, jise aage cleaning, EDA aur ML training me use kar sakein.</p></details>
+          </div>
+        </article>
+      </section>
+
       <footer class="footer">
-        <p><strong>Next batch:</strong> Lecture 14 ke baad isi file me next lecture section add hoga. Existing notes ko replace nahi kiya jayega, taaki tumhara revision trail bana rahe.</p>
+        <p><strong>Next batch:</strong> Lecture 17 ke baad isi file me next lecture section add hoga. Existing notes ko replace nahi kiya jayega, taaki tumhara revision trail bana rahe.</p>
         <p>Source: provided NoteGPT transcripts. Auto-caption errors ko lecture context ke according clean Hinglish me reorganize kiya gaya hai.</p>
       </footer>
     </main>
