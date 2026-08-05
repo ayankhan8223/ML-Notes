@@ -386,11 +386,15 @@
         <a href="#lecture-14"><span class="num">14</span><span>Frame ML Problem</span></a>
         <a href="#lecture-15"><span class="num">15</span><span>CSV Files</span></a>
         <a href="#lecture-16"><span class="num">16</span><span>JSON &amp; SQL</span></a>
+        <a href="#lecture-17"><span class="num">17</span><span>API Data</span></a>
+        <a href="#lecture-18"><span class="num">18</span><span>Web Scraping</span></a>
+        <a href="#lecture-19"><span class="num">19</span><span>Understand Data</span></a>
+        <a href="#lecture-20"><span class="num">20</span><span>Univariate EDA</span></a>
       </nav>
       <div class="side-progress">
         <strong>Batch progress</strong>
         <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
-        <span id="progress-label">0 of 16 lectures complete</span>
+        <span id="progress-label">0 of 20 lectures complete</span>
       </div>
     </aside>
 
@@ -1982,8 +1986,324 @@
         </article>
       </section>
 
+      <section class="section searchable" id="lecture-17" data-title="fetching data from api requests json tmdb api key pagination status code dataframe to_csv kaggle dataset">
+        <div class="section-head">
+          <div class="section-title-wrap">
+            <span class="section-index">17</span>
+            <div>
+              <h2>Fetching Data From an API</h2>
+              <p class="section-intro">API do softwares ko baat karne ka controlled tareeka deti hai. Is lecture me TMDB API se movie data fetch karke pandas DataFrame aur CSV dataset banaya gaya.</p>
+              <div class="timestamp">Lecture timestamps: 00:00:00 - 00:23:10</div>
+            </div>
+          </div>
+          <label class="lecture-complete"><input type="checkbox" data-lecture="17"> Complete</label>
+        </div>
+
+        <article class="panel">
+          <h3>API ka simple meaning</h3>
+          <p><strong>API = Application Programming Interface.</strong> Ye ek software ko doosre software ke data ya functionality se safely connect karne ka bridge hota hai. Direct database access nahi diya jata; fixed endpoints/fuctions ke through response milta hai.</p>
+          <div class="flow">
+            <div class="flow-step"><strong>Client app</strong><small>Python / website / mobile app</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>API endpoint</strong><small>URL + parameters + API key</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>Server</strong><small>Database se data fetch</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>JSON response</strong><small>Structured data back</small></div>
+          </div>
+          <div class="callout teal"><strong>IRCTC example:</strong> MakeMyTrip ko IRCTC ka database direct nahi milta. API call ke through seat availability/booking status jaisi information share hoti hai.</div>
+        </article>
+
+        <article class="panel" style="margin-top:15px">
+          <h3>TMDB movie dataset workflow</h3>
+          <p>Lecture me top-rated movies API endpoint hit kiya gaya. Response JSON me aaya, jisme <code>page</code>, <code>results</code>, <code>total_pages</code> aur <code>total_results</code> type keys thi. Important movie fields select karke dataset banaya gaya.</p>
+          <div class="flow">
+            <div class="flow-step"><strong>API key</strong><small>Account se generate</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>requests.get()</strong><small>Endpoint hit</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>response.json()</strong><small>Python dict/list</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>pd.DataFrame()</strong><small>Rows = movies</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>to_csv()</strong><small>Reusable dataset</small></div>
+          </div>
+          <div class="formula">import requests<br>import pandas as pd<br><br>response = requests.get(url)<br>data = response.json()["results"]<br>temp_df = pd.DataFrame(data)</div>
+        </article>
+
+        <div class="grid-2" style="margin-top:15px">
+          <article class="panel">
+            <h3>Fields selected from movie JSON</h3>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Column</th><th>Meaning</th></tr></thead>
+                <tbody>
+                  <tr><td><code>id</code></td><td>Movie ka unique identifier.</td></tr>
+                  <tr><td><code>title</code></td><td>Movie title.</td></tr>
+                  <tr><td><code>overview</code></td><td>Short description/plot.</td></tr>
+                  <tr><td><code>release_date</code></td><td>Movie release date.</td></tr>
+                  <tr><td><code>popularity</code></td><td>TMDB popularity signal.</td></tr>
+                  <tr><td><code>vote_average</code></td><td>Average rating.</td></tr>
+                  <tr><td><code>vote_count</code></td><td>Total votes.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+          <article class="panel">
+            <h3>Pagination loop</h3>
+            <p>API ek page me limited movies return karti hai. Sab pages ka data chahiye to loop chalao, har page se temporary DataFrame banao, aur final DataFrame me append/concat karo.</p>
+            <div class="formula">final_df = pd.DataFrame()<br><br>for page in range(1, total_pages + 1):<br>&nbsp;&nbsp;&nbsp;&nbsp;url = f"...&amp;page={page}"<br>&nbsp;&nbsp;&nbsp;&nbsp;response = requests.get(url)<br>&nbsp;&nbsp;&nbsp;&nbsp;temp_df = pd.DataFrame(response.json()["results"])<br>&nbsp;&nbsp;&nbsp;&nbsp;final_df = pd.concat([final_df, temp_df], ignore_index=True)</div>
+            <div class="callout gold"><strong>Status code:</strong> <code>200</code> means request successful. <code>404</code> often not found, <code>500</code> server issue. API debugging me status code pehle check karo.</div>
+          </article>
+        </div>
+
+        <article class="panel" style="margin-top:15px">
+          <h3>One-year-later recap</h3>
+          <div class="quiz">
+            <details><summary>API direct database access se better kyon?</summary><p>API controlled interface deti hai: limited endpoints, authentication, rate limits aur safe response format.</p></details>
+            <details><summary>API response generally kis format me milta hai?</summary><p>Mostly JSON, jise Python dict/list ki tarah parse kar sakte ho.</p></details>
+            <details><summary>Pagination ka need kyon hota hai?</summary><p>API ek call me limited records return karti hai; complete dataset ke liye multiple pages fetch karne padte hain.</p></details>
+            <details><summary>Dataset save kaise kiya?</summary><p>Final DataFrame ko <code>to_csv()</code> se CSV file me export karke.</p></details>
+          </div>
+        </article>
+      </section>
+
+      <section class="section searchable" id="lecture-18" data-title="fetching data using web scraping requests beautifulsoup html parser user agent headers find find_all inspect ambitionbox companies dataframe">
+        <div class="section-head">
+          <div class="section-title-wrap">
+            <span class="section-index">18</span>
+            <div>
+              <h2>Fetching Data Using Web Scraping</h2>
+              <p class="section-intro">Jab website API provide nahi karti, tab webpage ke HTML se useful data extract karna web scraping kehlata hai.</p>
+              <div class="timestamp">Lecture timestamps: 00:00:00 - 00:38:14</div>
+            </div>
+          </div>
+          <label class="lecture-complete"><input type="checkbox" data-lecture="18"> Complete</label>
+        </div>
+
+        <article class="panel">
+          <h3>Web scraping ka idea</h3>
+          <p>Lecture me AmbitionBox company listing page se company details scrape ki gayi: company name, rating, reviews, type, headquarters, age, employees etc. Browser me jo page render hota hai, uska HTML Python me laakar parse kiya gaya.</p>
+          <div class="flow">
+            <div class="flow-step"><strong>Website page</strong><small>No API / no direct dataset</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>requests</strong><small>HTML fetch</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>BeautifulSoup</strong><small>HTML parse</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>Selectors</strong><small>tag + class</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>DataFrame</strong><small>Structured table</small></div>
+          </div>
+        </article>
+
+        <div class="grid-2" style="margin-top:15px">
+          <article class="panel">
+            <h3>Core code pattern</h3>
+            <p>Normal request reject ho sakti hai, isliye browser-like <code>User-Agent</code> header pass kiya gaya. Phir HTML ko BeautifulSoup me parse karke tags/classes se data nikala.</p>
+            <div class="formula">import requests<br>from bs4 import BeautifulSoup<br>import pandas as pd<br><br>headers = {"User-Agent": "Mozilla/5.0"}<br>webpage = requests.get(url, headers=headers).text<br>soup = BeautifulSoup(webpage, "html.parser")</div>
+            <div class="callout teal"><strong>Inspect step:</strong> Browser me right click - Inspect karke pata chalta hai ki required text ka tag/class kya hai.</div>
+          </article>
+          <article class="panel">
+            <h3><code>find</code> vs <code>find_all</code></h3>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Method</th><th>Return</th><th>Use case</th></tr></thead>
+                <tbody>
+                  <tr><td><code>find()</code></td><td>Single matching element</td><td>Jab page/card me expected element unique ho.</td></tr>
+                  <tr><td><code>find_all()</code></td><td>List of matching elements</td><td>Jab multiple companies/cards/items extract karne hon.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p>Har company card ke andar individual fields extract karke lists banayi gayi, phir lists ko dictionary me convert karke DataFrame banaya.</p>
+          </article>
+        </div>
+
+        <article class="panel" style="margin-top:15px">
+          <h3>Scraping pipeline</h3>
+          <div class="flow">
+            <div class="flow-step"><strong>1. Page URL</strong><small>Page number change hota hai</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>2. Request</strong><small>headers ke saath</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>3. Parse HTML</strong><small>BeautifulSoup</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>4. Company cards</strong><small><code>find_all</code></small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>5. Extract fields</strong><small>name, rating, reviews...</small></div>
+          </div>
+          <div class="flow">
+            <div class="flow-step"><strong>6. Lists</strong><small>One list per column</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>7. DataFrame</strong><small>pd.DataFrame(dict)</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>8. Loop pages</strong><small>page 1 to n</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>9. Export</strong><small>CSV dataset</small></div>
+          </div>
+          <div class="callout"><strong>Ethics/practical note:</strong> Website terms, robots.txt, rate limits aur server load ka respect karo. Scraping ko learning/project context me responsibly use karna chahiye.</div>
+        </article>
+
+        <article class="panel" style="margin-top:15px">
+          <h3>One-year-later recap</h3>
+          <div class="quiz">
+            <details><summary>Web scraping kab use karte hain?</summary><p>Jab data webpage par visible hai but API/direct dataset available nahi hai.</p></details>
+            <details><summary>BeautifulSoup ka role?</summary><p>HTML ko parse karke tags/classes ke through useful text extract karna.</p></details>
+            <details><summary><code>User-Agent</code> header kyon diya?</summary><p>Request ko browser-like dikhane ke liye, kyunki kuch sites plain script request reject kar sakti hain.</p></details>
+            <details><summary>Final ML-friendly output kya hota hai?</summary><p>Structured pandas DataFrame/CSV, jisme rows records aur columns fields hoti hain.</p></details>
+          </div>
+        </article>
+      </section>
+
+      <section class="section searchable" id="lecture-19" data-title="understanding your data shape head sample info dtypes missing values isnull describe duplicated correlation titanic dataframe first questions">
+        <div class="section-head">
+          <div class="section-title-wrap">
+            <span class="section-index">19</span>
+            <div>
+              <h2>Understanding Your Data</h2>
+              <p class="section-intro">Dataset milte hi direct model train nahi karna. Pehle basic questions ask karo, taaki data ka size, structure, quality aur signal samajh aaye.</p>
+              <div class="timestamp">Lecture timestamps: 00:00:00 - 00:15:57</div>
+            </div>
+          </div>
+          <label class="lecture-complete"><input type="checkbox" data-lecture="19"> Complete</label>
+        </div>
+
+        <article class="panel">
+          <h3>First look checklist</h3>
+          <p>Lecture me Titanic dataset ke through bataya gaya ki first-pass data understanding me kaun se questions poochne chahiye.</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Question</th><th>Pandas check</th><th>Answer kya milta hai?</th></tr></thead>
+              <tbody>
+                <tr><td>Data kitna bada hai?</td><td><code>df.shape</code></td><td>Rows x columns.</td></tr>
+                <tr><td>Data dikhta kaisa hai?</td><td><code>df.head()</code>, <code>df.sample(5)</code></td><td>Actual rows/values ka feel.</td></tr>
+                <tr><td>Column types kya hain?</td><td><code>df.info()</code></td><td>Dtypes, non-null counts, memory.</td></tr>
+                <tr><td>Missing values hain?</td><td><code>df.isnull().sum()</code></td><td>Har column me missing count.</td></tr>
+                <tr><td>Numerical summary?</td><td><code>df.describe()</code></td><td>Mean, std, min, max, quartiles.</td></tr>
+                <tr><td>Duplicate rows?</td><td><code>df.duplicated().sum()</code></td><td>Repeated records count.</td></tr>
+                <tr><td>Columns related hain?</td><td><code>df.corr(numeric_only=True)</code></td><td>Numerical correlation pattern.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <div class="grid-2" style="margin-top:15px">
+          <article class="panel">
+            <h3>Why these checks matter</h3>
+            <ul>
+              <li><strong>Shape:</strong> Small/large data ka idea, memory planning.</li>
+              <li><strong>Sample:</strong> Starting rows biased ho sakti hain; random sample better feel deta hai.</li>
+              <li><strong>Info:</strong> Numeric column galti se object/string ho sakta hai.</li>
+              <li><strong>Missing values:</strong> Fill/drop strategy decide karni hoti hai.</li>
+              <li><strong>Describe:</strong> Outliers ya impossible values quickly visible ho sakti hain.</li>
+              <li><strong>Duplicates:</strong> Same row repeat ho to model biased learn kar sakta hai.</li>
+              <li><strong>Correlation:</strong> Target ke saath useful/unhelpful numerical columns ka initial hint.</li>
+            </ul>
+          </article>
+          <article class="panel">
+            <h3>Titanic examples from lecture</h3>
+            <p><strong>Age</strong> aur <strong>Cabin</strong> jaise columns me missing values dikhe. <strong>Fare</strong>, <strong>Pclass</strong>, <strong>Age</strong> jaise numerical columns ka summary/correlation survival ke saath relation ka first hint de sakta hai.</p>
+            <div class="flow">
+              <div class="flow-step"><strong>Raw Titanic data</strong><small>Passengers + survival</small></div><span class="arrow">-&gt;</span>
+              <div class="flow-step"><strong>Basic checks</strong><small>shape, info, missing</small></div><span class="arrow">-&gt;</span>
+              <div class="flow-step"><strong>Initial insight</strong><small>quality + possible signal</small></div><span class="arrow">-&gt;</span>
+              <div class="flow-step"><strong>EDA next</strong><small>graphs se deeper understanding</small></div>
+            </div>
+          </article>
+        </div>
+
+        <article class="panel" style="margin-top:15px">
+          <h3>One-year-later recap</h3>
+          <div class="quiz">
+            <details><summary><code>df.sample()</code> head se better kab?</summary><p>Jab starting rows biased/order-specific ho sakti hain; random rows overall data ka better feel deti hain.</p></details>
+            <details><summary><code>df.info()</code> se kya catch hota hai?</summary><p>Column dtype, non-null values aur memory usage. Wrong dtype bhi yahin se pakad sakte ho.</p></details>
+            <details><summary><code>describe()</code> ka use?</summary><p>Numerical columns ki high-level statistical summary aur possible outliers/impossible values ka hint.</p></details>
+            <details><summary>Correlation ko final truth kyon nahi maana?</summary><p>Ye sirf numerical linear relation ka initial hint hai; domain knowledge aur deeper EDA required hai.</p></details>
+          </div>
+        </article>
+      </section>
+
+      <section class="section searchable" id="lecture-20" data-title="eda univariate analysis categorical numerical countplot pie chart histogram distplot kde boxplot skewness percentile iqr outliers titanic">
+        <div class="section-head">
+          <div class="section-title-wrap">
+            <span class="section-index">20</span>
+            <div>
+              <h2>EDA Using Univariate Analysis</h2>
+              <p class="section-intro">Univariate analysis ka matlab ek time par ek column ko independently samajhna. Column numerical hai ya categorical, iske basis par plots aur checks change hote hain.</p>
+              <div class="timestamp">Lecture timestamps: 00:00:00 - 00:30:40</div>
+            </div>
+          </div>
+          <label class="lecture-complete"><input type="checkbox" data-lecture="20"> Complete</label>
+        </div>
+
+        <article class="panel">
+          <h3>Univariate, bivariate, multivariate</h3>
+          <div class="flow">
+            <div class="flow-step"><strong>Univariate</strong><small>One column at a time</small></div><span class="arrow">|</span>
+            <div class="flow-step"><strong>Bivariate</strong><small>Two columns relation</small></div><span class="arrow">|</span>
+            <div class="flow-step"><strong>Multivariate</strong><small>More than two columns</small></div>
+          </div>
+          <p>Is lecture ka focus sirf <strong>univariate</strong> tha: har column ka nature, distribution, frequency, outliers aur skewness independently samajhna.</p>
+        </article>
+
+        <div class="grid-2" style="margin-top:15px">
+          <article class="panel">
+            <h3>Categorical columns</h3>
+            <p>Categorical data me values categories/classes hoti hain: gender, embarked station, passenger class, survival yes/no etc.</p>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Plot/check</th><th>Use</th><th>Example question</th></tr></thead>
+                <tbody>
+                  <tr><td><code>value_counts()</code></td><td>Har category ka count.</td><td>Male/female kitne passengers?</td></tr>
+                  <tr><td>Count plot</td><td>Counts ko bar chart me dekhna.</td><td>Survived 0 vs 1 ka distribution?</td></tr>
+                  <tr><td>Pie chart</td><td>Percentage/share dekhna.</td><td>Passenger classes ka proportion?</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="formula">df["Survived"].value_counts().plot(kind="bar")<br>df["Pclass"].value_counts().plot(kind="pie", autopct="%0.1f%%")</div>
+          </article>
+          <article class="panel">
+            <h3>Numerical columns</h3>
+            <p>Numerical data me quantities hoti hain: age, fare, height, salary, marks etc. Yahan distribution aur outliers important hote hain.</p>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Plot/check</th><th>Use</th></tr></thead>
+                <tbody>
+                  <tr><td>Histogram</td><td>Values kis range me kitni baar aa rahi hain.</td></tr>
+                  <tr><td>KDE / PDF</td><td>Smooth probability density shape.</td></tr>
+                  <tr><td>Box plot</td><td>Median, quartiles aur potential outliers.</td></tr>
+                  <tr><td><code>skew()</code></td><td>Distribution left/right skewed hai ya symmetric.</td></tr>
+                  <tr><td><code>min()</code>, <code>max()</code>, <code>mean()</code></td><td>Basic range/central tendency.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </article>
+        </div>
+
+        <article class="panel" style="margin-top:15px">
+          <h3>Box plot and outliers</h3>
+          <p>Box plot five-number summary ka visual version hai: minimum boundary, Q1, median, Q3, maximum boundary. Isse noisy numerical data me potential outliers quickly detect hote hain.</p>
+          <div class="flow">
+            <div class="flow-step"><strong>Q1</strong><small>25th percentile</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>Median</strong><small>50th percentile</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>Q3</strong><small>75th percentile</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>IQR</strong><small>Q3 - Q1</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>Outlier rule</strong><small>&lt; Q1 - 1.5 IQR or &gt; Q3 + 1.5 IQR</small></div>
+          </div>
+          <div class="callout gold"><strong>Titanic fare example:</strong> Fare distribution left side par concentrated thi aur kuch very high fares potential outliers ki tarah dikhe.</div>
+        </article>
+
+        <article class="panel" style="margin-top:15px">
+          <h3>Skewness intuition</h3>
+          <p>Distribution symmetric ho to values center ke around balanced hoti hain. Salary/fare jaise columns me aksar right skew hota hai: bahut log low/medium range me, kuch values bahut high.</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Skew value</th><th>Meaning</th><th>Visual intuition</th></tr></thead>
+              <tbody>
+                <tr><td>Near 0</td><td>Roughly symmetric</td><td>Both sides balanced.</td></tr>
+                <tr><td>Positive</td><td>Right skew</td><td>Tail right side me long.</td></tr>
+                <tr><td>Negative</td><td>Left skew</td><td>Tail left side me long.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="panel" style="margin-top:15px">
+          <h3>One-year-later recap</h3>
+          <div class="quiz">
+            <details><summary>Univariate analysis ka meaning?</summary><p>Ek time par ek column ko independently analyse karna.</p></details>
+            <details><summary>Categorical column ke liye common plots?</summary><p>Count plot/bar chart aur pie chart, category counts/proportions dekhne ke liye.</p></details>
+            <details><summary>Numerical column ke liye common plots?</summary><p>Histogram, KDE/PDF aur box plot.</p></details>
+            <details><summary>Box plot ka main benefit?</summary><p>Median, quartiles aur potential outliers quickly show karta hai.</p></details>
+            <details><summary>Skewness kya batata hai?</summary><p>Distribution left/right side me lambi tail rakh raha hai ya roughly symmetric hai.</p></details>
+          </div>
+        </article>
+      </section>
+
       <footer class="footer">
-        <p><strong>Next batch:</strong> Lecture 17 ke baad isi file me next lecture section add hoga. Existing notes ko replace nahi kiya jayega, taaki tumhara revision trail bana rahe.</p>
+        <p><strong>Next batch:</strong> Lecture 21 ke baad isi file me next lecture section add hoga. Existing notes ko replace nahi kiya jayega, taaki tumhara revision trail bana rahe.</p>
         <p>Source: provided NoteGPT transcripts. Auto-caption errors ko lecture context ke according clean Hinglish me reorganize kiya gaya hai.</p>
       </footer>
     </main>
