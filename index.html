@@ -2148,8 +2148,8 @@
             </div>
             <div class="formula">df["Survived"].value_counts().plot(kind="bar")<br>df["Pclass"].value_counts().plot(kind="pie", autopct="%0.1f%%")</div>
             <div class="eda-chart-grid">
-              <div class="eda-chart"><h4>Survived: count plot</h4><div class="bar-chart"><div class="bar-item"><i style="height:78%"></i><span>0</span></div><div class="bar-item"><i style="height:42%"></i><span>1</span></div></div><p class="chart-note">Bar ki height = category count</p></div>
-              <div class="eda-chart"><h4>Pclass: share</h4><div class="pie-chart"></div><p class="chart-note">Pie slices = category proportion</p></div>
+              <div class="eda-chart"><h4>Survived: count plot</h4><div class="plotly-chart" id="survived-chart"></div></div>
+              <div class="eda-chart"><h4>Pclass: share</h4><div class="plotly-chart" id="pclass-chart"></div></div>
             </div>
           </article>
           <article class="panel">
@@ -2168,8 +2168,8 @@
               </table>
             </div>
             <div class="eda-chart-grid">
-              <div class="eda-chart"><h4>Age: histogram</h4><div class="histogram"><i style="height:28%"></i><i style="height:58%"></i><i style="height:82%"></i><i style="height:100%"></i><i style="height:72%"></i><i style="height:44%"></i><i style="height:22%"></i></div><p class="chart-note">Bars = age ranges ki frequency</p></div>
-              <div class="eda-chart"><h4>Fare: box plot idea</h4><div class="boxplot"><span class="whisker"></span><span class="box"></span><span class="median"></span><span class="outlier"></span></div><p class="chart-note">Box = middle values; dot = potential outlier</p></div>
+              <div class="eda-chart"><h4>Age: histogram</h4><div class="plotly-chart" id="age-chart"></div></div>
+              <div class="eda-chart"><h4>Fare: box plot</h4><div class="plotly-chart" id="fare-chart"></div></div>
             </div>
           </article>
         </div>
@@ -2519,7 +2519,26 @@
     </main>
   </div>
 
-  <script>
+  <script type="module">
+    import Plotly from 'plotly.js-dist-min';
+
+    const chartLayout = {
+      paper_bgcolor: 'transparent',
+      plot_bgcolor: 'transparent',
+      font: { color: '#a9c2be', family: 'Inter, sans-serif', size: 11 },
+      margin: { t: 8, r: 8, b: 30, l: 34 },
+      height: 170,
+      showlegend: false,
+      xaxis: { gridcolor: 'rgba(120,160,165,.16)', zerolinecolor: 'rgba(120,160,165,.25)' },
+      yaxis: { gridcolor: 'rgba(120,160,165,.16)', zerolinecolor: 'rgba(120,160,165,.25)' }
+    };
+    const chartConfig = { responsive: true, displayModeBar: false };
+
+    Plotly.newPlot('survived-chart', [{ x: ['Not survived', 'Survived'], y: [549, 342], type: 'bar', marker: { color: ['#55c8c4', '#ff8068'] } }], { ...chartLayout, yaxis: { ...chartLayout.yaxis, title: 'count' } }, chartConfig);
+    Plotly.newPlot('pclass-chart', [{ labels: ['Class 1', 'Class 2', 'Class 3'], values: [216, 184, 491], type: 'pie', hole: .45, marker: { colors: ['#55c8c4', '#ff8068', '#e0c68f'] }, textinfo: 'label+percent' }], { ...chartLayout, margin: { t: 8, r: 8, b: 8, l: 8 } }, chartConfig);
+    Plotly.newPlot('age-chart', [{ x: [3, 8, 15, 22, 30, 40, 55, 72, 80], type: 'histogram', nbinsx: 9, marker: { color: '#83b6ef' } }], { ...chartLayout, xaxis: { ...chartLayout.xaxis, title: 'age' }, yaxis: { ...chartLayout.yaxis, title: 'frequency' } }, chartConfig);
+    Plotly.newPlot('fare-chart', [{ y: [7.25, 8.05, 10.5, 13, 26, 29, 31, 52, 80, 120, 263], type: 'box', name: 'Fare', marker: { color: '#ff8068' }, line: { color: '#55c8c4' } }], { ...chartLayout, yaxis: { ...chartLayout.yaxis, title: 'fare' } }, chartConfig);
+
     const checks = [...document.querySelectorAll('[data-lecture]')];
     const fill = document.getElementById('progress-fill');
     const label = document.getElementById('progress-label');
