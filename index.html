@@ -2258,6 +2258,13 @@
         </div>
 
         <article class="panel" style="margin-top:15px">
+          <h3>Bar Plot: Numerical - Categorical</h3>
+          <p>Bar plot me categorical x-axis ke har group ke liye numerical value ka average/summary compare kiya jaata hai. Yahan <strong>Pclass</strong> category hai, <strong>Age</strong> numerical value hai, aur <strong>Sex</strong> hue ke through male/female comparison deta hai.</p>
+          <div class="formula">sns.barplot(x=titanic['Pclass'], y=titanic['Age'], hue=titanic['Sex'])</div>
+          <img class="lecture-chart-image" src="/assets/lecture-21-barplot.png" alt="Bar plot comparing average age across passenger classes for male and female passengers">
+        </article>
+
+        <article class="panel" style="margin-top:15px">
           <h3>Quick plot map</h3>
           <div class="flow">
             <div class="flow-step"><strong>Bar plot</strong><small>Category wise numerical average</small></div><span class="arrow">|</span>
