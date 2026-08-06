@@ -2161,7 +2161,7 @@
                 <tbody>
                   <tr><td>Histogram</td><td>Values kis range me kitni baar aa rahi hain.</td><td><code>df["Age"].plot(kind="hist")</code></td></tr>
                   <tr><td>Distplot</td><td>Histogram ke upar smooth KDE curve bhi dikhata hai; lecture ka combined distribution plot.</td><td>Old: <code>sns.distplot(df["Age"])</code><br>New: <code>sns.histplot(df["Age"], kde=True)</code></td></tr>
-                  <tr><td>Box plot</td><td>Median, quartiles aur potential outliers.</td><td><code>df["Fare"].plot(kind="box")</code></td></tr>
+                  <tr><td>Box plot</td><td>Median, quartiles aur potential outliers.</td><td><code>sns.boxplot(df["Age"])</code></td></tr>
                   <tr><td><code>skew()</code></td><td>Distribution left/right skewed hai ya symmetric.</td><td><code>df["Fare"].skew()</code></td></tr>
                   <tr><td><code>min()</code>, <code>max()</code>, <code>mean()</code></td><td>Basic range/central tendency.</td><td><code>df["Age"].min()</code>, <code>.max()</code>, <code>.mean()</code></td></tr>
                 </tbody>
@@ -2170,7 +2170,7 @@
             <div class="eda-chart-grid">
               <div class="eda-chart"><h4>Age: histogram</h4><div class="plotly-chart" id="age-chart"></div></div>
               <div class="eda-chart"><h4>Age: distplot idea</h4><div class="plotly-chart" id="age-distplot"></div></div>
-              <div class="eda-chart"><h4>Fare: box plot</h4><div class="plotly-chart" id="fare-chart"></div></div>
+              <div class="eda-chart"><h4>Age: box plot</h4><div class="plotly-chart" id="fare-chart"></div></div>
             </div>
           </article>
         </div>
@@ -2539,7 +2539,7 @@
     Plotly.newPlot('pclass-chart', [{ labels: ['male', 'female'], values: [577, 314], type: 'pie', marker: { colors: ['#2f83bd', '#ff9418'] }, textinfo: 'percent', textposition: 'outside', outsidetextfont: { color: '#c8d6d1', size: 12 }, hovertemplate: '%{label}: %{percent}<extra></extra>' }], { ...chartLayout, margin: { t: 8, r: 28, b: 8, l: 28 }, showlegend: true, legend: { orientation: 'h', y: -0.08, font: { size: 10 } } }, chartConfig);
     Plotly.newPlot('age-chart', [{ x: ['0-15', '15-30', '30-45', '45-60', '60-80'], y: [100, 345, 190, 70, 12], type: 'bar', marker: { color: '#2f83bd' } }], { ...chartLayout, bargap: 0, xaxis: { ...chartLayout.xaxis, title: 'age range' }, yaxis: { ...chartLayout.yaxis, title: 'frequency' } }, chartConfig);
     Plotly.newPlot('age-distplot', [{ x: ['0-15', '15-30', '30-45', '45-60', '60-80'], y: [100, 345, 190, 70, 12], type: 'bar', marker: { color: 'rgba(47,131,189,.72)' }, name: 'Histogram' }, { x: ['0-15', '15-30', '30-45', '45-60', '60-80'], y: [78, 330, 215, 82, 18], type: 'scatter', mode: 'lines+markers', line: { color: '#ff8068', width: 3, shape: 'spline' }, marker: { color: '#ff8068', size: 6 }, name: 'KDE' }], { ...chartLayout, showlegend: true, legend: { orientation: 'h', y: 1.16, font: { size: 10 } }, bargap: 0, xaxis: { ...chartLayout.xaxis, title: 'age range' }, yaxis: { ...chartLayout.yaxis, title: 'frequency' } }, chartConfig);
-    Plotly.newPlot('fare-chart', [{ y: [7.25, 8.05, 10.5, 13, 26, 29, 31, 52, 80, 120, 263], type: 'box', name: 'Fare', marker: { color: '#ff8068' }, line: { color: '#55c8c4' } }], { ...chartLayout, yaxis: { ...chartLayout.yaxis, title: 'fare' } }, chartConfig);
+    Plotly.newPlot('fare-chart', [{ x: [1, 2, 3, 5, 8, 12, 18, 21, 24, 26, 28, 30, 32, 35, 38, 42, 48, 55, 62, 65, 70, 80], type: 'box', orientation: 'h', name: 'Age', boxpoints: 'outliers', marker: { color: '#ff8068', size: 7 }, line: { color: '#55c8c4', width: 2 }, fillcolor: 'rgba(47,131,189,.65)' }], { ...chartLayout, xaxis: { ...chartLayout.xaxis, title: 'Age' }, yaxis: { ...chartLayout.yaxis, showticklabels: false } }, chartConfig);
 
     const checks = [...document.querySelectorAll('[data-lecture]')];
     const fill = document.getElementById('progress-fill');
