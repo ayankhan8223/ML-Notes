@@ -2177,7 +2177,7 @@
                 <tr><td>Missing values hain?</td><td><code>df.isnull().sum()</code></td><td>Har column me missing count.</td></tr>
                 <tr><td>Numerical summary?</td><td><code>df.describe()</code></td><td>Mean, std, min, max, quartiles.</td></tr>
                 <tr><td>Duplicate rows?</td><td><code>df.duplicated().sum()</code></td><td>Repeated records count.</td></tr>
-                <tr><td>Columns related hain?</td><td><code>df.corr(numeric_only=True)</code></td><td>Numerical correlation pattern.</td></tr>
+                <tr><td>Columns related hain?</td><td><code>df.corr(numeric_only=True)</code></td><td><code>numeric_only=True</code> ka matlab sirf numeric aur boolean columns ko correlation calculation me include karna; text columns ignore ho jayenge.</td></tr>
               </tbody>
             </table>
           </div>
