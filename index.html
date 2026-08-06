@@ -2110,7 +2110,7 @@
 
       </section>
 
-      <section class="section searchable" id="lecture-20" data-title="eda univariate analysis categorical numerical countplot pie chart histogram distplot kde boxplot skewness percentile iqr outliers titanic">
+      <section class="section searchable" id="lecture-20" data-title="eda univariate analysis categorical numerical countplot pie chart histogram kde boxplot skewness percentile iqr outliers titanic">
         <div class="section-head">
           <div class="section-title-wrap">
             <span class="section-index">20</span>
@@ -2161,7 +2161,7 @@
                 <thead><tr><th>Plot/check</th><th>Use</th><th>Example</th></tr></thead>
                 <tbody>
                   <tr><td>Histogram</td><td>Values kis range me kitni baar aa rahi hain.</td><td><code>df["Age"].plot(kind="hist")</code></td></tr>
-                  <tr><td>Distplot</td><td>Histogram ke upar smooth KDE curve bhi dikhata hai; lecture ka combined distribution plot.</td><td>Old: <code>sns.distplot(df["Age"])</code><br>New: <code>sns.histplot(df["Age"], kde=True)</code></td></tr>
+                  <tr><td>KDE plot</td><td>Values ki smooth probability density curve dikhata hai.</td><td><code>sns.kdeplot(df["Age"])</code></td></tr>
                   <tr><td>Box plot</td><td>Median, quartiles aur potential outliers.</td><td><code>sns.boxplot(df["Age"])</code></td></tr>
                   <tr><td><code>skew()</code></td><td>Distribution left/right skewed hai ya symmetric.</td><td><code>df["Fare"].skew()</code></td></tr>
                   <tr><td><code>min()</code>, <code>max()</code>, <code>mean()</code></td><td>Basic range/central tendency.</td><td><code>df["Age"].min()</code>, <code>.max()</code>, <code>.mean()</code></td></tr>
@@ -2170,7 +2170,7 @@
             </div>
             <div class="eda-chart-grid">
               <div class="eda-chart"><h4>Age: histogram</h4><div class="plotly-chart" id="age-chart"></div></div>
-              <div class="eda-chart"><h4>Age: distplot idea</h4><div class="plotly-chart" id="age-distplot"></div></div>
+              <div class="eda-chart"><h4>Age: KDE curve</h4><div class="plotly-chart" id="age-kde"></div></div>
               <div class="eda-chart"><h4>Age: box plot</h4><div class="plotly-chart" id="fare-chart"></div></div>
             </div>
           </article>
@@ -2269,6 +2269,13 @@
           <p>Box plot me categorical groups ke andar numerical distribution compare hoti hai. Yahan <strong>Sex</strong> groups hain, <strong>Age</strong> numerical value hai, aur <strong>Survived</strong> hue se survival classes alag dikh rahi hain.</p>
           <div class="formula">sns.boxplot(x=titanic['Sex'], y=titanic['Age'], hue=titanic['Survived'])</div>
           <img class="lecture-chart-image" src="/assets/lecture-21-boxplot.png" alt="Box plot comparing age distributions by sex and survival status">
+        </article>
+
+        <article class="panel" style="margin-top:15px">
+          <h3>KDE Plot: Numerical - Categorical</h3>
+          <p>KDE plot me numerical distribution ko category-wise compare karte hain. Yahan <strong>Age</strong> numerical column hai aur <strong>Survived</strong> ke 0/1 groups ki density curves compare ho rahi hain.</p>
+          <div class="formula">sns.kdeplot(data=titanic[titanic['Survived']==0], x='Age', label='Did not survive')<br>sns.kdeplot(data=titanic[titanic['Survived']==1], x='Age', label='Survived')</div>
+          <img class="lecture-chart-image" src="/assets/lecture-21-kdeplot.png" alt="KDE plot comparing age density for passengers who did and did not survive">
         </article>
 
         <article class="panel" style="margin-top:15px">
@@ -2554,7 +2561,7 @@
     Plotly.newPlot('survived-chart', [{ x: ['Not survived', 'Survived'], y: [549, 342], type: 'bar', marker: { color: ['#55c8c4', '#ff8068'] } }], { ...chartLayout, yaxis: { ...chartLayout.yaxis, title: 'count' } }, chartConfig);
     Plotly.newPlot('pclass-chart', [{ labels: ['male', 'female'], values: [577, 314], type: 'pie', marker: { colors: ['#2f83bd', '#ff9418'] }, textinfo: 'percent', textposition: 'outside', outsidetextfont: { color: '#c8d6d1', size: 12 }, hovertemplate: '%{label}: %{percent}<extra></extra>' }], { ...chartLayout, margin: { t: 8, r: 28, b: 8, l: 28 }, showlegend: true, legend: { orientation: 'h', y: -0.08, font: { size: 10 } } }, chartConfig);
     Plotly.newPlot('age-chart', [{ x: ['0-15', '15-30', '30-45', '45-60', '60-80'], y: [100, 345, 190, 70, 12], type: 'bar', marker: { color: '#2f83bd' } }], { ...chartLayout, bargap: 0, xaxis: { ...chartLayout.xaxis, title: 'age range' }, yaxis: { ...chartLayout.yaxis, title: 'frequency' } }, chartConfig);
-    Plotly.newPlot('age-distplot', [{ x: ['0-15', '15-30', '30-45', '45-60', '60-80'], y: [100, 345, 190, 70, 12], type: 'bar', marker: { color: 'rgba(47,131,189,.72)' }, name: 'Histogram' }, { x: ['0-15', '15-30', '30-45', '45-60', '60-80'], y: [78, 330, 215, 82, 18], type: 'scatter', mode: 'lines+markers', line: { color: '#ff8068', width: 3, shape: 'spline' }, marker: { color: '#ff8068', size: 6 }, name: 'KDE' }], { ...chartLayout, showlegend: true, legend: { orientation: 'h', y: 1.16, font: { size: 10 } }, bargap: 0, xaxis: { ...chartLayout.xaxis, title: 'age range' }, yaxis: { ...chartLayout.yaxis, title: 'frequency' } }, chartConfig);
+    Plotly.newPlot('age-kde', [{ x: [0, 8, 15, 20, 25, 30, 40, 50, 60, 70, 80], y: [0.001, 0.005, 0.012, 0.028, 0.033, 0.027, 0.016, 0.009, 0.004, 0.001, 0], type: 'scatter', mode: 'lines', line: { color: '#ff8068', width: 3, shape: 'spline' }, name: 'KDE' }], { ...chartLayout, xaxis: { ...chartLayout.xaxis, title: 'Age' }, yaxis: { ...chartLayout.yaxis, title: 'density' } }, chartConfig);
     Plotly.newPlot('fare-chart', [{ x: [5, 10, 15, 18, 20, 21, 22, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 38, 40, 42, 45, 48, 50, 65, 70, 80], type: 'box', orientation: 'h', name: 'Age', boxpoints: false, line: { color: '#55c8c4', width: 2 }, fillcolor: 'rgba(47,131,189,.65)' }], { ...chartLayout, xaxis: { ...chartLayout.xaxis, title: 'Age' }, yaxis: { ...chartLayout.yaxis, showticklabels: false } }, chartConfig);
 
     const checks = [...document.querySelectorAll('[data-lecture]')];
