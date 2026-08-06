@@ -307,6 +307,11 @@
     .csv-cheat-table th:nth-child(2), .csv-cheat-table td:nth-child(2) { width: 27%; }
     .csv-cheat-table th:nth-child(3), .csv-cheat-table td:nth-child(3) { width: 54%; }
     .csv-cheat-table td:nth-child(2) code { overflow-wrap: normal; word-break: normal; }
+    .data-check-table { table-layout: fixed; }
+    .data-check-table th:nth-child(1), .data-check-table td:nth-child(1) { width: 20%; }
+    .data-check-table th:nth-child(2), .data-check-table td:nth-child(2) { width: 28%; }
+    .data-check-table th:nth-child(3), .data-check-table td:nth-child(3) { width: 52%; }
+    .data-check-table td:nth-child(2) code { white-space: nowrap; overflow-wrap: normal; word-break: normal; }
     th { padding: 12px 13px; color: #a9c2be; background: #1b333b; font-size: 10px; font-weight: 900; letter-spacing: .08em; text-align: left; text-transform: uppercase; }
     td { padding: 11px 13px; color: var(--muted); border-top: 1px solid var(--line); vertical-align: top; }
     td:first-child { color: var(--ink); font-weight: 850; }
@@ -2168,7 +2173,7 @@
           <h3>First look checklist</h3>
           <p>Lecture me Titanic dataset ke through bataya gaya ki first-pass data understanding me kaun se questions poochne chahiye.</p>
           <div class="table-wrap">
-            <table>
+            <table class="data-check-table">
               <thead><tr><th>Question</th><th>Pandas check</th><th>Answer kya milta hai?</th></tr></thead>
               <tbody>
                 <tr><td>Data kitna bada hai?</td><td><code>df.shape</code></td><td>Rows x columns.</td></tr>
