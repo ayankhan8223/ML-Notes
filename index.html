@@ -2160,6 +2160,7 @@
                 <thead><tr><th>Plot/check</th><th>Use</th><th>Example</th></tr></thead>
                 <tbody>
                   <tr><td>Histogram</td><td>Values kis range me kitni baar aa rahi hain.</td><td><code>df["Age"].plot(kind="hist")</code></td></tr>
+                  <tr><td><code>distplot</code></td><td>Histogram aur KDE ko ek saath dekhna; lecture ka old Seaborn approach.</td><td>Old: <code>sns.distplot(df["Age"])</code><br>New: <code>sns.histplot(df["Age"], kde=True)</code></td></tr>
                   <tr><td>KDE / PDF</td><td>Smooth probability density shape.</td><td><code>df["Fare"].plot(kind="kde")</code></td></tr>
                   <tr><td>Box plot</td><td>Median, quartiles aur potential outliers.</td><td><code>df["Fare"].plot(kind="box")</code></td></tr>
                   <tr><td><code>skew()</code></td><td>Distribution left/right skewed hai ya symmetric.</td><td><code>df["Fare"].skew()</code></td></tr>
