@@ -1878,7 +1878,7 @@
                 <tr><td>Local CSV load</td><td><code>pd.read_csv("file.csv")</code></td><td>Same folder ya path se file read karna.</td></tr>
                 <tr><td>URL se CSV</td><td><code>pd.read_csv(url)</code></td><td>Internet/server par hosted CSV directly load.</td></tr>
                 <tr><td>TSV file</td><td><code>sep="\t"</code></td><td>Tab separated values ko correctly split karna.</td></tr>
-                <tr><td>No header</td><td><code>header=None</code></td><td>CSV ki first row ko column names mat samjho. First row bhi normal data row hai, aur pandas columns ko default numbers dega.</td></tr>
+                <tr><td>No header</td><td><code>header=None</code></td><td>CSV ki first row ko column names mat samjho. First row bhi normal data row hai, aur pandas columns ko default numbers dega. Agar kisi specific row ko column names banana ho to <code>header=row_number</code> use karo; jaise <code>header=1</code> second row ko header banata hai. Pandas me row number 0-based hota hai.</td></tr>
                 <tr><td>Custom names</td><td><code>names=["a", "b"]</code></td><td>Agar file me column names nahi hain, to <code>names</code> parameter se apne column names assign kar sakte ho.</td></tr>
                 <tr><td>Index column</td><td><code>index_col="id"</code></td><td>Default pandas index <code>0, 1, 2...</code> hota hai. Agar file ka koi column, jaise <code>id</code>, row index banana ho to <code>index_col</code> use karo.</td></tr>
                 <tr><td>Selected columns</td><td><code>usecols=["A", "B"]</code></td><td>Sirf useful columns load karna.</td></tr>
