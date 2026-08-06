@@ -2265,6 +2265,13 @@
         </article>
 
         <article class="panel" style="margin-top:15px">
+          <h3>Box Plot: Numerical - Categorical</h3>
+          <p>Box plot me categorical groups ke andar numerical distribution compare hoti hai. Yahan <strong>Sex</strong> groups hain, <strong>Age</strong> numerical value hai, aur <strong>Survived</strong> hue se survival classes alag dikh rahi hain.</p>
+          <div class="formula">sns.boxplot(x=titanic['Sex'], y=titanic['Age'], hue=titanic['Survived'])</div>
+          <img class="lecture-chart-image" src="/assets/lecture-21-boxplot.png" alt="Box plot comparing age distributions by sex and survival status">
+        </article>
+
+        <article class="panel" style="margin-top:15px">
           <h3>Quick plot map</h3>
           <div class="flow">
             <div class="flow-step"><strong>Bar plot</strong><small>Category wise numerical average</small></div><span class="arrow">|</span>
