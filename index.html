@@ -2111,10 +2111,10 @@
             <h3><code>find</code> vs <code>find_all</code></h3>
             <div class="table-wrap">
               <table>
-                <thead><tr><th>Method</th><th>Return</th><th>Use case</th></tr></thead>
+                <thead><tr><th>Method</th><th>Return</th><th>Use case</th><th>Lecture example</th></tr></thead>
                 <tbody>
-                  <tr><td><code>find()</code></td><td>Single matching element</td><td>Jab page/card me expected element unique ho.</td></tr>
-                  <tr><td><code>find_all()</code></td><td>List of matching elements</td><td>Jab multiple companies/cards/items extract karne hon.</td></tr>
+                  <tr><td><code>find()</code></td><td>Single matching element</td><td>Jab page/card me expected element unique ho.</td><td><code>card.find("h2")</code> se ek company card ka name.</td></tr>
+                  <tr><td><code>find_all()</code></td><td>List of matching elements</td><td>Jab multiple companies/cards/items extract karne hon.</td><td><code>soup.find_all("div", class_="company-card")</code> se saare company cards.</td></tr>
                 </tbody>
               </table>
             </div>
