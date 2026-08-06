@@ -535,14 +535,6 @@
           </article>
         </div>
 
-        <article class="panel" style="margin-top:15px">
-          <h3>One-year-later recap</h3>
-          <div class="quiz">
-            <details><summary>ML aur traditional programming ka fundamental difference?</summary><p>Traditional programming me logic manually written hoti hai. ML me examples se model patterns/logic learn karta hai.</p></details>
-            <details><summary>Spam filter me ML ka advantage kya hai?</summary><p>New patterns aur changed wording ko fresh data ke through learn kiya ja sakta hai; har rule manually rewrite nahi karna padta.</p></details>
-            <details><summary>Data mining kisliye hoti hai?</summary><p>Data me hidden relationships aur useful patterns discover karne ke liye, jo simple graphs se obvious na hon.</p></details>
-          </div>
-        </article>
       </section>
 
       <section class="section searchable" id="lecture-2" data-title="ai vs ml vs dl artificial intelligence machine learning deep learning expert systems neural networks features">
@@ -753,16 +745,6 @@
           <div class="memory"><strong>RL memory hook</strong><p>Supervised me answer pehle se diya hota hai. RL me action ka result reward/penalty se seekha jaata hai.</p></div>
         </article>
 
-        <article class="panel" style="margin-top:15px">
-          <h3>One-year-later recap</h3>
-          <div class="quiz">
-            <details><summary>House price prediction ka type?</summary><p>Supervised regression: input features aur numerical target available hai.</p></details>
-            <details><summary>Placement hua ya nahi hua ka type?</summary><p>Supervised classification: target category Yes/No hai.</p></details>
-            <details><summary>Customer groups banana, bina labels ke?</summary><p>Unsupervised clustering.</p></details>
-            <details><summary>Game me trial-and-error karke improve karna?</summary><p>Reinforcement Learning.</p></details>
-            <details><summary>Sirf kuch images label karna aur baaki se help lena?</summary><p>Semi-supervised learning.</p></details>
-          </div>
-        </article>
       </section>
 
       <section class="section searchable" id="lecture-4" data-title="batch machine learning offline learning batch learning production deployment retraining static model full data">
@@ -847,14 +829,6 @@
           </div>
         </article>
 
-        <article class="panel" style="margin-top:15px">
-          <h3>One-year-later recap</h3>
-          <div class="quiz">
-            <details><summary>Batch learning ka one-line meaning?</summary><p>Poore available dataset ko ek saath use karke model train karna.</p></details>
-            <details><summary>Batch model new data par automatically update kyon nahi hota?</summary><p>Production me deployed model fixed learned parameters ke saath run karta hai; update ke liye retraining aur redeployment chahiye.</p></details>
-            <details><summary>Batch learning ka major risk?</summary><p>Large data ke saath compute/memory problem aur changing data ki wajah se stale predictions.</p></details>
-          </div>
-        </article>
       </section>
 
       <section class="section searchable" id="lecture-5" data-title="online machine learning incremental learning partial fit streaming data learning rate concept drift river library mini batch chunks">
@@ -964,15 +938,6 @@
           <div class="callout teal"><strong>Decision shortcut:</strong> Stable data and periodic updates ho to Batch/Offline. Fast-changing stream, huge data ya continuous adaptation chahiye to Online Learning.</div>
         </article>
 
-        <article class="panel" style="margin-top:15px">
-          <h3>One-year-later recap</h3>
-          <div class="quiz">
-            <details><summary>Online learning ka one-line meaning?</summary><p>Incoming data ke small chunks ke saath model ko incrementally update karna.</p></details>
-            <details><summary>Online learning batch se cost-effective kab ho sakti hai?</summary><p>Jab data bahut large ho, continuous ho, ya full retraining repeatedly expensive ho.</p></details>
-            <details><summary>Online model me learning rate kyon important hai?</summary><p>Ye balance karta hai ki model new data kitni speed se seekhe aur old knowledge kitni retain kare.</p></details>
-            <details><summary>Online learning ka operational risk?</summary><p>Bad data, noisy labels, drift, feedback delay, ya high learning rate model ko misbehave kara sakte hain.</p></details>
-          </div>
-        </article>
       </section>
 
       <section class="section searchable" id="lecture-6" data-title="instance based learning model based learning memory generalization knn linear regression logistic regression training data decision boundary">
@@ -1144,14 +1109,6 @@
           <div class="memory"><strong>One-year-later memory hook</strong><p>Instance-based = “similar cases dhoondo.” Model-based = “general rule apply karo.”</p></div>
         </article>
 
-        <article class="panel" style="margin-top:15px">
-          <h3>One-year-later recap</h3>
-          <div class="quiz">
-            <details><summary>KNN ka learning style?</summary><p>Instance-based: training examples store hote hain aur nearest neighbors ki similarity se prediction hoti hai.</p></details>
-            <details><summary>Linear Regression model-based kyon hai?</summary><p>Kyuki wo coefficients ke form me input-output relationship ka mathematical function learn karta hai.</p></details>
-            <details><summary>Instance-based ka main cost?</summary><p>Training data storage aur prediction time par distance calculations.</p></details>
-          </div>
-        </article>
       </section>
 
       <section class="section searchable" id="lecture-7" data-title="challenges problems machine learning data collection insufficient data labels representative data sampling bias data quality irrelevant features overfitting underfitting integration deployment cost mlops">
@@ -1258,16 +1215,6 @@
           <div class="callout teal"><strong>Production mindset:</strong> Accuracy ke saath cost, speed, reliability, fairness, security aur maintainability bhi success ka part hain.</div>
         </article>
 
-        <article class="panel" style="margin-top:15px">
-          <h3>One-year-later recap</h3>
-          <div class="quiz">
-            <details><summary>Good algorithm ke baad bhi model fail kyon ho sakta hai?</summary><p>Insufficient, poor-quality ya biased data ki wajah se. Model input data se hi learn karta hai.</p></details>
-            <details><summary>Overfitting ka signature?</summary><p>Training performance high, lekin validation/test performance noticeably low.</p></details>
-            <details><summary>Irrelevant feature ka risk?</summary><p>Noise, confusion, unnecessary computation aur weak generalization.</p></details>
-            <details><summary>Notebook model ko product banana kyon important hai?</summary><p>Real users model ko notebook me nahi, software/app/service ke through use karte hain.</p></details>
-            <details><summary>Production ML me accuracy ke alawa kya monitor karna chahiye?</summary><p>Data drift, latency, failures, cost, fairness, security aur business metrics.</p></details>
-          </div>
-        </article>
       </section>
 
       <section class="section searchable" id="lecture-8" data-title="machine learning applications real life applications retail ecommerce banking finance transportation logistics manufacturing predictive maintenance social media sentiment analysis b2b b2c">
@@ -1359,15 +1306,6 @@
           </div>
         </article>
 
-        <article class="panel" style="margin-top:15px">
-          <h3>One-year-later recap</h3>
-          <div class="quiz">
-            <details><summary>Retail me ML ka direct business use?</summary><p>Demand forecast, inventory planning, customer profiling, targeted marketing aur product association.</p></details>
-            <details><summary>Ola/Uber surge pricing ka intuition?</summary><p>Area-wise demand high aur supply low ho to price/incentive badhakar drivers ko attract karna.</p></details>
-            <details><summary>Predictive maintenance kya hota hai?</summary><p>Sensor patterns se failure pehle predict karke machine ko breakdown se pehle maintain karna.</p></details>
-            <details><summary>Sentiment analysis ka output?</summary><p>Text ke emotional orientation ko positive, negative ya neutral categories me estimate karna.</p></details>
-          </div>
-        </article>
       </section>
 
       <section class="section searchable" id="lecture-9" data-title="machine learning development life cycle mldlc problem framing data gathering data processing eda exploratory data analysis feature engineering selection model training evaluation model selection hyperparameter tuning deployment beta testing monitoring retraining optimization">
@@ -1474,15 +1412,6 @@
           </article>
         </div>
 
-        <article class="panel" style="margin-top:15px">
-          <h3>One-year-later recap</h3>
-          <div class="quiz">
-            <details><summary>MLDLC ka purpose?</summary><p>Idea se usable ML software product tak repeatable roadmap dena.</p></details>
-            <details><summary>EDA model se pehle kyon?</summary><p>Data ke distributions, relationships, imbalance aur hidden problems samajhne ke liye.</p></details>
-            <details><summary>Beta testing ka fayda?</summary><p>Small controlled user group se real feedback lekar full rollout se pehle issues pakadna.</p></details>
-            <details><summary>Model deployment ke baad kaam khatam?</summary><p>Nahi. Monitoring, backups, retraining, drift handling, scaling aur optimization continue karni hoti hai.</p></details>
-          </div>
-        </article>
       </section>
 
       <section class="section searchable" id="lecture-10" data-title="data engineer data analyst data scientist machine learning engineer job roles skills responsibilities data warehouse pipelines reports visualization models production deployment monitoring">
@@ -1626,15 +1555,6 @@
           <p>Example: 30 FPS ka 60-second RGB video, 480 x 720 resolution par, ek video ka shape roughly <code>(1800, 480, 720, 3)</code> yani <strong>4D</strong> ho sakta hai. Agar 4 videos ka batch ho to shape <code>(4, 1800, 480, 720, 3)</code> yani <strong>5D</strong> hoga. Dimensions badhne par memory/storage bhi fast grow hota hai, isliye compression useful hoti hai.</p>
         </article>
 
-        <article class="panel" style="margin-top:15px">
-          <h3>One-year-later recap</h3>
-          <div class="quiz">
-            <details><summary>Tensor ko simple words me kaise define karoge?</summary><p>Numerical data ko organised dimensions/axes me store karne wala container.</p></details>
-            <details><summary>Shape aur size me difference?</summary><p>Shape har axis ke elements batata hai; size total elements batata hai.</p></details>
-            <details><summary>Tabular dataset 3D kyon nahi hota?</summary><p>Teen features hone ke baad bhi rows aur columns sirf do axes banate hain, isliye dataset 2D matrix hota hai.</p></details>
-            <details><summary>Colour image 3D kyon?</summary><p>Height, width aur RGB channels teen axes hote hain.</p></details>
-          </div>
-        </article>
       </section>
 
       <section class="section searchable" id="lecture-12" data-title="anaconda installation jupyter notebook google colab kaggle virtual environment python data science tools cpu gpu datasets notebooks">
@@ -1754,16 +1674,6 @@
           <div class="callout"><strong>Reality check:</strong> Ye toy dataset chhota hai aur model basic hai. Real company project me data quality, better validation, model selection, security, monitoring aur retraining bhi required honge.</div>
         </article>
 
-        <article class="panel" style="margin-top:15px">
-          <h3>One-year-later recap</h3>
-          <div class="quiz">
-            <details><summary>Is toy project ka target?</summary><p>CGPA aur IQ ke basis par student placement Yes/No predict karna.</p></details>
-            <details><summary>Training aur testing data alag kyon?</summary><p>Unseen examples par model ki generalization check karne ke liye.</p></details>
-            <details><summary>Logistic Regression yahan kyon?</summary><p>Placement jaise binary classification target ke liye decision boundary learn kar sakta hai.</p></details>
-            <details><summary>Pickle ka role?</summary><p>Trained model object ko file me save karke website/server me reuse karna.</p></details>
-            <details><summary>End-to-end ka actual meaning?</summary><p>Data load karne se lekar preprocessing, training, evaluation, saving aur deployment tak poora flow.</p></details>
-          </div>
-        </article>
       </section>
 
       <section class="section searchable" id="lecture-14" data-title="how to frame machine learning problem business problem netflix churn rate metrics features online offline learning assumptions data science project planning">
@@ -1843,15 +1753,6 @@
           </div>
         </article>
 
-        <article class="panel" style="margin-top:15px">
-          <h3>One-year-later recap</h3>
-          <div class="quiz">
-            <details><summary>Business problem ko ML problem me convert karna kyon zaroori?</summary><p>Kyuki "revenue badhao" directly model target nahi hai. Use measurable metric aur prediction target me convert karna padta hai.</p></details>
-            <details><summary>Netflix example me target kya tha?</summary><p>Customers jo platform chhodne wale hain unhe identify karna, taaki churn reduce ho sake.</p></details>
-            <details><summary>Feature decide karte waqt kya sochna hai?</summary><p>Customer behavior ka kaunsa signal churn se related ho sakta hai, aur kya woh data actually available hai.</p></details>
-            <details><summary>Planning stage important kyon?</summary><p>Wrong framing se poori team galat direction me kaam kar sakti hai, jo time aur cost dono waste karta hai.</p></details>
-          </div>
-        </article>
       </section>
 
       <section class="section searchable" id="lecture-15" data-title="working with csv files pandas read_csv tsv sep names index_col header usecols skiprows nrows encoding parse_dates converters na_values chunksize">
@@ -1927,15 +1828,6 @@
           </article>
         </div>
 
-        <article class="panel" style="margin-top:15px">
-          <h3>One-year-later recap</h3>
-          <div class="quiz">
-            <details><summary>CSV aur TSV me basic difference?</summary><p>CSV me values comma se separate hoti hain; TSV me values tab se separate hoti hain.</p></details>
-            <details><summary><code>usecols</code> kab use karoge?</summary><p>Jab sirf selected columns load karne hon, memory aur clutter dono kam karne ke liye.</p></details>
-            <details><summary><code>parse_dates</code> ka use?</summary><p>Date columns ko proper datetime type me convert karna, taaki date filtering/calculation possible ho.</p></details>
-            <details><summary><code>chunksize</code> kyon useful?</summary><p>Large CSV ko small DataFrames me read karke RAM overload avoid karne ke liye.</p></details>
-          </div>
-        </article>
       </section>
 
       <section class="section searchable" id="lecture-16" data-title="working with json sql pandas read_json api mysql connector read_sql dataframe xampp phpmyadmin database query api data source">
@@ -1994,15 +1886,6 @@
           <div class="callout"><strong>Core pattern:</strong> Chahe source CSV ho, JSON ho ya SQL, ML workflow me usually pehla target hota hai data ko clean pandas DataFrame me lana.</div>
         </article>
 
-        <article class="panel" style="margin-top:15px">
-          <h3>One-year-later recap</h3>
-          <div class="quiz">
-            <details><summary>JSON popular kyon hai?</summary><p>Ye universal data format hai jise almost sab programming languages parse kar sakti hain, isliye APIs me common hai.</p></details>
-            <details><summary>SQL ka role?</summary><p>Database tables se query ke through required data fetch karna.</p></details>
-            <details><summary>Python ko MySQL se connect karne ke liye kya chahiye?</summary><p>Connector library, jaise <code>mysql.connector</code>, jo Python aur database ke beech bridge banati hai.</p></details>
-            <details><summary>Final output kya chahiye hota hai?</summary><p>Pandas DataFrame, jise aage cleaning, EDA aur ML training me use kar sakein.</p></details>
-          </div>
-        </article>
       </section>
 
       <section class="section searchable" id="lecture-17" data-title="fetching data from api requests json tmdb api key pagination status code dataframe to_csv kaggle dataset">
@@ -2069,15 +1952,6 @@
           </article>
         </div>
 
-        <article class="panel" style="margin-top:15px">
-          <h3>One-year-later recap</h3>
-          <div class="quiz">
-            <details><summary>API direct database access se better kyon?</summary><p>API controlled interface deti hai: limited endpoints, authentication, rate limits aur safe response format.</p></details>
-            <details><summary>API response generally kis format me milta hai?</summary><p>Mostly JSON, jise Python dict/list ki tarah parse kar sakte ho.</p></details>
-            <details><summary>Pagination ka need kyon hota hai?</summary><p>API ek call me limited records return karti hai; complete dataset ke liye multiple pages fetch karne padte hain.</p></details>
-            <details><summary>Dataset save kaise kiya?</summary><p>Final DataFrame ko <code>to_csv()</code> se CSV file me export karke.</p></details>
-          </div>
-        </article>
       </section>
 
       <section class="section searchable" id="lecture-18" data-title="fetching data using web scraping requests beautifulsoup html parser user agent headers find find_all inspect ambitionbox companies dataframe">
@@ -2145,15 +2019,6 @@
           <div class="callout"><strong>Ethics/practical note:</strong> Website terms, robots.txt, rate limits aur server load ka respect karo. Scraping ko learning/project context me responsibly use karna chahiye.</div>
         </article>
 
-        <article class="panel" style="margin-top:15px">
-          <h3>One-year-later recap</h3>
-          <div class="quiz">
-            <details><summary>Web scraping kab use karte hain?</summary><p>Jab data webpage par visible hai but API/direct dataset available nahi hai.</p></details>
-            <details><summary>BeautifulSoup ka role?</summary><p>HTML ko parse karke tags/classes ke through useful text extract karna.</p></details>
-            <details><summary><code>User-Agent</code> header kyon diya?</summary><p>Request ko browser-like dikhane ke liye, kyunki kuch sites plain script request reject kar sakti hain.</p></details>
-            <details><summary>Final ML-friendly output kya hota hai?</summary><p>Structured pandas DataFrame/CSV, jisme rows records aur columns fields hoti hain.</p></details>
-          </div>
-        </article>
       </section>
 
       <section class="section searchable" id="lecture-19" data-title="understanding your data shape head sample info dtypes missing values isnull describe duplicated correlation titanic dataframe first questions">
@@ -2213,15 +2078,6 @@
           </article>
         </div>
 
-        <article class="panel" style="margin-top:15px">
-          <h3>One-year-later recap</h3>
-          <div class="quiz">
-            <details><summary><code>df.sample()</code> head se better kab?</summary><p>Jab starting rows biased/order-specific ho sakti hain; random rows overall data ka better feel deti hain.</p></details>
-            <details><summary><code>df.info()</code> se kya catch hota hai?</summary><p>Column dtype, non-null values aur memory usage. Wrong dtype bhi yahin se pakad sakte ho.</p></details>
-            <details><summary><code>describe()</code> ka use?</summary><p>Numerical columns ki high-level statistical summary aur possible outliers/impossible values ka hint.</p></details>
-            <details><summary>Correlation ko final truth kyon nahi maana?</summary><p>Ye sirf numerical linear relation ka initial hint hai; domain knowledge aur deeper EDA required hai.</p></details>
-          </div>
-        </article>
       </section>
 
       <section class="section searchable" id="lecture-20" data-title="eda univariate analysis categorical numerical countplot pie chart histogram distplot kde boxplot skewness percentile iqr outliers titanic">
@@ -2309,16 +2165,6 @@
           </div>
         </article>
 
-        <article class="panel" style="margin-top:15px">
-          <h3>One-year-later recap</h3>
-          <div class="quiz">
-            <details><summary>Univariate analysis ka meaning?</summary><p>Ek time par ek column ko independently analyse karna.</p></details>
-            <details><summary>Categorical column ke liye common plots?</summary><p>Count plot/bar chart aur pie chart, category counts/proportions dekhne ke liye.</p></details>
-            <details><summary>Numerical column ke liye common plots?</summary><p>Histogram, KDE/PDF aur box plot.</p></details>
-            <details><summary>Box plot ka main benefit?</summary><p>Median, quartiles aur potential outliers quickly show karta hai.</p></details>
-            <details><summary>Skewness kya batata hai?</summary><p>Distribution left/right side me lambi tail rakh raha hai ya roughly symmetric hai.</p></details>
-          </div>
-        </article>
       </section>
 
       <section class="section searchable" id="lecture-21" data-title="eda bivariate multivariate analysis scatter plot bar plot boxplot heatmap clustermap pairplot lineplot categorical numerical seaborn">
@@ -2383,15 +2229,6 @@
           <p>Pair plot ek graph nahi, scatter plots ka matrix hai. Agar dataset me multiple numerical columns hain, pair plot ek glance me relation patterns aur separability show kar sakta hai.</p>
         </article>
 
-        <article class="panel" style="margin-top:15px">
-          <h3>One-year-later recap</h3>
-          <div class="quiz">
-            <details><summary>Bivariate vs multivariate?</summary><p>Bivariate me do columns; multivariate me two se zyada variables ek graph/analysis me.</p></details>
-            <details><summary>Numerical vs numerical relation ke liye?</summary><p>Scatter plot. Agar x time based hai to line plot.</p></details>
-            <details><summary>Categorical vs categorical relation ke liye?</summary><p>Cross-tab ke saath heatmap/clustermap useful hote hain.</p></details>
-            <details><summary>Pair plot ka use?</summary><p>Multiple numerical columns ke pairwise scatter plots ek saath dekhna.</p></details>
-          </div>
-        </article>
       </section>
 
       <section class="section searchable" id="lecture-22" data-title="pandas profiling ydata profiling profile report automated eda overview variables interactions correlations missing values html report">
@@ -2443,14 +2280,6 @@
           <div class="callout gold"><strong>Important:</strong> Automated report answer nahi hoti; woh investigation ki direction batati hai.</div>
         </article>
 
-        <article class="panel" style="margin-top:15px">
-          <h3>One-year-later recap</h3>
-          <div class="quiz">
-            <details><summary>Pandas Profiling ka purpose?</summary><p>Dataset ka automated EDA report banana, taaki first-pass understanding fast ho.</p></details>
-            <details><summary>Kaun se sections important?</summary><p>Overview, variables, interactions, correlations, missing values, sample.</p></details>
-            <details><summary>Manual EDA ki zaroorat phir bhi kyon?</summary><p>Report hints deti hai; domain interpretation, decisions aur deeper analysis tumhe karna hota hai.</p></details>
-          </div>
-        </article>
       </section>
 
       <section class="section searchable" id="lecture-23" data-title="feature engineering feature transformation construction selection extraction imputation categorical encoding outliers scaling pca mnist titanic family">
@@ -2509,15 +2338,6 @@
           </article>
         </div>
 
-        <article class="panel" style="margin-top:15px">
-          <h3>One-year-later recap</h3>
-          <div class="quiz">
-            <details><summary>Feature engineering kyon important?</summary><p>Model raw data se tabhi achha learn karta hai jab features clean, meaningful aur model-friendly hon.</p></details>
-            <details><summary>Feature transformation me kya aata hai?</summary><p>Imputation, categorical encoding, outlier handling, scaling, transformations.</p></details>
-            <details><summary>Feature construction ka example?</summary><p><code>SibSp</code> + <code>Parch</code> se family size/family type banana.</p></details>
-            <details><summary>Selection aur extraction me difference?</summary><p>Selection original features me choose/drop karta hai; extraction naye transformed features banata hai.</p></details>
-          </div>
-        </article>
       </section>
 
       <section class="section searchable" id="lecture-24" data-title="feature scaling standardization standard scaler z score mean zero standard deviation one knn logistic regression pca gradient descent tree algorithms outliers">
@@ -2578,15 +2398,6 @@
           <div class="callout"><strong>Tree models:</strong> Decision Tree, Random Forest, XGBoost type tree-based models me scaling usually necessary nahi hoti, kyunki splits comparisons par based hote hain.</div>
         </article>
 
-        <article class="panel" style="margin-top:15px">
-          <h3>One-year-later recap</h3>
-          <div class="quiz">
-            <details><summary>Standardization formula?</summary><p><code>(x - mean) / standard_deviation</code>.</p></details>
-            <details><summary>Standardized column ka mean/std?</summary><p>Mean 0, standard deviation 1.</p></details>
-            <details><summary>Outliers fix ho jaate hain?</summary><p>Nahi. Standardization scale change karta hai, outliers ko remove/fix nahi karta.</p></details>
-            <details><summary>Tree models me scaling kyon optional?</summary><p>Tree splits value comparisons par based hote hain, distance/gradient scale par nahi.</p></details>
-          </div>
-        </article>
       </section>
 
       <section class="section searchable" id="lecture-25" data-title="feature scaling normalization minmax scaler maxabs scaler robust scaler mean normalization formula image processing sparse data outliers standardization comparison">
@@ -2662,16 +2473,6 @@
           <div class="callout"><strong>Practical rule:</strong> Pehle decide karo scaling required hai ya nahi. Required ho to algorithm + data distribution ke according scaler choose karo.</div>
         </article>
 
-        <article class="panel" style="margin-top:15px">
-          <h3>One-year-later recap</h3>
-          <div class="quiz">
-            <details><summary>MinMax formula?</summary><p><code>(x - min) / (max - min)</code>.</p></details>
-            <details><summary>MinMax output range?</summary><p>Usually 0 se 1 ke beech.</p></details>
-            <details><summary>RobustScaler kab?</summary><p>Jab data me outliers hon; ye median aur IQR use karta hai.</p></details>
-            <details><summary>MaxAbsScaler kab?</summary><p>Sparse data/matrices me, jahan zeros bahut hote hain.</p></details>
-            <details><summary>Scaling ka first question?</summary><p>Kya selected algorithm ko scaling chahiye? Har algorithm ke liye blindly scaling zaroori nahi.</p></details>
-          </div>
-        </article>
       </section>
 
       <footer class="footer">
