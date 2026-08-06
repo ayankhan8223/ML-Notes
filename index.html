@@ -1879,7 +1879,7 @@
                 <tr><td>URL se CSV</td><td><code>pd.read_csv(url)</code></td><td>Internet/server par hosted CSV directly load.</td></tr>
                 <tr><td>TSV file</td><td><code>sep="\t"</code></td><td>Tab separated values ko correctly split karna.</td></tr>
                 <tr><td>No header</td><td><code>header=None</code></td><td>CSV ki first row ko column names mat samjho. First row bhi normal data row hai, aur pandas columns ko default numbers dega.</td></tr>
-                <tr><td>Custom names</td><td><code>names=["a", "b"]</code></td><td>Apne column names assign karna.</td></tr>
+                <tr><td>Custom names</td><td><code>names=["a", "b"]</code></td><td>Agar file me column names nahi hain, to <code>names</code> parameter se apne column names assign kar sakte ho.</td></tr>
                 <tr><td>Index column</td><td><code>index_col="id"</code></td><td>Kisi column ko row index banana.</td></tr>
                 <tr><td>Selected columns</td><td><code>usecols=["A", "B"]</code></td><td>Sirf useful columns load karna.</td></tr>
                 <tr><td>Skip rows</td><td><code>skiprows=[0, 2]</code></td><td>Extra title/metadata rows ignore karna.</td></tr>
