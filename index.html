@@ -312,6 +312,16 @@
     .data-check-table th:nth-child(2), .data-check-table td:nth-child(2) { width: 28%; }
     .data-check-table th:nth-child(3), .data-check-table td:nth-child(3) { width: 52%; }
     .data-check-table td:nth-child(2) code { white-space: nowrap; overflow-wrap: normal; word-break: normal; }
+    .categorical-eda-table { table-layout: fixed; }
+    .categorical-eda-table th:nth-child(1), .categorical-eda-table td:nth-child(1) { width: 18%; }
+    .categorical-eda-table th:nth-child(2), .categorical-eda-table td:nth-child(2) { width: 24%; }
+    .categorical-eda-table th:nth-child(3), .categorical-eda-table td:nth-child(3) { width: 28%; }
+    .categorical-eda-table th:nth-child(4), .categorical-eda-table td:nth-child(4) { width: 30%; }
+    .categorical-eda-table td:nth-child(4) code, .numerical-eda-table td:nth-child(3) code { overflow-wrap: normal; word-break: normal; }
+    .numerical-eda-table { table-layout: fixed; }
+    .numerical-eda-table th:nth-child(1), .numerical-eda-table td:nth-child(1) { width: 22%; }
+    .numerical-eda-table th:nth-child(2), .numerical-eda-table td:nth-child(2) { width: 48%; }
+    .numerical-eda-table th:nth-child(3), .numerical-eda-table td:nth-child(3) { width: 30%; }
     th { padding: 12px 13px; color: #a9c2be; background: #1b333b; font-size: 10px; font-weight: 900; letter-spacing: .08em; text-align: left; text-transform: uppercase; }
     td { padding: 11px 13px; color: var(--muted); border-top: 1px solid var(--line); vertical-align: top; }
     td:first-child { color: var(--ink); font-weight: 850; }
@@ -2108,12 +2118,12 @@
             <h3>Categorical columns</h3>
             <p>Categorical data me values categories/classes hoti hain: gender, embarked station, passenger class, survival yes/no etc.</p>
             <div class="table-wrap">
-              <table>
-                <thead><tr><th>Plot/check</th><th>Use</th><th>Example question</th></tr></thead>
+              <table class="categorical-eda-table">
+                <thead><tr><th>Plot/check</th><th>Use</th><th>Example question</th><th>Example code</th></tr></thead>
                 <tbody>
-                  <tr><td><code>value_counts()</code></td><td>Har category ka count.</td><td>Male/female kitne passengers?</td></tr>
-                  <tr><td>Count plot</td><td>Counts ko bar chart me dekhna.</td><td>Survived 0 vs 1 ka distribution?</td></tr>
-                  <tr><td>Pie chart</td><td>Percentage/share dekhna.</td><td>Passenger classes ka proportion?</td></tr>
+                  <tr><td><code>value_counts()</code></td><td>Har category ka count.</td><td>Male/female kitne passengers?</td><td><code>df["Sex"].value_counts()</code></td></tr>
+                  <tr><td>Count plot</td><td>Counts ko bar chart me dekhna.</td><td>Survived 0 vs 1 ka distribution?</td><td><code>sns.countplot(x="Survived", data=df)</code></td></tr>
+                  <tr><td>Pie chart</td><td>Percentage/share dekhna.</td><td>Passenger classes ka proportion?</td><td><code>df["Pclass"].value_counts().plot(kind="pie")</code></td></tr>
                 </tbody>
               </table>
             </div>
@@ -2123,14 +2133,14 @@
             <h3>Numerical columns</h3>
             <p>Numerical data me quantities hoti hain: age, fare, height, salary, marks etc. Yahan distribution aur outliers important hote hain.</p>
             <div class="table-wrap">
-              <table>
-                <thead><tr><th>Plot/check</th><th>Use</th></tr></thead>
+              <table class="numerical-eda-table">
+                <thead><tr><th>Plot/check</th><th>Use</th><th>Example</th></tr></thead>
                 <tbody>
-                  <tr><td>Histogram</td><td>Values kis range me kitni baar aa rahi hain.</td></tr>
-                  <tr><td>KDE / PDF</td><td>Smooth probability density shape.</td></tr>
-                  <tr><td>Box plot</td><td>Median, quartiles aur potential outliers.</td></tr>
-                  <tr><td><code>skew()</code></td><td>Distribution left/right skewed hai ya symmetric.</td></tr>
-                  <tr><td><code>min()</code>, <code>max()</code>, <code>mean()</code></td><td>Basic range/central tendency.</td></tr>
+                  <tr><td>Histogram</td><td>Values kis range me kitni baar aa rahi hain.</td><td><code>df["Age"].plot(kind="hist")</code></td></tr>
+                  <tr><td>KDE / PDF</td><td>Smooth probability density shape.</td><td><code>df["Fare"].plot(kind="kde")</code></td></tr>
+                  <tr><td>Box plot</td><td>Median, quartiles aur potential outliers.</td><td><code>df["Fare"].plot(kind="box")</code></td></tr>
+                  <tr><td><code>skew()</code></td><td>Distribution left/right skewed hai ya symmetric.</td><td><code>df["Fare"].skew()</code></td></tr>
+                  <tr><td><code>min()</code>, <code>max()</code>, <code>mean()</code></td><td>Basic range/central tendency.</td><td><code>df["Age"].min()</code>, <code>.max()</code>, <code>.mean()</code></td></tr>
                 </tbody>
               </table>
             </div>
