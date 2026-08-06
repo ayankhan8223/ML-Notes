@@ -2279,6 +2279,13 @@
         </article>
 
         <article class="panel" style="margin-top:15px">
+          <h3>HeatMap: Categorical - Categorical</h3>
+          <p>Heatmap categorical columns ke combinations ka count ya relationship colors ke through show karta hai. Yahan <strong>Pclass</strong> aur <strong>Survived</strong> ke cross-tab counts compare ho rahe hain.</p>
+          <div class="formula">sns.heatmap(pd.crosstab(titanic['Pclass'], titanic['Survived']))</div>
+          <img class="lecture-chart-image" src="/assets/lecture-21-heatmap.png" alt="Heatmap showing passenger class and survival cross-tab counts">
+        </article>
+
+        <article class="panel" style="margin-top:15px">
           <h3>Quick plot map</h3>
           <div class="flow">
             <div class="flow-step"><strong>Bar plot</strong><small>Category wise numerical average</small></div><span class="arrow">|</span>
