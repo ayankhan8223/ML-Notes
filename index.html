@@ -2271,7 +2271,7 @@
           <img class="lecture-chart-image" src="/assets/lecture-21-boxplot.png" alt="Box plot comparing age distributions by sex and survival status">
         </article>
 
-        <article class="panel">
+        <article class="panel" style="grid-column:1 / -1">
           <h3>KDE Plot</h3>
           <p>KDE plot me numerical distribution ko category-wise compare karte hain. Yahan <strong>Age</strong> numerical column hai aur <strong>Survived</strong> ke 0/1 groups ki density curves compare ho rahi hain.</p>
           <div class="formula">sns.kdeplot(data=titanic[titanic['Survived']==0], x='Age', label='Did not survive')<br>sns.kdeplot(data=titanic[titanic['Survived']==1], x='Age', label='Survived')</div>
