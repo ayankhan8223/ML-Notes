@@ -2252,7 +2252,8 @@
           <article class="panel">
             <h3>Time data: line plot</h3>
             <p>Line plot tab useful hota hai jab x-axis time based ho: year, month, date etc. Flight dataset me year-wise passengers ka trend line plot se clearly growth dikhata hai.</p>
-            <div class="formula">yearly = flights.groupby("year")["passengers"].sum().reset_index()<br>sns.lineplot(data=yearly, x="year", y="passengers")</div>
+            <div class="formula">sns.lineplot(x=new['year'], y=new['passengers'])</div>
+            <img class="lecture-chart-image" src="/assets/lecture-21-lineplot.png" alt="Line plot showing passenger trend over years">
             <div class="callout teal"><strong>Rule:</strong> Scatter plot relation dikhata hai; line plot relation + time trend dikhata hai.</div>
           </article>
         </div>
