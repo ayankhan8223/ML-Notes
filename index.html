@@ -200,7 +200,14 @@
     .scaler-branch::before { content: ''; position: absolute; top: -34px; left: 50%; width: 1px; height: 31px; background: var(--teal); }
     .scaler-branch strong { display: block; margin-bottom: 5px; color: var(--teal); font-size: 13px; }
     .scaler-branch small { color: var(--muted); }
-    .scaler-branch .arrow { display: block; margin: 8px 0; }
+    .react-flow-shell { height: 370px; margin-top: 18px; overflow: hidden; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); }
+    .react-flow-shell .react-flow { --xy-background-color: var(--paper); --xy-node-background-color: var(--paper-2); --xy-node-color: var(--ink); --xy-edge-stroke: var(--coral); --xy-edge-stroke-width: 2; }
+    .react-flow-shell .react-flow__node { padding: 12px 16px; min-width: 145px; border: 2px solid var(--teal); border-radius: 8px; background: var(--paper-2); color: var(--ink); font-family: inherit; font-size: 13px; font-weight: 800; text-align: center; box-shadow: 0 8px 20px rgba(0,0,0,.18); }
+    .react-flow-shell .react-flow__node.fit-node { min-width: 190px; background: var(--teal); color: #102126; border-color: var(--teal); }
+    .react-flow-shell .react-flow__node small { display: block; margin-top: 5px; color: var(--muted); font-size: 10px; font-weight: 500; }
+    .react-flow-shell .react-flow__node.fit-node small { color: #203b3b; }
+    .react-flow-shell .react-flow__edge-path { stroke: var(--coral); stroke-width: 2.5; }
+    .react-flow-shell .react-flow__arrowhead { fill: var(--coral); }
     .arrow { color: var(--coral); font-size: 20px; font-weight: 900; white-space: nowrap; flex: 0 0 auto; min-width: 24px; text-align: center; }
     .nested { display: grid; place-items: center; min-height: 315px; padding: 18px; background: var(--paper-2); border: 1px solid var(--line); border-radius: 9px; }
     .lesson-chart { margin: 15px 0 0; padding: 16px; background: var(--paper-2); border: 1px solid var(--line); border-radius: 9px; }
@@ -2506,11 +2513,7 @@
           </div>
           <div class="formula">from sklearn.preprocessing import StandardScaler<br><br>scaler = StandardScaler()<br><br># fit the scaler to the train set, it will learn the parameters<br>scaler.fit(X_train)<br><br># transform train and test sets<br>X_train_scaled = scaler.transform(X_train)<br>X_test_scaled = scaler.transform(X_test)</div>
           <div class="callout gold"><strong>Important:</strong> Scaler ko training data par <code>fit</code> karo; test data par sirf <code>transform</code>. Test data se mean/std learn karna data leakage hai.</div>
-          <div class="scaler-hierarchy">
-            <div class="scaler-root">scaler.fit()<small style="display:block; margin-top:4px; font-weight:400">X_train se mean/std learns</small></div>
-            <div class="scaler-branch"><strong>X_train</strong><small>Training data</small><span class="arrow">&darr;</span><strong>transform()</strong><small>Learned parameters apply</small><span class="arrow">&darr;</span><strong>X_train_scaled</strong><small>Model training ke liye</small></div>
-            <div class="scaler-branch"><strong>X_test</strong><small>Unseen test data</small><span class="arrow">&darr;</span><strong>transform()</strong><small>Same mean/std apply</small><span class="arrow">&darr;</span><strong>X_test_scaled</strong><small>Final evaluation ke liye</small></div>
-          </div>
+          <div id="standardizer-flow" class="react-flow-shell" aria-label="StandardScaler fit and transform flow"></div>
         </article>
 
         <article class="panel" style="margin-top:15px">
@@ -2614,7 +2617,35 @@
   </div>
 
   <script type="module">
+    import React from 'react';
+    import { createRoot } from 'react-dom/client';
+    import { ReactFlow, Background, Controls, MarkerType } from '@xyflow/react';
+    import '@xyflow/react/dist/style.css';
     import Plotly from 'plotly.js-dist-min';
+
+    const flowNodes = [
+      { id: 'fit-input', position: { x: 20, y: 45 }, data: { label: React.createElement(React.Fragment, null, 'X_train', React.createElement('small', null, 'fit ke liye')) }, sourcePosition: 'right' },
+      { id: 'fit', position: { x: 265, y: 45 }, data: { label: React.createElement(React.Fragment, null, 'scaler.fit()', React.createElement('small', null, 'mean/std learns')) }, className: 'fit-node', targetPosition: 'left', sourcePosition: 'right' },
+      { id: 'learned', position: { x: 520, y: 45 }, data: { label: React.createElement(React.Fragment, null, 'Learned parameters', React.createElement('small', null, 'same mean/std')) }, targetPosition: 'left' },
+      { id: 'train', position: { x: 20, y: 205 }, data: { label: React.createElement(React.Fragment, null, 'X_train', React.createElement('small', null, 'training data')) }, sourcePosition: 'right' },
+      { id: 'train-transform', position: { x: 265, y: 205 }, data: { label: React.createElement(React.Fragment, null, 'transform()', React.createElement('small', null, 'learned params apply')) }, targetPosition: 'left', sourcePosition: 'right' },
+      { id: 'train-scaled', position: { x: 520, y: 205 }, data: { label: React.createElement(React.Fragment, null, 'X_train_scaled', React.createElement('small', null, 'model training')) }, targetPosition: 'left' },
+      { id: 'test', position: { x: 20, y: 305 }, data: { label: React.createElement(React.Fragment, null, 'X_test', React.createElement('small', null, 'unseen test data')) }, sourcePosition: 'right' },
+      { id: 'test-transform', position: { x: 265, y: 305 }, data: { label: React.createElement(React.Fragment, null, 'transform()', React.createElement('small', null, 'same params apply')) }, targetPosition: 'left', sourcePosition: 'right' },
+      { id: 'test-scaled', position: { x: 520, y: 305 }, data: { label: React.createElement(React.Fragment, null, 'X_test_scaled', React.createElement('small', null, 'final evaluation')) }, targetPosition: 'left' }
+    ];
+    const flowEdges = [
+      { id: 'fit-input-fit', source: 'fit-input', target: 'fit', markerEnd: { type: MarkerType.ArrowClosed } },
+      { id: 'fit-learned', source: 'fit', target: 'learned', markerEnd: { type: MarkerType.ArrowClosed } },
+      { id: 'train-transform', source: 'train', target: 'train-transform', markerEnd: { type: MarkerType.ArrowClosed } },
+      { id: 'train-scaled', source: 'train-transform', target: 'train-scaled', markerEnd: { type: MarkerType.ArrowClosed } },
+      { id: 'test-transform', source: 'test', target: 'test-transform', markerEnd: { type: MarkerType.ArrowClosed } },
+      { id: 'test-scaled', source: 'test-transform', target: 'test-scaled', markerEnd: { type: MarkerType.ArrowClosed } },
+      { id: 'fit-train-transform', source: 'fit', target: 'train-transform', type: 'smoothstep', markerEnd: { type: MarkerType.ArrowClosed }, label: 'parameters' },
+      { id: 'fit-test-transform', source: 'fit', target: 'test-transform', type: 'smoothstep', markerEnd: { type: MarkerType.ArrowClosed }, label: 'parameters' }
+    ];
+    const flowRoot = createRoot(document.getElementById('standardizer-flow'));
+    flowRoot.render(React.createElement(ReactFlow, { nodes: flowNodes, edges: flowEdges, fitView: true, fitViewOptions: { padding: 0.18 }, nodesDraggable: false, nodesConnectable: false, elementsSelectable: false }, React.createElement(Background, { gap: 20, color: 'rgba(120,160,165,.12)' }), React.createElement(Controls, { showInteractive: false })));
 
     const chartLayout = {
       paper_bgcolor: 'transparent',
