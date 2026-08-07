@@ -187,6 +187,12 @@
     .flow-step { min-width: 128px; padding: 12px; color: var(--ink-2); background: var(--paper-2); border: 1px solid #35545c; border-radius: 7px; text-align: center; font-size: 11px; }
     .flow-step strong { display: block; margin-bottom: 4px; color: var(--teal); font-size: 12px; }
     .flow-step small { color: var(--muted); }
+    .feature-type-map { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 14px; padding-top: 16px; border-top: 1px solid var(--line); }
+    .feature-type { position: relative; min-width: 0; padding: 14px 12px; background: var(--paper-2); border: 1px solid #35545c; border-top: 3px solid var(--teal); border-radius: 7px; text-align: center; }
+    .feature-type::before { content: ''; position: absolute; top: -19px; left: 50%; width: 1px; height: 16px; background: var(--teal); }
+    .feature-type strong { display: block; margin-bottom: 8px; color: var(--teal); font-size: 12px; }
+    .feature-type small { display: block; color: var(--muted); line-height: 1.55; }
+    .feature-type-list { margin: 10px 0 0; padding-top: 9px; border-top: 1px solid var(--line); color: var(--ink-2); font-size: 11px; line-height: 1.55; text-align: left; }
     .arrow { color: var(--coral); font-size: 20px; font-weight: 900; white-space: nowrap; flex: 0 0 auto; min-width: 24px; text-align: center; }
     .nested { display: grid; place-items: center; min-height: 315px; padding: 18px; background: var(--paper-2); border: 1px solid var(--line); border-radius: 9px; }
     .lesson-chart { margin: 15px 0 0; padding: 16px; background: var(--paper-2); border: 1px solid var(--line); border-radius: 9px; }
@@ -371,7 +377,7 @@
       .hero { display: block; padding: 48px 0 35px; }
       h1 { font-size: 42px; }
       .hero-side { margin-top: 28px; }
-      .stats, .grid-2, .grid-3, .type-grid { grid-template-columns: 1fr; }
+      .stats, .grid-2, .grid-3, .type-grid, .feature-type-map { grid-template-columns: 1fr; }
       .tensor-dimensions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .section-head { display: block; }
       .section-tag { display: inline-block; margin: 14px 0 0 47px; }
@@ -2412,6 +2418,12 @@
 
         <article class="panel" style="margin-top:15px">
           <h3>Feature engineering map</h3>
+          <div class="feature-type-map">
+            <div class="feature-type"><strong>Feature Transformation</strong><small>Existing feature ko better form me convert karo.</small><div class="feature-type-list">Missing value imputation<br>Categorical handling<br>Outlier detection<br>Feature scaling</div></div>
+            <div class="feature-type"><strong>Feature Construction</strong><small>Existing columns se new meaningful feature banao.</small><div class="feature-type-list">SibSp + Parch<br>-&gt; family size<br>Alone / small / large</div></div>
+            <div class="feature-type"><strong>Feature Selection</strong><small>Useful features rakho, noisy features hatao.</small><div class="feature-type-list">Relevant columns keep<br>Weak signal remove<br>Model simpler banao</div></div>
+            <div class="feature-type"><strong>Feature Extraction</strong><small>Original data se new feature space create karo.</small><div class="feature-type-list">PCA / LDA<br>Dimensions reduce<br>Information preserve</div></div>
+          </div>
           <div class="table-wrap">
             <table>
               <thead><tr><th>Type</th><th>Meaning</th><th>Examples from lecture</th></tr></thead>
