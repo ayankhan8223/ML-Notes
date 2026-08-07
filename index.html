@@ -2473,7 +2473,7 @@
           <h3>Standardization formula</h3>
           <p>Har value se column mean subtract karo aur standard deviation se divide karo. Isko z-score scaling bhi bolte hain.</p>
           <div class="formula">x_scaled = (x - mean) / standard_deviation</div>
-          <div class="callout teal"><strong>Scientific notation:</strong> <code>1.2e-05</code> ka matlab <code>1.2 × 10⁻⁵</code> hota hai, yani <code>0.000012</code>. Python/NumPy outputs me chhoti ya badi values ko compact form me dikhane ke liye ye notation common hai.</div>
+          <div class="callout teal"><strong>Age example:</strong> Formula ko har value par separately apply karte hain: <code>zᵢ = (xᵢ - x̄) / σ</code>. Agar Age ka mean <code>x̄ = 30</code> aur standard deviation <code>σ = 10</code> ho, to Age 20 ka <code>z = (20 - 30) / 10 = -1</code>, Age 30 ka <code>z = (30 - 30) / 10 = 0</code>, aur Age 40 ka <code>z = (40 - 30) / 10 = +1</code>. Is tarah dataset ki har age ko transform karke nayi standardized column milti hai.</div>
           <div class="table-wrap">
             <table>
               <thead><tr><th>Before</th><th>After standardization</th></tr></thead>
