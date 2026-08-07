@@ -2517,6 +2517,29 @@
         </article>
 
         <article class="panel" style="margin-top:15px">
+          <h3>Scaling ka visual effect</h3>
+          <p>Scaling data ke relationships ya distribution ki basic shape ko usually destroy nahi karta. Bas feature ki numerical range change hoti hai, taaki Age aur Estimated Salary jaise columns model ke liye comparable ban sakein.</p>
+          <div class="grid-2" style="margin-top:15px">
+            <div class="eda-chart">
+              <h4>Age distribution: before vs after standardization</h4>
+              <img class="lecture-chart-image" src="/assets/lecture-24-age-scaling.png" alt="Age distribution before and after standard scaling">
+              <p><strong>Observation:</strong> Age ki distribution same rehti hai, lekin x-axis raw years se z-score range me convert ho jaati hai. Mean ke around value 0 hoti hai.</p>
+            </div>
+            <div class="eda-chart">
+              <h4>Estimated Salary distribution: before vs after</h4>
+              <img class="lecture-chart-image" src="/assets/lecture-24-salary-scaling.png" alt="Estimated salary distribution before and after standard scaling">
+              <p><strong>Observation:</strong> Salary ki original large values compact standardized values ban jaati hain. Relative pattern preserve rehta hai.</p>
+            </div>
+          </div>
+          <div class="eda-chart" style="margin-top:15px">
+            <h4>Age + Estimated Salary: feature relationship</h4>
+            <img class="lecture-chart-image" src="/assets/lecture-24-before-after-scaling.png" alt="Age and estimated salary scatter plot before and after scaling">
+            <p><strong>Before:</strong> Salary ka large numerical range plot ko dominate karta hai. <strong>After:</strong> Dono features comparable z-score scale par aa jaate hain, isliye distance-based algorithms ko balanced input milta hai.</p>
+          </div>
+          <div class="callout teal"><strong>Important:</strong> Standardization data ko 0 se 1 ke beech force nahi karta. Ye mean ko approximately 0 aur standard deviation ko approximately 1 banata hai.</div>
+        </article>
+
+        <article class="panel" style="margin-top:15px">
           <h3>Kab standardization useful?</h3>
           <div class="table-wrap">
             <table>
