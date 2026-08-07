@@ -2550,12 +2550,14 @@
           <h3>Kab standardization useful?</h3>
           <div class="table-wrap">
             <table>
-              <thead><tr><th>Usually scale</th><th>Why</th></tr></thead>
+              <thead><tr><th>Algorithm</th><th>Feature scaling kyun useful hai?</th></tr></thead>
               <tbody>
-                <tr><td>KNN, K-Means</td><td>Distance calculation scale-sensitive hoti hai.</td></tr>
-                <tr><td>PCA</td><td>Variance comparison scale-sensitive hota hai.</td></tr>
-                <tr><td>Gradient descent models</td><td>Convergence faster/stable ho sakti hai.</td></tr>
-                <tr><td>Logistic/Linear regression, SVM, Neural nets</td><td>Weights/optimization scale se affected ho sakte hain.</td></tr>
+                <tr><td>K-Means</td><td>Euclidean distance use karta hai; large-scale feature clusters ko dominate kar sakta hai.</td></tr>
+                <tr><td>K-Nearest Neighbours (KNN)</td><td>Samples ke beech distances measurement units se influence hote hain.</td></tr>
+                <tr><td>Principal Component Analysis (PCA)</td><td>Maximum variance find karta hai; scale difference se variance comparison unfair ho sakta hai.</td></tr>
+                <tr><td>Artificial Neural Network</td><td>Gradient Descent use hota hai; comparable inputs learning ko stable bana sakte hain.</td></tr>
+                <tr><td>Gradient Descent</td><td>Theta calculation faster ho sakti hai aur parameters ke learning rates balanced rehte hain.</td></tr>
+                <tr><td>Logistic/Linear Regression, SVM</td><td>Weights aur optimization feature scale se affected ho sakte hain.</td></tr>
               </tbody>
             </table>
           </div>
