@@ -2540,6 +2540,13 @@
         </article>
 
         <article class="panel" style="margin-top:15px">
+          <h3>Outliers scaling ke baad bhi rehte hain</h3>
+          <img class="lecture-chart-image" src="/assets/lecture-24-outlier-scaling.png" alt="Outlier remains visible before and after standard scaling">
+          <p><strong>Before scaling:</strong> Ek bahut low aur ek bahut high value normal points se door dikh rahi hai. <strong>After scaling:</strong> Axis change ho gayi, lekin wahi observations ab bhi baaki points se door hain.</p>
+          <div class="callout gold"><strong>Key point:</strong> StandardScaler outliers ko remove ya fix nahi karta. Outliers handle karne ke liye pehle investigate karo, phir clipping, transformation, RobustScaler ya domain-based treatment choose karo.</div>
+        </article>
+
+        <article class="panel" style="margin-top:15px">
           <h3>Kab standardization useful?</h3>
           <div class="table-wrap">
             <table>
