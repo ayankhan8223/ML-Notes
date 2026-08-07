@@ -193,13 +193,6 @@
     .feature-type strong { display: block; margin-bottom: 8px; color: var(--teal); font-size: 12px; }
     .feature-type small { display: block; color: var(--muted); line-height: 1.55; }
     .feature-type-list { margin: 10px 0 0; padding-top: 9px; border-top: 1px solid var(--line); color: var(--ink-2); font-size: 11px; line-height: 1.55; text-align: left; }
-    .scaling-branch { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px; position: relative; margin-top: 18px; padding-top: 34px; }
-    .scaling-branch::before { content: ''; position: absolute; top: 0; left: 25%; right: 25%; height: 1px; background: var(--teal); }
-    .scaling-root { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); padding: 9px 16px; color: var(--ink); background: var(--teal); border-radius: 7px; font-size: 13px; font-weight: 900; white-space: nowrap; }
-    .scaling-option { position: relative; padding: 14px; background: var(--paper-2); border: 1px solid #35545c; border-top: 3px solid var(--teal); border-radius: 7px; text-align: center; }
-    .scaling-option::before { content: ''; position: absolute; top: -28px; left: 50%; width: 1px; height: 26px; background: var(--teal); }
-    .scaling-option strong { display: block; margin-bottom: 5px; color: var(--teal); font-size: 14px; }
-    .scaling-option small { color: var(--muted); }
     .arrow { color: var(--coral); font-size: 20px; font-weight: 900; white-space: nowrap; flex: 0 0 auto; min-width: 24px; text-align: center; }
     .nested { display: grid; place-items: center; min-height: 315px; padding: 18px; background: var(--paper-2); border: 1px solid var(--line); border-radius: 9px; }
     .lesson-chart { margin: 15px 0 0; padding: 16px; background: var(--paper-2); border: 1px solid var(--line); border-radius: 9px; }
@@ -384,7 +377,7 @@
       .hero { display: block; padding: 48px 0 35px; }
       h1 { font-size: 42px; }
       .hero-side { margin-top: 28px; }
-      .stats, .grid-2, .grid-3, .type-grid, .feature-type-map, .scaling-branch { grid-template-columns: 1fr; }
+      .stats, .grid-2, .grid-3, .type-grid, .feature-type-map { grid-template-columns: 1fr; }
       .tensor-dimensions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .section-head { display: block; }
       .section-tag { display: inline-block; margin: 14px 0 0 47px; }
@@ -2473,15 +2466,6 @@
             <div class="flow-step"><strong>Salary / IQ</strong><small>Large range</small></div><span class="arrow">-&gt;</span>
             <div class="flow-step"><strong>Unequal influence</strong><small>Model bias risk</small></div><span class="arrow">-&gt;</span>
             <div class="flow-step"><strong>Scaling</strong><small>Comparable inputs</small></div>
-          </div>
-        </article>
-
-        <article class="panel" style="margin-top:15px">
-          <h3>Feature scaling ke two main approaches</h3>
-          <div class="scaling-branch">
-            <div class="scaling-root">Feature Scaling</div>
-            <div class="scaling-option"><strong>Standardization</strong><small>Mean 0, standard deviation 1<br>Z-score based transformation</small></div>
-            <div class="scaling-option"><strong>Normalization</strong><small>Values ko fixed range me laana<br>Usually 0 se 1</small></div>
           </div>
         </article>
 
