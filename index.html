@@ -2473,7 +2473,19 @@
           <h3>Standardization formula</h3>
           <p>Har value se column mean subtract karo aur standard deviation se divide karo. Isko z-score scaling bhi bolte hain.</p>
           <div class="formula">x_scaled = (x - mean) / standard_deviation</div>
-          <div class="callout teal"><strong>Age example:</strong> Formula ko har value par separately apply karte hain: <code>zᵢ = (xᵢ - x̄) / σ</code>. Agar Age ka mean <code>x̄ = 30</code> aur standard deviation <code>σ = 10</code> ho, to Age 20 ka <code>z = (20 - 30) / 10 = -1</code>, Age 30 ka <code>z = (30 - 30) / 10 = 0</code>, aur Age 40 ka <code>z = (40 - 30) / 10 = +1</code>. Is tarah dataset ki har age ko transform karke nayi standardized column milti hai.</div>
+          <h4>Age example</h4>
+          <p>Har age par same formula separately apply hota hai. Yahan mean <code>x̄ = 30</code> aur standard deviation <code>σ = 10</code> maan rahe hain.</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Original age (xᵢ)</th><th>Calculation: (xᵢ - 30) / 10</th><th>Standardized value (zᵢ)</th></tr></thead>
+              <tbody>
+                <tr><td>20</td><td>(20 - 30) / 10</td><td>-1</td></tr>
+                <tr><td>30</td><td>(30 - 30) / 10</td><td>0</td></tr>
+                <tr><td>40</td><td>(40 - 30) / 10</td><td>+1</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout teal"><strong>Result:</strong> Dataset ki har age transform hokar standardized column me chali jaati hai.</div>
           <div class="table-wrap">
             <table>
               <thead><tr><th>Before</th><th>After standardization</th></tr></thead>
