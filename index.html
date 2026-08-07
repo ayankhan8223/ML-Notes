@@ -2331,8 +2331,8 @@
             <div class="flow-step"><strong>HTML report</strong><small>Interactive output</small></div><span class="arrow">-&gt;</span>
             <div class="flow-step"><strong>Observations</strong><small>Notes for EDA/modeling</small></div>
           </div>
-          <div class="formula">from pandas_profiling import ProfileReport<br><br>profile = ProfileReport(df)<br>profile.to_file("report.html")</div>
-          <div class="callout teal"><strong>Modern note:</strong> Newer ecosystem me package name often <code>ydata-profiling</code> hota hai, but lecture me concept Pandas Profiling ke naam se covered hai.</div>
+          <div class="formula">from ydata_profiling import ProfileReport<br><br>profile = ProfileReport(df, title="EDA Report")<br>profile.to_file("report.html")</div>
+          <div class="callout teal"><strong>Modern code:</strong> <code>pandas_profiling</code> deprecated hai; ab <code>ydata_profiling</code> use karo.</div>
         </article>
 
         <article class="panel" style="margin-top:15px">
