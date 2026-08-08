@@ -2623,6 +2623,41 @@
         </div>
 
         <article class="panel" style="margin-top:15px">
+          <h3>MinMax scaling: distribution aur calculation</h3>
+          <p>MinMax scaling values ko 0 se 1 ke beech laati hai. Graph me points ka overall pattern/distribution same dikhta hai; sirf axes aur numerical range change hoti hai.</p>
+          <img class="lecture-chart-image" src="/assets/lecture-25-minmax-scatter.png" alt="Before and after MinMax scaling scatter plot">
+          <div class="grid-2" style="margin-top:15px">
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Statistic</th><th>Alcohol</th><th>Malic acid</th></tr></thead>
+                <tbody>
+                  <tr><td>Count</td><td>124</td><td>124</td></tr>
+                  <tr><td>Mean</td><td>13.0</td><td>2.4</td></tr>
+                  <tr><td>Std</td><td>0.8</td><td>1.1</td></tr>
+                  <tr><td>Min</td><td>11.0</td><td>0.9</td></tr>
+                  <tr><td>Max</td><td>14.8</td><td>5.6</td></tr>
+                </tbody>
+              </table>
+              <p><strong>Before:</strong> Features different ranges me hain.</p>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>Statistic</th><th>Alcohol</th><th>Malic acid</th></tr></thead>
+                <tbody>
+                  <tr><td>Count</td><td>124</td><td>124</td></tr>
+                  <tr><td>Mean</td><td>0.5</td><td>0.3</td></tr>
+                  <tr><td>Std</td><td>0.2</td><td>0.2</td></tr>
+                  <tr><td>Min</td><td>0.0</td><td>0.0</td></tr>
+                  <tr><td>Max</td><td>1.0</td><td>1.0</td></tr>
+                </tbody>
+              </table>
+              <p><strong>After:</strong> Dono features common 0-1 range me hain.</p>
+            </div>
+          </div>
+          <div class="callout teal"><strong>Example:</strong> Agar Alcohol ka minimum 11.0, maximum 14.8 aur ek value 13.0 ho, to <code>(13.0 - 11.0) / (14.8 - 11.0) = 0.526</code>. Har row par ye formula apply hota hai.</div>
+        </article>
+
+        <article class="panel" style="margin-top:15px">
           <h3>Standardization vs normalization</h3>
           <div class="table-wrap">
             <table>
