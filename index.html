@@ -2593,16 +2593,15 @@
           <h3>Normalization techniques</h3>
           <div class="table-wrap">
             <table>
-              <thead><tr><th>Technique</th><th>Formula / idea</th><th>Output range / use</th><th>Example</th></tr></thead>
+              <thead><tr><th>Technique</th><th>Formula / idea</th><th>What happens?</th><th>Output range / use</th><th>Example</th></tr></thead>
               <tbody>
-                <tr><td>MinMax Scaling</td><td><code>(x - min) / (max - min)</code></td><td>Usually 0 to 1. Most common normalization.</td><td><code>(13 - 11) / (14.8 - 11) = 0.526</code></td></tr>
-                <tr><td>Mean Normalization</td><td><code>(x - mean) / (max - min)</code></td><td>Data mean ke around center hota hai; values generally <code>-1</code> se <code>+1</code> ke beech aati hain.</td><td><code>(65 - 50) / (80 - 20) = 0.25</code></td></tr>
-                <tr><td>MaxAbs Scaling</td><td><code>x / max(abs(x))</code></td><td>Good for sparse data with many zeros.</td><td><code>-4 / 10 = -0.4</code></td></tr>
-                <tr><td>Robust Scaling</td><td><code>(x - median) / IQR</code></td><td>Better when outliers are present.</td><td><code>(70 - 50) / 20 = 1</code></td></tr>
+                <tr><td>MinMax Scaling</td><td><code>(x - min) / (max - min)</code></td><td>Minimum value 0 aur maximum value 1 ban jaati hai; baaki values proportionally map hoti hain.</td><td>Usually 0 to 1; common normalization.</td><td><code>(13 - 11) / (14.8 - 11) = 0.526</code></td></tr>
+                <tr><td>Mean Normalization</td><td><code>(x - mean) / (max - min)</code></td><td>Pehle mean subtract hota hai, isliye mean ke around data center hota hai. Mean se neeche values negative, mean par 0, aur mean se upar positive hoti hain.</td><td>Generally -1 to +1 ke beech; exact limits data ke mean/min/max par depend karte hain.</td><td><code>(65 - 50) / (80 - 20) = 0.25</code></td></tr>
+                <tr><td>MaxAbs Scaling</td><td><code>x / max(abs(x))</code></td><td>Har value ko sabse bade absolute value se divide karta hai; zero values zero hi rehti hain.</td><td>-1 to +1; sparse data ke liye useful.</td><td><code>-4 / 10 = -0.4</code></td></tr>
+                <tr><td>Robust Scaling</td><td><code>(x - median) / IQR</code></td><td>Mean/std ke bajay median aur IQR use karta hai, isliye extreme outliers ka effect comparatively kam hota hai.</td><td>Fixed range nahi; outlier-heavy data ke liye better.</td><td><code>(70 - 50) / 20 = 1</code></td></tr>
               </tbody>
             </table>
           </div>
-          <div class="callout teal"><strong>Mean Normalization example:</strong> Agar mean <code>50</code>, minimum <code>20</code>, maximum <code>80</code> aur value <code>65</code> ho, to <code>(65 - 50) / (80 - 20) = 0.25</code>. Mean se neeche values negative, mean ke paas values 0 ke around, aur mean se upar values positive hoti hain. Result generally <code>-1</code> se <code>+1</code> ke beech rehta hai.</div>
         </article>
 
         <div class="grid-2" style="margin-top:15px">
