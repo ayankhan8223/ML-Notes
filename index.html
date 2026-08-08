@@ -2613,24 +2613,6 @@
           </div>
         </article>
 
-        <div class="grid-2" style="margin-top:15px">
-          <article class="panel">
-            <h3>MinMaxScaler intuition</h3>
-            <p>Min value 0 ban jaati hai, max value 1 ban jaati hai, aur baaki values inke beech map hoti hain. Geometry me imagine karo: whole data ko unit square/cube/hypercube ke andar squeeze karna.</p>
-            <div class="formula">from sklearn.preprocessing import MinMaxScaler<br><br>scaler = MinMaxScaler()<br>X_train_scaled = scaler.fit_transform(X_train)<br>X_test_scaled = scaler.transform(X_test)</div>
-            <div class="callout teal"><strong>Good use:</strong> Jab feature ka min/max naturally known ho, jaise image pixels 0-255, MinMax scaling very common hoti hai.</div>
-          </article>
-          <article class="panel">
-            <h3>Outlier issue</h3>
-            <p>MinMax scaling outliers se sensitive hoti hai. Ek extreme max value ho to normal values compressed ho sakti hain. Outliers wale data me RobustScaler try karna useful ho sakta hai.</p>
-            <div class="flow">
-              <div class="flow-step"><strong>Outlier exists</strong><small>Very high/low value</small></div><span class="arrow">-&gt;</span>
-              <div class="flow-step"><strong>MinMax compresses</strong><small>Most points squeezed</small></div><span class="arrow">-&gt;</span>
-              <div class="flow-step"><strong>RobustScaler</strong><small>Median + IQR based</small></div>
-            </div>
-          </article>
-        </div>
-
         <article class="panel" style="margin-top:15px">
           <h3>MinMax scaling: distribution aur calculation</h3>
           <p>MinMax scaling values ko 0 se 1 ke beech laati hai. Graph me points ka overall pattern/distribution same dikhta hai; sirf axes aur numerical range change hoti hai.</p>
