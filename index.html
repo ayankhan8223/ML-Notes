@@ -2593,12 +2593,12 @@
           <h3>Normalization techniques</h3>
           <div class="table-wrap">
             <table>
-              <thead><tr><th>Technique</th><th>Formula / idea</th><th>Output range / use</th></tr></thead>
+              <thead><tr><th>Technique</th><th>Formula / idea</th><th>Output range / use</th><th>Example</th></tr></thead>
               <tbody>
-                <tr><td>MinMax Scaling</td><td><code>(x - min) / (max - min)</code></td><td>Usually 0 to 1. Most common normalization.</td></tr>
-                <tr><td>Mean Normalization</td><td><code>(x - mean) / (max - min)</code><br>Mean subtract karke range se divide.</td><td>Data mean ke around center hota hai; values generally <code>-1</code> se <code>+1</code> ke beech aati hain.</td></tr>
-                <tr><td>MaxAbs Scaling</td><td><code>x / max(abs(x))</code></td><td>Good for sparse data with many zeros.</td></tr>
-                <tr><td>Robust Scaling</td><td><code>(x - median) / IQR</code></td><td>Better when outliers are present.</td></tr>
+                <tr><td>MinMax Scaling</td><td><code>(x - min) / (max - min)</code></td><td>Usually 0 to 1. Most common normalization.</td><td><code>(13 - 11) / (14.8 - 11) = 0.526</code></td></tr>
+                <tr><td>Mean Normalization</td><td><code>(x - mean) / (max - min)</code></td><td>Data mean ke around center hota hai; values generally <code>-1</code> se <code>+1</code> ke beech aati hain.</td><td><code>(65 - 50) / (80 - 20) = 0.25</code></td></tr>
+                <tr><td>MaxAbs Scaling</td><td><code>x / max(abs(x))</code></td><td>Good for sparse data with many zeros.</td><td><code>-4 / 10 = -0.4</code></td></tr>
+                <tr><td>Robust Scaling</td><td><code>(x - median) / IQR</code></td><td>Better when outliers are present.</td><td><code>(70 - 50) / 20 = 1</code></td></tr>
               </tbody>
             </table>
           </div>
@@ -2655,7 +2655,6 @@
               <p><strong>After:</strong> Dono features common 0-1 range me hain.</p>
             </div>
           </div>
-          <div class="callout teal"><strong>Example:</strong> Agar Alcohol ka minimum 11.0, maximum 14.8 aur ek value 13.0 ho, to <code>(13.0 - 11.0) / (14.8 - 11.0) = 0.526</code>. Har row par ye formula apply hota hai.</div>
         </article>
 
         <article class="panel" style="margin-top:15px">
