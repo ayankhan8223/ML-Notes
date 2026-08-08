@@ -323,6 +323,13 @@
 
     .table-wrap { overflow-x: auto; margin: 14px 0 18px; background: var(--panel); border: 1px solid var(--line); border-radius: 8px; -webkit-overflow-scrolling: touch; }
     table { width: 100%; min-width: 700px; border-collapse: collapse; font-size: 12px; }
+    .normalization-table { min-width: 1480px; table-layout: fixed; }
+    .normalization-table th:nth-child(1) { width: 150px; }
+    .normalization-table th:nth-child(2) { width: 230px; }
+    .normalization-table th:nth-child(3) { width: 360px; }
+    .normalization-table th:nth-child(4) { width: 260px; }
+    .normalization-table th:nth-child(5) { width: 260px; }
+    .normalization-table th:nth-child(6) { width: 360px; }
     .csv-cheat-table { table-layout: fixed; }
     .csv-cheat-table th:nth-child(1), .csv-cheat-table td:nth-child(1) { width: 19%; }
     .csv-cheat-table th:nth-child(2), .csv-cheat-table td:nth-child(2) { width: 27%; }
@@ -2592,7 +2599,7 @@
         <article class="panel" style="margin-top:15px">
           <h3>Normalization techniques</h3>
           <div class="table-wrap">
-            <table>
+            <table class="normalization-table">
               <thead><tr><th>Technique</th><th>Formula / idea</th><th>What happens?</th><th>Output range / use</th><th>Example</th><th>Kab use karein?</th></tr></thead>
               <tbody>
                 <tr><td>MinMax Scaling</td><td><code>(x - min) / (max - min)</code></td><td>Minimum value 0 aur maximum value 1 ban jaati hai; baaki values proportionally map hoti hain.</td><td>Usually 0 to 1; common normalization.</td><td><code>(13 - 11) / (14.8 - 11) = 0.526</code></td><td>Jab bounded range chahiye, jaise image pixels 0-255, ya feature ka min/max meaningful ho.</td></tr>
