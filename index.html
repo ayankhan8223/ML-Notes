@@ -457,9 +457,9 @@
         <a href="#lecture-21"><span class="num">21</span><span>Bi/Multi EDA</span></a>
         <a href="#lecture-22"><span class="num">22</span><span>Pandas Profiling</span></a>
         <a href="#lecture-23"><span class="num">23</span><span>Feature Engg</span></a>
-        <a href="#lecture-24"><span class="num">24</span><span>Standardization</span></a>
-        <a href="#lecture-25"><span class="num">25</span><span>Normalization</span></a>
-        <a href="#lecture-26"><span class="num">26</span><span>Ordinal &amp; Label Encoding</span></a>
+        <a href="#lecture-24"><span class="num">24</span><span>Feature Transformation: Standardization</span></a>
+        <a href="#lecture-25"><span class="num">25</span><span>Feature Transformation: Normalization</span></a>
+        <a href="#lecture-26"><span class="num">26</span><span>Feature Transformation: Encoding</span></a>
         <a href="#lecture-27"><span class="num">27</span><span>One-Hot Encoding</span></a>
         <a href="#lecture-28"><span class="num">28</span><span>ColumnTransformer</span></a>
         <a href="#lecture-29"><span class="num">29</span><span>ML Pipelines</span></a>
@@ -2477,7 +2477,7 @@
           <div class="section-title-wrap">
             <span class="section-index">24</span>
             <div>
-              <h2>Feature Scaling: Standardization</h2>
+              <h2>Feature Transformation: Standardization</h2>
               <p class="section-intro">Standardization features ko comparable scale par laata hai. Transformed feature ka mean 0 aur standard deviation 1 hota hai.</p>
               <div class="timestamp">Lecture timestamps: 00:00:00 - 00:33:17</div>
               <div class="callout teal" style="margin-top:12px"><strong>Practice notebook:</strong> Standardization ka Colab yahan se open karo: <a href="https://colab.research.google.com/drive/1xd5jMo3Pom9NZXRe60ENKSyA3L5j16I4?usp=sharing" target="_blank" rel="noopener">Lecture 24 Standardization Colab</a>.</div>
@@ -2584,7 +2584,7 @@
           <div class="section-title-wrap">
             <span class="section-index">25</span>
             <div>
-              <h2>Feature Scaling: Normalization</h2>
+              <h2>Feature Transformation: Normalization</h2>
               <p class="section-intro">Normalization numerical columns ko common bounded scale me laata hai. Most common version MinMax scaling hai.</p>
               <div class="timestamp">Lecture timestamps: 00:00:00 - 00:23:38</div>
               <div class="callout teal" style="margin-top:12px"><strong>Practice notebook:</strong> MinMax Scaling ka Colab yahan se open karo: <a href="https://colab.research.google.com/drive/1NlpQvv47uTVMB2-taSFKnp13aRnZLSor?usp=sharing" target="_blank" rel="noopener">Lecture 25 MinMax Scaling Colab</a>.</div>
@@ -2688,7 +2688,7 @@
       </section>
 
       <section class="section searchable" id="lecture-26" data-title="ordinal encoding label encoding categorical data ordinal nominal categories target labels">
-        <div class="section-head"><div class="section-title-wrap"><span class="section-index">26</span><div><h2>Ordinal Encoding &amp; Label Encoding</h2><p class="section-intro">Categorical strings ko numerical form me convert karna encoding hai. Encoding ka choice category ke meaning par depend karta hai.</p></div></div><label class="lecture-complete"><input type="checkbox" data-lecture="26"> Complete</label></div>
+        <div class="section-head"><div class="section-title-wrap"><span class="section-index">26</span><div><h2>Feature Transformation: Ordinal &amp; Label Encoding</h2><p class="section-intro">Categorical strings ko numerical form me convert karna encoding hai. Encoding ka choice category ke meaning par depend karta hai.</p></div></div><label class="lecture-complete"><input type="checkbox" data-lecture="26"> Complete</label></div>
         <article class="panel"><h3>Nominal vs ordinal data</h3><div class="table-wrap"><table><thead><tr><th>Type</th><th>Meaning</th><th>Example</th><th>Suitable encoding</th></tr></thead><tbody><tr><td>Nominal</td><td>Categories me koi natural order nahi.</td><td>State: Delhi, Kerala, Punjab</td><td>One-Hot Encoding</td></tr><tr><td>Ordinal</td><td>Categories ka meaningful order hota hai.</td><td>Education: School &lt; Graduate &lt; Postgraduate</td><td>Ordinal Encoding</td></tr></tbody></table></div><div class="callout gold"><strong>Why encoding?</strong> ML algorithms numbers par kaam karte hain, isliye categorical strings ko numerical representation me convert karna padta hai.</div></article>
         <article class="panel" style="margin-top:15px"><h3>Ordinal Encoding</h3><p>Ordinal categories ko order preserve karte hue numbers assign kiye jaate hain. Sirf wahi use karo jahan order genuinely meaningful ho.</p><div class="formula">from sklearn.preprocessing import OrdinalEncoder<br><br>encoder = OrdinalEncoder(categories=[['School', 'Graduate', 'Postgraduate']])<br>X_encoded = encoder.fit_transform(X[['education']])</div><div class="flow"><div class="flow-step"><strong>School</strong><small>0</small></div><span class="arrow">-&gt;</span><div class="flow-step"><strong>Graduate</strong><small>1</small></div><span class="arrow">-&gt;</span><div class="flow-step"><strong>Postgraduate</strong><small>2</small></div></div><div class="callout teal"><strong>Risk:</strong> Agar nominal categories ko 0, 1, 2 de diya, model artificial order samajh sakta hai.</div></article>
         <article class="panel" style="margin-top:15px"><h3>Label Encoding</h3><p>LabelEncoder usually target column <code>y</code> ke class labels ko numbers me convert karne ke liye use hota hai, input features ke liye nahi.</p><div class="formula">from sklearn.preprocessing import LabelEncoder<br><br>le = LabelEncoder()<br>y_encoded = le.fit_transform(y)<br># classes_ se mapping inspect kar sakte ho</div><div class="callout"><strong>Rule:</strong> Input feature categorical ho to OrdinalEncoder/OneHotEncoder; target labels categorical ho to LabelEncoder.</div></article>
