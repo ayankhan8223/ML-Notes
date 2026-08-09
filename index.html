@@ -352,8 +352,9 @@
     .pipeline-step-card { min-width: 220px; padding: 16px; border: 1px solid var(--line); border-top: 4px solid var(--accent); border-radius: 8px; background: var(--panel); position: relative; }
     .pipeline-step-card:not(:last-child)::after { content: '→'; position: absolute; right: -18px; top: 46%; color: var(--coral); font-size: 24px; font-weight: 800; z-index: 2; }
     .pipeline-step-card h4 { margin: 0 0 8px; color: var(--accent); }
-    .pipeline-step-card pre { margin: 8px 0; padding: 10px; overflow-x: auto; background: var(--ink); border-radius: 6px; color: #ffd3c7; font-size: 12px; line-height: 1.45; }
-    .pipeline-step-card code { white-space: normal; }
+    .pipeline-step-card pre { margin: 10px 0; padding: 10px; overflow-x: auto; background: #0d2026; border: 1px solid #31545c; border-radius: 6px; color: #dcebe5; font-size: 12px; line-height: 1.45; }
+    .pipeline-step-card code { display: block; margin: 9px 0; white-space: normal; line-height: 1.45; }
+    .pipeline-step-card small { display: block; line-height: 1.45; }
     .pipeline-visual { display: grid; grid-template-columns: repeat(6, minmax(190px, 1fr)); gap: 12px; align-items: stretch; overflow-x: auto; padding: 8px 2px 14px; }
     .pipeline-visual .pipeline-card { min-width: 190px; position: relative; padding: 18px 16px; border: 1px solid var(--line); border-top: 4px solid var(--accent); border-radius: 8px; background: var(--panel); }
     .pipeline-visual .pipeline-card:not(:last-child)::after { content: '→'; position: absolute; right: -18px; top: 46%; color: var(--coral); font-size: 24px; font-weight: 800; z-index: 2; }
