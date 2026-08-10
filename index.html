@@ -522,11 +522,11 @@
         <a href="#lecture-28"><span class="num">28</span><span>ColumnTransformer</span></a>
         <a href="#lecture-29"><span class="num">29</span><span>ML Pipelines</span></a>
         <a href="#lecture-30"><span class="num">30</span><span>FunctionTransformer</span></a>
-        <a href="#lecture-31"><span class="num">31</span><span>Missing Data</span></a>
-        <a href="#lecture-32"><span class="num">32</span><span>Mixed Variables</span></a>
-        <a href="#lecture-33"><span class="num">33</span><span>Binning</span></a>
+        <a href="#lecture-31"><span class="num">31</span><span>Power Transformer</span></a>
+        <a href="#lecture-32"><span class="num">32</span><span>Missing Data</span></a>
+        <a href="#lecture-33"><span class="num">33</span><span>Mixed Variables</span></a>
         <a href="#lecture-34"><span class="num">34</span><span>Date-Time Variables</span></a>
-        <a href="#lecture-35"><span class="num">35</span><span>Power Transformer</span></a>
+        <a href="#lecture-35"><span class="num">35</span><span>Binning</span></a>
       </nav>
       <div class="side-progress">
         <strong>Batch progress</strong>
@@ -2792,20 +2792,20 @@
         <article class="panel" style="margin-top:15px"><h3>Important precautions</h3><ul><li>Log transform ko generally positive values par apply karo. Negative values par direct log valid nahi hota; zero ke liye <code>np.log1p</code> useful hai.</li><li>Square root ke liye bhi negative values directly valid nahi hoti.</li><li>Reciprocal me zero division problem hoti hai.</li><li>Transformation ke baad distribution visualize karke verify karo.</li><li>FunctionTransformer ko ColumnTransformer/Pipeline ke andar combine kiya ja sakta hai.</li></ul><div class="callout gold"><strong>Goal:</strong> Transformation data ko magically normal nahi banata; model ke liye relationship aur distribution ko manageable banane ki koshish karta hai.</div></article>
       </section>
 
-      <section class="section searchable" id="lecture-31" data-title="missing data complete case analysis missing values deletion imputation">
-        <div class="section-head"><div class="section-title-wrap"><span class="section-index">31</span><div><h2>Handling Missing Data: Complete Case Analysis</h2><p class="section-intro">Missing values ko ignore karke model train karna risky ho sakta hai. Complete Case Analysis me missing wali rows remove ki jaati hain.</p></div></div><label class="lecture-complete"><input type="checkbox" data-lecture="31"> Complete</label></div>
+      <section class="section searchable" id="lecture-32" data-title="missing data complete case analysis missing values deletion imputation">
+        <div class="section-head"><div class="section-title-wrap"><span class="section-index">32</span><div><h2>Handling Missing Data: Complete Case Analysis</h2><p class="section-intro">Missing values ko ignore karke model train karna risky ho sakta hai. Complete Case Analysis me missing wali rows remove ki jaati hain.</p></div></div><label class="lecture-complete"><input type="checkbox" data-lecture="32"> Complete</label></div>
         <article class="panel"><h3>Complete Case Analysis</h3><p>Sirf un rows ko retain karo jahan required columns me koi missing value nahi hai. Ye simple approach hai, lekin data loss ka risk hota hai.</p><div class="flow"><div class="flow-step"><strong>Raw data</strong><small>Missing cells</small></div><span class="arrow">-&gt;</span><div class="flow-step"><strong>Drop incomplete rows</strong><small>Complete cases only</small></div><span class="arrow">-&gt;</span><div class="flow-step"><strong>Clean dataset</strong><small>Ready for modeling</small></div></div><div class="formula">complete_df = df.dropna()<br>complete_df = df.dropna(subset=['age', 'salary'])</div></article>
         <article class="panel" style="margin-top:15px"><h3>Kab suitable hai?</h3><div class="table-wrap"><table><thead><tr><th>Situation</th><th>Decision</th></tr></thead><tbody><tr><td>Missing rows bahut kam</td><td>Complete Case Analysis practical ho sakta hai.</td></tr><tr><td>Missing rows zyada</td><td>Bahut data lose hoga; imputation consider karo.</td></tr><tr><td>Missingness random nahi</td><td>Blindly delete mat karo; missing pattern investigate karo.</td></tr></tbody></table></div><div class="callout gold"><strong>Important:</strong> Train/test split aur preprocessing ka order carefully rakho; statistics sirf training data se learn karo.</div></article>
       </section>
 
-      <section class="section searchable" id="lecture-32" data-title="mixed variables feature engineering numerical categorical mixed data encoding transformation">
-        <div class="section-head"><div class="section-title-wrap"><span class="section-index">32</span><div><h2>Handling Mixed Variables</h2><p class="section-intro">Mixed dataset me numerical aur categorical variables saath hote hain; har type ko suitable transformation chahiye.</p></div></div><label class="lecture-complete"><input type="checkbox" data-lecture="32"> Complete</label></div>
+      <section class="section searchable" id="lecture-33" data-title="mixed variables feature engineering numerical categorical mixed data encoding transformation">
+        <div class="section-head"><div class="section-title-wrap"><span class="section-index">33</span><div><h2>Handling Mixed Variables</h2><p class="section-intro">Mixed dataset me numerical aur categorical variables saath hote hain; har type ko suitable transformation chahiye.</p></div></div><label class="lecture-complete"><input type="checkbox" data-lecture="33"> Complete</label></div>
         <article class="panel"><h3>Mixed data ka treatment</h3><div class="table-wrap"><table><thead><tr><th>Variable type</th><th>Example</th><th>Typical treatment</th></tr></thead><tbody><tr><td>Numerical</td><td>Age, income, balance</td><td>Imputation, scaling, transformation.</td></tr><tr><td>Nominal categorical</td><td>City, gender, color</td><td>One-Hot Encoding.</td></tr><tr><td>Ordinal categorical</td><td>Low, medium, high</td><td>Ordinal Encoding with explicit order.</td></tr><tr><td>Mixed string-numeric</td><td>House number + street text</td><td>Split/extract meaningful parts first.</td></tr></tbody></table></div><div class="formula">preprocessor = ColumnTransformer([<br>&nbsp;&nbsp;('num', StandardScaler(), numerical_cols),<br>&nbsp;&nbsp;('cat', OneHotEncoder(handle_unknown='ignore'), categorical_cols)<br>])</div></article>
         <article class="panel" style="margin-top:15px"><h3>Core idea</h3><p>Raw column ko direct model me dene ke bajay uska data type aur business meaning samjho. Mixed variables ke liye ColumnTransformer/Pipeline repeatable solution provide karte hain.</p></article>
       </section>
 
-      <section class="section searchable" id="lecture-33" data-title="binning binarization discretization quantile binning uniform kmeans binning">
-        <div class="section-head"><div class="section-title-wrap"><span class="section-index">33</span><div><h2>Binning, Binarization &amp; Discretization</h2><p class="section-intro">Continuous numerical values ko intervals ya binary values me convert karna binning/discretization hai.</p></div></div><label class="lecture-complete"><input type="checkbox" data-lecture="33"> Complete</label></div>
+      <section class="section searchable" id="lecture-35" data-title="binning binarization discretization quantile binning uniform kmeans binning">
+        <div class="section-head"><div class="section-title-wrap"><span class="section-index">35</span><div><h2>Binning, Binarization &amp; Discretization</h2><p class="section-intro">Continuous numerical values ko intervals ya binary values me convert karna binning/discretization hai.</p></div></div><label class="lecture-complete"><input type="checkbox" data-lecture="35"> Complete</label></div>
         <article class="panel"><h3>Types of binning</h3><div class="table-wrap"><table><thead><tr><th>Method</th><th>How it works</th><th>Use case</th><th>Example</th></tr></thead><tbody><tr><td>Uniform / equal-width</td><td>Range ko equal-size intervals me divide.</td><td>Simple age bands.</td><td>0-20, 20-40, 40-60</td></tr><tr><td>Quantile binning</td><td>Har bin me roughly equal observations.</td><td>Uneven distribution me balanced groups.</td><td>Quartiles: Q1, Q2, Q3, Q4</td></tr><tr><td>KMeans binning</td><td>Similar values ko clusters me group.</td><td>Natural data groups discover karna.</td><td>Income-based segments</td></tr><tr><td>Binarization</td><td>Threshold ke basis par 0/1.</td><td>Binary indicator banana.</td><td>Age &gt; 18 → 1, otherwise 0</td></tr></tbody></table></div><div class="formula">from sklearn.preprocessing import KBinsDiscretizer<br><br>kbd = KBinsDiscretizer(n_bins=4, encode='ordinal', strategy='quantile')<br>X_binned = kbd.fit_transform(X[['age']])</div></article>
         <div class="callout gold"><strong>Trade-off:</strong> Binning complexity aur noise reduce kar sakta hai, lekin continuous information bhi lose ho sakti hai. Model validation se benefit check karo.</div>
       </section>
@@ -2816,8 +2816,8 @@
         <article class="panel" style="margin-top:15px"><h3>Important considerations</h3><ul><li>Year, month, weekday, weekend, hour aur holiday indicator useful ho sakte hain.</li><li>Cyclical features jaise month/hour me 1 aur 12 ka relation preserve karne ke liye sine/cosine encoding consider karo.</li><li>Timezone aur future information leakage ka dhyan rakho.</li></ul></article>
       </section>
 
-      <section class="section searchable" id="lecture-35" data-title="power transformer box cox yeo johnson skewness transformation positive negative values">
-        <div class="section-head"><div class="section-title-wrap"><span class="section-index">35</span><div><h2>Power Transformer: Box-Cox &amp; Yeo-Johnson</h2><p class="section-intro">Power transformations skewed numerical distributions ko more symmetric banane ki koshish karti hain.</p></div></div><label class="lecture-complete"><input type="checkbox" data-lecture="35"> Complete</label></div>
+      <section class="section searchable" id="lecture-31" data-title="power transformer box cox yeo johnson skewness transformation positive negative values">
+        <div class="section-head"><div class="section-title-wrap"><span class="section-index">31</span><div><h2>Power Transformer: Box-Cox &amp; Yeo-Johnson</h2><p class="section-intro">Power transformations skewed numerical distributions ko more symmetric banane ki koshish karti hain.</p></div></div><label class="lecture-complete"><input type="checkbox" data-lecture="31"> Complete</label></div>
         <article class="panel"><h3>Box-Cox vs Yeo-Johnson</h3><div class="table-wrap"><table><thead><tr><th>Transformer</th><th>Input restriction</th><th>Idea</th><th>scikit-learn code</th></tr></thead><tbody><tr><td>Box-Cox</td><td>Strictly positive values only.</td><td>Lambda parameter choose karke distribution ko Gaussian-like banane ki koshish.</td><td><code>PowerTransformer(method='box-cox')</code></td></tr><tr><td>Yeo-Johnson</td><td>Positive, zero aur negative values handle kar sakta hai.</td><td>Box-Cox jaisa transformation without strict positivity restriction.</td><td><code>PowerTransformer(method='yeo-johnson')</code></td></tr></tbody></table></div><div class="formula">from sklearn.preprocessing import PowerTransformer<br><br>pt = PowerTransformer(method='yeo-johnson', standardize=True)<br>X_transformed = pt.fit_transform(X)</div></article>
         <article class="panel" style="margin-top:15px"><h3>Kab use karein?</h3><p>Jab numerical feature strongly skewed ho aur simple log/square-root transformation sufficient na ho, PowerTransformer try kar sakte ho.</p><div class="callout gold"><strong>Reminder:</strong> Transformation ke baad histogram/QQ plot aur model validation se check karo. “More normal” distribution automatically better model guarantee nahi karti.</div></article>
       </section>
@@ -2849,6 +2849,15 @@
     Plotly.newPlot('age-chart', [{ x: ['0-15', '15-30', '30-45', '45-60', '60-80'], y: [100, 345, 190, 70, 12], type: 'bar', marker: { color: '#2f83bd' } }], { ...chartLayout, bargap: 0, xaxis: { ...chartLayout.xaxis, title: 'age range' }, yaxis: { ...chartLayout.yaxis, title: 'frequency' } }, chartConfig);
     Plotly.newPlot('age-kde', [{ x: [0, 8, 15, 20, 25, 30, 40, 50, 60, 70, 80], y: [0.001, 0.005, 0.012, 0.028, 0.033, 0.027, 0.016, 0.009, 0.004, 0.001, 0], type: 'scatter', mode: 'lines', line: { color: '#ff8068', width: 3, shape: 'spline' }, name: 'KDE' }], { ...chartLayout, xaxis: { ...chartLayout.xaxis, title: 'Age' }, yaxis: { ...chartLayout.yaxis, title: 'density' } }, chartConfig);
     Plotly.newPlot('fare-chart', [{ x: [5, 10, 15, 18, 20, 21, 22, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 38, 40, 42, 45, 48, 50, 65, 70, 80], type: 'box', orientation: 'h', name: 'Age', boxpoints: false, line: { color: '#55c8c4', width: 2 }, fillcolor: 'rgba(47,131,189,.65)' }], { ...chartLayout, xaxis: { ...chartLayout.xaxis, title: 'Age' }, yaxis: { ...chartLayout.yaxis, showticklabels: false } }, chartConfig);
+
+    const lecture31to35Order = ['lecture-31', 'lecture-32', 'lecture-33', 'lecture-34', 'lecture-35'];
+    let lectureInsertPoint = document.getElementById('lecture-30');
+    lecture31to35Order.forEach((id) => {
+      const section = document.getElementById(id);
+      if (!section) return;
+      lectureInsertPoint.after(section);
+      lectureInsertPoint = section;
+    });
 
     const checks = [...document.querySelectorAll('[data-lecture]')];
     const fill = document.getElementById('progress-fill');
