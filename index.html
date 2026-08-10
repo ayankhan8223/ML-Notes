@@ -2861,7 +2861,8 @@
       const lecture31Head = lecture31.querySelector('.section-head');
       const lecture31Figure = lecture31.querySelector('.power-transformer-summary');
       const lecture31Colab = [...lecture31.querySelectorAll('.callout')].find((el) => el.textContent.includes('Lecture 31 Colab'));
-      if (lecture31Head && lecture31Figure && lecture31Colab) lecture31Head.after(lecture31Figure, lecture31Colab);
+      if (lecture31Figure) lecture31.append(lecture31Figure);
+      if (lecture31Head && lecture31Colab) lecture31Head.after(lecture31Colab);
     }
     const lecture31to35Order = ['lecture-31', 'lecture-32', 'lecture-33', 'lecture-34', 'lecture-35'];
     let lectureInsertPoint = document.getElementById('lecture-30');
