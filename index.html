@@ -548,10 +548,10 @@
         <a href="#lecture-29"><span class="num">29</span><span>ML Pipelines</span></a>
         <a href="#lecture-30"><span class="num">30</span><span>FunctionTransformer</span></a>
         <a href="#lecture-31"><span class="num">31</span><span>Power Transformer</span></a>
-        <a href="#lecture-32"><span class="num">32</span><span>Missing Data</span></a>
-        <a href="#lecture-34"><span class="num">33</span><span>Date-Time Variables</span></a>
-        <a href="#lecture-35"><span class="num">34</span><span>Binning</span></a>
-        <a href="#lecture-33"><span class="num">35</span><span>Mixed Variables</span></a>
+        <a href="#lecture-35"><span class="num">32</span><span>Binning</span></a>
+        <a href="#lecture-33"><span class="num">33</span><span>Mixed Variables</span></a>
+        <a href="#lecture-34"><span class="num">34</span><span>Date-Time Variables</span></a>
+        <a href="#lecture-32"><span class="num">35</span><span>Missing Data</span></a>
       </nav>
       <div class="side-progress">
         <strong>Batch progress</strong>
@@ -2893,8 +2893,8 @@
       if (lecture31Head && lecture31Colab) lecture31Head.after(lecture31Colab);
       if (lecture31Use) lecture31.append(lecture31Use);
     }
-    const lecture31to35Order = ['lecture-31', 'lecture-32', 'lecture-34', 'lecture-35', 'lecture-33'];
-    const lectureNumberMap = { 'lecture-33': '35', 'lecture-34': '33', 'lecture-35': '34' };
+    const lecture31to35Order = ['lecture-31', 'lecture-35', 'lecture-33', 'lecture-34', 'lecture-32'];
+    const lectureNumberMap = { 'lecture-32': '35', 'lecture-33': '33', 'lecture-34': '34', 'lecture-35': '32' };
     Object.entries(lectureNumberMap).forEach(([id, number]) => {
       const section = document.getElementById(id);
       if (!section) return;
