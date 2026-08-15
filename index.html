@@ -446,6 +446,14 @@
     .lecture-code-table th:nth-child(1) { width: 180px; }
     .lecture-code-table th:nth-child(2) { width: 340px; }
     .lecture-code-table th:nth-child(3) { width: 580px; }
+    #lecture-39 .lecture-code-table { min-width: 900px; table-layout: fixed; }
+    #lecture-39 .lecture-code-table th:nth-child(1) { width: 130px; }
+    #lecture-39 .lecture-code-table th:nth-child(2),
+    #lecture-39 .lecture-code-table th:nth-child(3),
+    #lecture-39 .lecture-code-table th:nth-child(4),
+    #lecture-39 .lecture-code-table th:nth-child(5) { width: 190px; }
+    #lecture-39 .formula + .formula { margin-top: -12px; border-top: 0; border-radius: 0 0 7px 7px; }
+    #lecture-39 .formula:has(+ .formula) { border-radius: 7px 7px 0 0; }
     @media (max-width: 760px) { .cca-pros-cons { grid-template-columns: 1fr; } }
     @media (max-width: 760px) { .cca-decision { grid-template-columns: 1fr; } }
     @media (max-width: 760px) { .binning-explanations { grid-template-columns: 1fr; } }
