@@ -411,6 +411,16 @@
     .pca-rotation-figure .stage-title { fill: #dcebe5; font-size: 17px; }
     .pca-rotation-figure .pca-arrow { stroke: var(--coral); stroke-width: 3; }
     .pca-rotation-figure .separator { stroke: #31545c; stroke-width: 2; stroke-dasharray: 6 8; }
+    .pca-math-map { display: grid; grid-template-columns: repeat(5, minmax(145px, 1fr)); gap: 24px; margin-top: 16px; overflow-x: auto; padding: 4px 2px 12px; }
+    .pca-math-step { position: relative; min-width: 145px; padding: 16px 13px; text-align: center; background: #10272e; border: 1px solid #31545c; border-top: 4px solid var(--teal); border-radius: 8px; }
+    .pca-math-step:not(:last-child)::after { content: '→'; position: absolute; top: 50%; right: -21px; color: var(--coral); font-size: 24px; font-weight: 900; transform: translateY(-50%); }
+    .pca-math-step strong { display: block; margin-bottom: 7px; color: var(--ink); font-size: 14px; }
+    .pca-math-step code { display: inline-block; margin-bottom: 7px; }
+    .pca-math-step small { display: block; color: var(--muted); line-height: 1.45; }
+    .optional-math { margin-top: 15px; padding: 14px 16px; background: var(--paper-2); border: 1px solid var(--line); border-radius: 8px; }
+    .optional-math summary { color: var(--ink); cursor: pointer; font-weight: 850; }
+    .optional-math[open] summary { margin-bottom: 12px; }
+    @media (max-width: 900px) { .pca-math-map { grid-template-columns: repeat(5, 180px); } }
     @media (max-width: 720px) { .pca-case-grid { grid-template-columns: 1fr; } }
     .binning-map { padding: 18px; border: 1px solid var(--line); border-radius: 8px; background: #0c1d23; }
     .binning-root { width: min(360px, 100%); margin: 0 auto 22px; padding: 14px; text-align: center; border: 2px solid var(--teal); border-radius: 8px; background: #17343a; }
@@ -3130,9 +3140,29 @@
       </section>
 
       <section class="section searchable" id="lecture-48" data-title="pca problem formulation covariance matrix eigenvalues eigenvectors standardization projection mathematics">
-        <div class="section-head"><div class="section-title-wrap"><span class="section-index">48</span><div><h2>PCA: Problem Formulation &amp; Step-by-Step Solution</h2><p class="section-intro">PCA ka mathematical flow: center/scale, covariance matrix, eigenvectors-eigenvalues aur projection.</p></div></div><label class="lecture-complete"><input type="checkbox" data-lecture="48"> Complete</label></div>
-        <article class="panel"><h3>PCA ke actual steps</h3><div class="flow"><div class="flow-step"><strong>1. Standardize</strong><small>Mean 0, comparable scale</small></div><span class="arrow">-&gt;</span><div class="flow-step"><strong>2. Covariance</strong><small>Feature relationships</small></div><span class="arrow">-&gt;</span><div class="flow-step"><strong>3. Eigen solve</strong><small>Directions + variance</small></div><span class="arrow">-&gt;</span><div class="flow-step"><strong>4. Select &amp; project</strong><small>Top k components</small></div></div><div class="formula">Z = (X - mean) / standard_deviation<br>Covariance matrix: C = (1 / (n - 1)) ZᵀZ<br>Eigenvector with largest eigenvalue → PC1<br>Projected data: X_pca = Z · W_k</div></article>
-        <article class="panel" style="margin-top:15px"><h3>Eigenvalue se component choose karo</h3><p>Covariance matrix ke eigenvectors candidate directions hote hain. Unke eigenvalues batate hain ki us direction me variance kitna hai. Eigenvalues ko descending order me sort karke top <code>k</code> eigenvectors ko projection matrix <code>W_k</code> me rakho.</p><div class="callout teal"><strong>Important:</strong> PCA unsupervised technique hai—target <code>y</code> ko component calculation me use nahi karta.</div></article>
+        <div class="section-head"><div class="section-title-wrap"><span class="section-index">48</span><div><h2>PCA: Problem Formulation &amp; Step-by-Step Solution</h2><p class="section-intro">PCA ka mathematical objective: aisa unit direction find karo jiske upar projected data ka variance maximum ho, phir top directions par data project karke dimensions reduce karo.</p></div></div><label class="lecture-complete"><input type="checkbox" data-lecture="48"> Complete</label></div>
+
+        <article class="panel"><h3>Problem formulation: 2D data ko 1D me lana</h3><p>Maan lo dataset me <code>n</code> observations aur <code>p</code> numerical features hain. Har observation <code>xᵢ ∈ ℝᵖ</code> ek vector hai. Hume ek direction <code>u</code> find karni hai aur saare points ko us direction par project karna hai.</p><div class="table-wrap"><table><thead><tr><th>Symbol</th><th>Meaning</th><th>Shape</th></tr></thead><tbody><tr><td><code>X</code></td><td>Input-feature matrix</td><td><code>n × p</code></td></tr><tr><td><code>xᵢ</code></td><td>Ek observation/row vector</td><td><code>p × 1</code></td></tr><tr><td><code>u</code></td><td>Candidate projection direction; unit vector</td><td><code>p × 1</code></td></tr><tr><td><code>zᵢ</code></td><td><code>xᵢ</code> ka new 1D coordinate</td><td>scalar</td></tr></tbody></table></div><div class="callout gold"><strong>Constraint kyu?</strong> <code>uᵀu = 1</code> rakhna zaroori hai. Agar direction ki length unrestricted ho, to <code>u</code> ko arbitrarily bada karke projected variance fake tareeke se infinite ki ja sakti hai.</div></article>
+
+        <article class="panel" style="margin-top:15px"><h3>Step 1 — ek point ko direction <code>u</code> par project karo</h3><p>General vector projection me denominator <code>uᵀu</code> hota hai. PCA me <code>u</code> unit vector hai, isliye denominator 1 ho jata hai.</p><div class="formula">Scalar projection / new coordinate:<br>zᵢ = uᵀxᵢ<br><br>Projected vector on the line:<br>x̂ᵢ = (uᵀxᵢ)u<br><br>If u = [u₁, u₂]ᵀ and xᵢ = [xᵢ₁, xᵢ₂]ᵀ:<br>zᵢ = u₁xᵢ₁ + u₂xᵢ₂</div><p>PCA output me usually scalar coordinate <code>zᵢ</code> store hota hai. Har original point ko project karoge to <code>z₁, z₂, …, zₙ</code> ki one-dimensional list milti hai.</p></article>
+
+        <article class="panel" style="margin-top:15px"><h3>Step 2 — projected values ka variance maximize karo</h3><p>Projected mean <code>z̄ = uᵀx̄</code> hota hai. Isliye projection variance ko matrix form me simplify kar sakte hain:</p><div class="formula">Var(z) = (1/n) Σᵢ (zᵢ − z̄)²<br>= (1/n) Σᵢ [uᵀ(xᵢ − x̄)]²<br>= uᵀ [(1/n) Σᵢ (xᵢ − x̄)(xᵢ − x̄)ᵀ] u<br>= uᵀSu</div><p>Bracket ke andar wali matrix <code>S</code> covariance matrix hai. PCA ka formal optimization problem:</p><div class="formula">maximize&nbsp;&nbsp;uᵀSu<br>subject to&nbsp;&nbsp;uᵀu = 1</div><div class="callout teal"><strong>Lecture ki most important line:</strong> Hume woh unit vector <code>u</code> chahiye jiske upar saare points project karne ke baad variance maximum aaye.</div></article>
+
+        <article class="panel" style="margin-top:15px"><h3>Variance se covariance tak</h3><p>Variance ek feature ka spread batata hai, lekin multiple features ki orientation/relationship nahi. Covariance batata hai ki do features saath me kaise change karte hain.</p><div class="formula">Var(X₁) = (1/n) Σᵢ (xᵢ₁ − x̄₁)²<br><br>Cov(X₁, X₂) = (1/n) Σᵢ (xᵢ₁ − x̄₁)(xᵢ₂ − x̄₂)</div><div class="table-wrap"><table><thead><tr><th>Covariance</th><th>Interpretation</th></tr></thead><tbody><tr><td>Positive</td><td><code>X₁</code> badhta hai to <code>X₂</code> bhi generally badhta hai.</td></tr><tr><td>Negative</td><td><code>X₁</code> badhta hai to <code>X₂</code> generally ghatta hai.</td></tr><tr><td>Near zero</td><td>Strong linear co-movement nahi dikh raha.</td></tr></tbody></table></div><div class="callout gold"><strong>Covariance vs correlation:</strong> Sign ka intuition similar hai, lekin correlation standardized hokar <code>−1</code> se <code>+1</code> ke beech hota hai; covariance ki fixed range nahi hoti.</div></article>
+
+        <article class="panel" style="margin-top:15px"><h3>Covariance matrix ka structure</h3><p><code>p</code> features ke liye covariance matrix ka shape <code>p × p</code> hota hai. Diagonal par individual variances aur off-diagonal par pairwise covariances aati hain.</p><div class="formula">For two features:<br><br>S = [ Var(X₁)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Cov(X₁,X₂) ]<br>&nbsp;&nbsp;&nbsp;&nbsp;[ Cov(X₂,X₁)&nbsp;&nbsp;Var(X₂)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;]<br><br>Matrix form for centered X:<br>S = (1/n)XᵀX&nbsp;&nbsp;&nbsp;or sample convention&nbsp;&nbsp;&nbsp;S = (1/(n−1))XᵀX</div><ul><li><code>Cov(X₁,X₂) = Cov(X₂,X₁)</code>, so covariance matrix symmetric hoti hai.</li><li>Diagonal values data ka axis-wise spread batati hain.</li><li>Off-diagonal values data ki orientation/tilt batati hain.</li><li>Isi matrix me dataset ke spread aur linear orientation ki combined information hoti hai.</li></ul></article>
+
+        <article class="panel" style="margin-top:15px"><h3>Matrix transformation, eigenvectors aur eigenvalues</h3><p>Matrix ko ek linear transformation ki tarah samjho: woh coordinate space ko rotate, stretch, shrink, reflect ya squash kar sakti hai. Most vectors ka direction transformation ke baad change hota hai, lekin kuch special vectors apni line/direction preserve karte hain.</p><div class="formula">Av = λv</div><div class="table-wrap"><table><thead><tr><th>Term</th><th>Meaning</th></tr></thead><tbody><tr><td><code>A</code></td><td>Transformation matrix</td></tr><tr><td><code>v</code></td><td>Eigenvector: transformation ke baad same line/direction me rehta hai</td></tr><tr><td><code>λ</code></td><td>Eigenvalue: eigenvector kitna stretch/shrink/flip hua</td></tr></tbody></table></div><p><code>λ &gt; 1</code> stretch, <code>0 &lt; λ &lt; 1</code> shrink aur negative <code>λ</code> direction flip ke saath scaling represent kar sakta hai.</p></article>
+
+        <article class="panel" style="margin-top:15px"><h3>Optimization ka solution eigenvector kyu hai?</h3><p>Lecture me optimization ka direct result use hua: covariance matrix ke eigenvectors hi candidate principal directions hain. Lagrange-multiplier bridge se result:</p><div class="formula">L(u, λ) = uᵀSu − λ(uᵀu − 1)<br><br>∂L/∂u = 0<br>2Su − 2λu = 0<br>Su = λu</div><p>Ye exactly eigenvector equation hai. Aur agar <code>u</code> unit eigenvector hai:</p><div class="formula">Variance along u = uᵀSu<br>= uᵀ(λu)<br>= λ(uᵀu)<br>= λ</div><div class="callout teal"><strong>Core result:</strong> Covariance matrix ka eigenvector direction batata hai; corresponding eigenvalue us direction ka variance batata hai. Sabse badi eigenvalue ka eigenvector = <strong>PC1</strong>, second largest = <strong>PC2</strong>, and so on.</div></article>
+
+        <article class="panel" style="margin-top:15px"><h3>Complete PCA algorithm — lecture order</h3><div class="flow"><div class="flow-step"><strong>1. Center / scale</strong><small>Origin par lao</small></div><span class="arrow">-&gt;</span><div class="flow-step"><strong>2. Covariance</strong><small>Spread + orientation</small></div><span class="arrow">-&gt;</span><div class="flow-step"><strong>3. Eigen decomposition</strong><small>Directions + variance</small></div><span class="arrow">-&gt;</span><div class="flow-step"><strong>4. Sort &amp; select</strong><small>Top k PCs</small></div><span class="arrow">-&gt;</span><div class="flow-step"><strong>5. Project</strong><small>New coordinates</small></div></div><ol><li><strong>Mean-center:</strong> <code>Xc = X − μ</code>. Lecture code me <code>StandardScaler</code> use hua, so centering ke saath scaling bhi hui: <code>Xs = (X−μ)/σ</code>.</li><li><strong>Covariance matrix:</strong> <code>S = np.cov(Xs, rowvar=False)</code>.</li><li><strong>Eigen pairs:</strong> <code>Svⱼ = λⱼvⱼ</code>.</li><li><strong>Descending sort:</strong> <code>λ₁ ≥ λ₂ ≥ … ≥ λₚ</code>.</li><li><strong>Top k eigenvectors:</strong> columns me combine karke projection matrix <code>Wₖ</code> banao.</li><li><strong>Transform:</strong> centered/scaled data ko <code>Wₖ</code> se multiply karo.</li></ol><div class="callout gold"><strong>Center vs scale:</strong> PCA ko mean-centered data chahiye. Scaling especially tab important hai jab features ki units/ranges different hon; warna large-scale feature variance dominate kar sakta hai.</div></article>
+
+        <article class="panel" style="margin-top:15px"><h3>Projection matrix aur shapes: 3D → 2D / 1D</h3><p>Maan lo <code>X</code> me 1000 rows aur 3 features hain.</p><div class="table-wrap"><table><thead><tr><th>Object</th><th>Shape</th><th>Meaning</th></tr></thead><tbody><tr><td><code>Xs</code></td><td><code>1000 × 3</code></td><td>Centered/scaled 3D data</td></tr><tr><td><code>W₂</code></td><td><code>3 × 2</code></td><td>PC1 aur PC2 as columns</td></tr><tr><td><code>Z = XsW₂</code></td><td><code>1000 × 2</code></td><td>New 2D dataset</td></tr><tr><td><code>W₁</code></td><td><code>3 × 1</code></td><td>Only PC1</td></tr><tr><td><code>Z = XsW₁</code></td><td><code>1000 × 1</code></td><td>New 1D dataset</td></tr></tbody></table></div><div class="formula">Column-vector convention:<br>Z = Xs · Wₖ<br><br>If PCs are stored as rows (k × p), as in the lecture notation:<br>Z = Xs · PCsᵀ</div><p>Target column <code>y</code> projection calculate karne me use nahi hota; transform ke baad same target values new <code>PC1, PC2, …</code> features ke saath copy hoti hain.</p></article>
+
+        <article class="panel" style="margin-top:15px"><h3>Small mathematical example</h3><p>Suppose centered/scaled two-feature data ki covariance matrix:</p><div class="formula">S = [ 1.0&nbsp;&nbsp;0.8 ]<br>&nbsp;&nbsp;&nbsp;&nbsp;[ 0.8&nbsp;&nbsp;1.0 ]<br><br>Eigen pair 1:<br>λ₁ = 1.8,&nbsp;&nbsp;v₁ = (1/√2)[1, 1]ᵀ&nbsp;&nbsp;→ PC1<br><br>Eigen pair 2:<br>λ₂ = 0.2,&nbsp;&nbsp;v₂ = (1/√2)[1, −1]ᵀ&nbsp;&nbsp;→ PC2</div><p>Total variance <code>λ₁ + λ₂ = 2.0</code>. PC1 alone <code>1.8 / 2.0 = 90%</code> variance capture karta hai. Isliye 2D → 1D reduction me PC1 retain karna sensible ho sakta hai.</p></article>
+
+        <article class="panel" style="margin-top:15px"><h3>From-scratch NumPy implementation</h3><div class="formula">import numpy as np<br>from sklearn.preprocessing import StandardScaler<br><br># X shape: (n_samples, n_features)<br>Xs = StandardScaler().fit_transform(X)<br><br># p × p covariance matrix<br>S = np.cov(Xs, rowvar=False)<br><br># S symmetric hai, so eigh is suitable<br>eigenvalues, eigenvectors = np.linalg.eigh(S)<br><br># largest eigenvalue first<br>order = np.argsort(eigenvalues)[::-1]<br>eigenvalues = eigenvalues[order]<br>eigenvectors = eigenvectors[:, order]<br><br># top k principal directions<br>k = 2<br>W = eigenvectors[:, :k]      # shape: p × k<br><br># transformed coordinates<br>X_pca = Xs @ W              # shape: n × k</div><div class="callout teal"><strong>Lecture summary in one equation:</strong> <code>covariance → eigenvectors/eigenvalues → top directions → dot product projection</code>.</div></article>
       </section>
 
       <section class="section searchable" id="lecture-49" data-title="pca code example visualization sklearn mnist explained variance transform inverse transform">
@@ -3286,6 +3316,112 @@
       lecture47VarianceArticle.insertBefore(takeaway, squaredDeviationNote);
     }
 
+    const lecture48 = document.querySelector('#lecture-48');
+    if (lecture48) {
+      const lecture48Intro = lecture48.querySelector('.section-intro');
+      if (lecture48Intro) lecture48Intro.textContent = 'Simple goal: original p features ko top k principal components me convert karo, jahan maximum possible variance/information preserve rahe.';
+      lecture48.querySelectorAll(':scope > article').forEach((article) => article.remove());
+      lecture48.insertAdjacentHTML('beforeend', `
+        <article class="panel">
+          <h3>PCA mathematics ka complete visual map</h3>
+          <p>Bas ye five objects yaad rakho. Har step ka output next step ka input hai.</p>
+          <div class="pca-math-map">
+            <div class="pca-math-step"><strong>1. Center</strong><code>Xc = X − μ</code><small>Data ko origin ke around lao.</small></div>
+            <div class="pca-math-step"><strong>2. Covariance</strong><code>S = XcᵀXc/(n−1)</code><small>Spread aur feature relationships.</small></div>
+            <div class="pca-math-step"><strong>3. Eigen solve</strong><code>Sv = λv</code><small><em>v</em> direction; <em>λ</em> us direction ka variance.</small></div>
+            <div class="pca-math-step"><strong>4. Top k choose</strong><code>λ₁ ≥ λ₂ ≥ ...</code><small>Largest eigenvalues ke eigenvectors rakho.</small></div>
+            <div class="pca-math-step"><strong>5. Project</strong><code>Z = XcW</code><small>Original p columns se new k PCs.</small></div>
+          </div>
+          <div class="callout teal"><strong>One-line idea:</strong> Covariance matrix se aisi directions milti hain jahan data sabse zyada spread hai; top directions par projection hi PCA output hai.</div>
+        </article>
+
+        <article class="panel" style="margin-top:15px">
+          <h3>Maximum-variance formula kahan se aaya?</h3>
+          <p>Is formula me koi nayi variance definition nahi bani. Hum ordinary one-dimensional variance formula hi use karte hain—bas pehle every point ko candidate unit direction <code>u</code> par project karte hain.</p>
+          <div class="flow">
+            <div class="flow-step"><strong>Original point</strong><small><code>xᵢ</code> is a p-dimensional vector</small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>Project on u</strong><small><code>xᵢ′ = uᵀxᵢ</code></small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>Get scalar scores</strong><small><code>x₁′, x₂′, ..., xₙ′</code></small></div><span class="arrow">-&gt;</span>
+            <div class="flow-step"><strong>Calculate variance</strong><small>Which u gives maximum spread?</small></div>
+          </div>
+          <h4>1. Har point ka projected coordinate</h4>
+          <div class="formula">xᵢ′ = uᵀxᵢ</div>
+          <p><code>uᵀxᵢ</code> ek scalar number hai—projection line par point ki position. Vector projection <code>(uᵀxᵢ)u</code> hota, lekin spread calculate karne ke liye scalar coordinates <code>xᵢ′</code> chahiye.</p>
+          <h4>2. Projected coordinates ka mean</h4>
+          <div class="formula">x̄′ = (1/n) Σᵢ xᵢ′<br>= (1/n) Σᵢ uᵀxᵢ<br>= uᵀ[(1/n) Σᵢ xᵢ]<br>= uᵀx̄</div>
+          <p>Because <code>u</code> sabhi points ke liye same direction hai, use summation ke bahar nikaal sakte hain.</p>
+          <h4>3. Ordinary variance formula me substitute karo</h4>
+          <div class="formula">Var(projected data)<br>= (1/n) Σᵢ (xᵢ′ − x̄′)²<br><br>Substitute xᵢ′ = uᵀxᵢ and x̄′ = uᵀx̄:<br><br>Var(u)<br>= (1/n) Σᵢ (uᵀxᵢ − uᵀx̄)²<br>= (1/n) Σᵢ [uᵀ(xᵢ − x̄)]²</div>
+          <h4>4. PCA ka optimization question</h4>
+          <div class="formula">Find the unit vector u that maximizes:<br><br>(1/n) Σᵢ [uᵀ(xᵢ − x̄)]²<br><br>subject to&nbsp;&nbsp;uᵀu = 1</div>
+          <div class="callout gold"><strong>Meaning:</strong> Different directions <code>u</code> try karo. Har direction par points ke scalar projections nikalo, unki variance calculate karo, aur maximum variance dene wali direction choose karo. Wahi direction PC1 banegi.</div>
+        </article>
+
+        <article class="panel" style="margin-top:15px">
+          <h3>Har step ko simple language me samjho</h3>
+          <div class="grid-2">
+            <div>
+              <h4>1. Center / scale</h4>
+              <p>Har feature ka mean subtract karo, taaki data origin ke around aa jaye.</p>
+              <div class="formula">Xc = X − μ<br><br>Different units/ranges hon to:<br>Xs = (X − μ) / σ</div>
+              <p>Lecture code me <code>StandardScaler</code> use hua, isliye centering aur scaling dono hui.</p>
+            </div>
+            <div>
+              <h4>2. Covariance matrix</h4>
+              <p>Covariance matrix dataset ka spread + tilt/orientation summarize karti hai.</p>
+              <div class="formula">S = [ Var(F1)&nbsp;&nbsp;&nbsp;Cov(F1,F2) ]<br>&nbsp;&nbsp;&nbsp;&nbsp;[ Cov(F2,F1)&nbsp;&nbsp;Var(F2)&nbsp;&nbsp;&nbsp;]</div>
+              <p>Diagonal = individual feature variance. Off-diagonal = features saath me kaise change karte hain.</p>
+            </div>
+            <div>
+              <h4>3. Eigenvectors and eigenvalues</h4>
+              <div class="formula">Sv = λv</div>
+              <p><code>v</code> ek candidate direction hai. <code>λ</code> batata hai us direction par projected data ka variance kitna hai.</p>
+              <p>Largest <code>λ</code> wala <code>v</code> = <strong>PC1</strong>; next largest = <strong>PC2</strong>.</p>
+            </div>
+            <div>
+              <h4>4–5. Select and project</h4>
+              <p>Eigenvalues descending order me sort karo. Required dimensions ke top eigenvectors ko matrix <code>W</code> me rakho.</p>
+              <div class="formula">W = [PC1&nbsp;&nbsp;PC2&nbsp;&nbsp;...&nbsp;&nbsp;PCk]<br><br>Z = Xc · W</div>
+              <p><code>Z</code> final transformed dataset hai—columns ab original features nahi, principal components hain.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel" style="margin-top:15px">
+          <h3>Projection ka small formula</h3>
+          <p>Ek centered point <code>x</code> ko unit direction <code>u</code> par project karne par uska new coordinate:</p>
+          <div class="formula">score = uᵀx<br><br>Example:<br>u = [u₁, u₂]ᵀ,&nbsp;&nbsp;x = [x₁, x₂]ᵀ<br>score = u₁x₁ + u₂x₂</div>
+          <p>Har row ke liye ye dot product karo. Agar sirf PC1 retain hai to har row se one score milega; PC1 aur PC2 retain hain to two scores milenge.</p>
+          <div class="callout gold"><strong>Important:</strong> PCA direction <code>u</code> unit vector hoti hai (<code>uᵀu = 1</code>). Warna vector ko bas bada karke variance artificially badhayi ja sakti hai.</div>
+        </article>
+
+        <article class="panel" style="margin-top:15px">
+          <h3>3D → 2D matrix shapes</h3>
+          <p>Maan lo 1000 rows aur 3 input features hain; hume top 2 PCs chahiye.</p>
+          <div class="table-wrap"><table><thead><tr><th>Matrix</th><th>Shape</th><th>Meaning</th></tr></thead><tbody><tr><td><code>Xc</code></td><td><code>1000 × 3</code></td><td>Centered 3D data</td></tr><tr><td><code>W</code></td><td><code>3 × 2</code></td><td>PC1 aur PC2 directions</td></tr><tr><td><code>Z = XcW</code></td><td><code>1000 × 2</code></td><td>Final 2D data</td></tr></tbody></table></div>
+          <div class="formula">(1000 × 3) · (3 × 2) = (1000 × 2)</div>
+          <p>Target <code>y</code> PCA calculate karne me use nahi hota. Transformation ke baad wahi target column new PC features ke saath attach hota hai.</p>
+        </article>
+
+        <article class="panel" style="margin-top:15px">
+          <h3>Lecture ka from-scratch code</h3>
+          <div class="formula">import numpy as np<br>from sklearn.preprocessing import StandardScaler<br><br>Xs = StandardScaler().fit_transform(X)<br>S = np.cov(Xs, rowvar=False)<br><br>values, vectors = np.linalg.eigh(S)<br>order = np.argsort(values)[::-1]<br>vectors = vectors[:, order]<br><br>W = vectors[:, :2]  # PC1 and PC2<br>X_pca = Xs @ W</div>
+          <div class="callout teal"><strong>Code ko formula se map karo:</strong> scale → covariance → eigenpairs → sort → top PCs → dot-product projection.</div>
+        </article>
+
+        <details class="optional-math">
+          <summary>Optional: maximum-variance proof (revision ke liye)</summary>
+          <p>Projected coordinate <code>z = uᵀx</code> hai. Centered data ke liye projected variance:</p>
+          <div class="formula">Var(z) = uᵀSu</div>
+          <p>PCA is quantity ko maximize karta hai, with unit-length constraint:</p>
+          <div class="formula">maximize&nbsp;&nbsp;uᵀSu<br>subject to&nbsp;&nbsp;uᵀu = 1</div>
+          <p>Lagrange multiplier lagane par:</p>
+          <div class="formula">L = uᵀSu − λ(uᵀu − 1)<br>∂L/∂u = 0<br>Su = λu</div>
+          <p>Ye eigenvector equation hai. Unit eigenvector ke liye <code>uᵀSu = λ</code>, isliye largest eigenvalue ka eigenvector maximum variance direction—PC1—hota hai.</p>
+        </details>
+      `);
+    }
+
     // Lectures 24–44 are one continuous Feature Transformation block.
     const featureTransformationPrefix = 'Feature Transformation: ';
     document.querySelectorAll('.topic-nav a').forEach((link) => {
@@ -3345,5 +3481,6 @@
     }, { rootMargin: '-25% 0px -65% 0px' });
     sections.forEach((section) => observer.observe(section));
   </script>
+  <script type="module" src="./pca-chapter.js"></script>
 </body>
 </html>
