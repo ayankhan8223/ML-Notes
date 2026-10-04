@@ -392,6 +392,14 @@
     .lecture-figure { margin: 16px 0 0; padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: #0d2026; overflow: hidden; }
     .lecture-figure img { display: block; width: 100%; height: auto; border-radius: 5px; }
     .lecture-figure figcaption { margin: 9px 4px 2px; color: var(--muted); font-size: 13px; line-height: 1.5; }
+    .svm-margin-figure { max-width: 700px; margin: 18px auto 20px; }
+    .svm-derivation-figure { background: var(--paper-2); overflow-x: auto; --svm-graph-blue: #83b6ef; --svm-graph-orange: #f1b85c; --svm-graph-green: #65d6bd; --svm-graph-red: #ff8b78; }
+    .svm-derivation-figure svg { display: block; width: 100%; min-width: 620px; height: auto; }
+    .svm-derivation-figure .graph-label { fill: var(--ink); font: 500 17px var(--body); }
+    .svm-derivation-figure .graph-secondary { fill: var(--muted); font: 500 14px var(--body); }
+    .svm-c-figure { max-width: 980px; }
+    .svm-c-figure svg { min-width: 800px; }
+    body.light .svm-derivation-figure { --svm-graph-blue: #2068a8; --svm-graph-orange: #9b5f0d; --svm-graph-green: #078577; --svm-graph-red: #bf493c; }
     .pca-case-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 14px; }
     .pca-case-figure { margin: 0; padding: 10px; border: 1px solid #31545c; border-radius: 8px; background: #0d2026; overflow: hidden; }
     .pca-case-figure svg { display: block; width: 100%; height: auto; }
@@ -844,11 +852,17 @@
         <a href="#lecture-88"><span class="num">88</span><span>Naive Bayes: Mathematics</span></a>
         <a href="#lecture-89"><span class="num">89</span><span>Naive Bayes: Simple Example Code</span></a>
         <a href="#lecture-90"><span class="num">90</span><span>Gaussian Naive Bayes</span></a>
+        <a href="#lecture-91"><span class="num">91</span><span>K-Nearest Neighbors (KNN)</span></a>
+        <a href="#lecture-92"><span class="num">92</span><span>SVM: Geometric Intuition</span></a>
+        <a href="#lecture-93"><span class="num">93</span><span>SVM: Hard Margin Mathematics</span></a>
+        <a href="#lecture-94"><span class="num">94</span><span>SVM: Soft Margin</span></a>
+        <a href="#lecture-95"><span class="num">95</span><span>Kernel Trick: Geometric Intuition</span></a>
+        <a href="#lecture-96"><span class="num">96</span><span>Kernel Trick: RBF Code Demo</span></a>
       </nav>
       <div class="side-progress">
         <strong>Batch progress</strong>
         <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
-        <span id="progress-label">0 of 90 lectures complete</span>
+        <span id="progress-label">0 of 96 lectures complete</span>
       </div>
     </aside>
 
@@ -4007,8 +4021,359 @@ print(max(scores, key=scores.get))  # No</code></pre>
         </article>
       </section>
 
+      <section class="section searchable" id="lecture-91" data-title="knn k nearest neighbors distance voting scaling k overfitting decision surface failure cases">
+        <div class="section-head"><div class="section-title-wrap"><span class="section-index">91</span><div><h2>K-Nearest Neighbors (KNN)</h2><p class="section-intro">New point ko uske nearest training examples ke votes se classify karo.</p></div></div><label class="lecture-complete"><input type="checkbox" data-lecture="91"> Complete</label></div>
+        <article class="panel">
+          <h3>Intuition: “nearest log” ka answer</h3>
+          <p>Lecture ka first example: student ka <strong>CGPA</strong> aur <strong>IQ</strong> input hain; placement hua (<code>1</code>) ya nahi (<code>0</code>) output hai. Ek new student aaye to KNN pehle uske aas-paas ke known students dekhta hai. Model koi straight-line equation learn karke nahi rakhta; training examples aur labels store karta hai.</p>
+          <p>Suppose <span class="regression-math-inline" data-regression-math-inline="k=3"></span>. New student se <strong>har training student</strong> ka distance nikalo, distances sort karo, 3 nearest students lo. Agar unke labels <code>1, 1, 0</code> hain, majority <code>1</code> hai, so <strong>placement predicted</strong>. <span class="regression-math-inline" data-regression-math-inline="k"></span> ka matlab “kitne neighbors vote denge,” classes ki count nahi.</p>
+          <div class="regression-math" data-regression-math="d(x,q)=\sqrt{(x_1-q_1)^2+(x_2-q_2)^2}"></div>
+          <p>Ye two-feature <strong>Euclidean distance</strong> hai. More columns hon to har column ke squared difference ka sum lenge. Lecture me classification ke liye simple <strong>majority vote</strong> use hua; regression case me neighbors ke target values ka average le sakte hain.</p>
+        </article>
+        <article class="panel">
+          <h3>Practical flow: breast-cancer dataset</h3>
+          <p>Code demo me 569 patients aur 30 numeric input features wala breast-cancer dataset use hua. Data ko train/test me split kiya, <strong>scaling sirf training set par fit</strong> ki, train aur test dono ko same fitted scaler se transform kiya, phir <code>KNeighborsClassifier</code> se prediction aur accuracy check ki.</p>
+          <div class="callout gold"><strong>Scaling zaroori kyun?</strong> Agar ek feature 10,000 ke scale par aur doosra 0–1 par hai, Euclidean distance me pehla feature dominate karega. Tab “nearest” ka meaning misleading ho sakta hai. Test data par scaler dobara <code>fit</code> nahi karte—isse test information training process me leak ho sakti hai.</div>
+          <pre><code>from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
+
+X, y = load_breast_cancer(return_X_y=True)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+model = make_pipeline(StandardScaler(), KNeighborsClassifier(n_neighbors=5))
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+print(accuracy_score(y_test, y_pred))</code></pre>
+          <p><code>make_pipeline</code> automatically scaler ko training data par fit karke test data par wahi transformation lagata hai. Score har split par change ho sakta hai; lecture ka approximately 97% result universal guarantee nahi hai.</p>
+        </article>
+        <article class="panel">
+          <h3><span class="regression-math-inline" data-regression-math-inline="k"></span> ka value kaise choose karein?</h3>
+          <p>Lecture me <span class="regression-math-inline" data-regression-math-inline="\sqrt{n}"></span> ko ek <em>starting heuristic</em> bataya, phir multiple <span class="regression-math-inline" data-regression-math-inline="k"></span> values try karke accuracy compare ki. Us demo me <span class="regression-math-inline" data-regression-math-inline="k=3"></span> best dikha; har dataset ke liye 3 best nahi hoga. Odd <span class="regression-math-inline" data-regression-math-inline="k"></span> binary classes me exact voting tie avoid karne me help karta hai, but ties poori tarah impossible nahi hoti.</p>
+          <div class="grid-2"><div class="callout teal"><strong>Very small k, e.g. 1:</strong> ek isolated/noisy point bhi nearby area ka label badal sakta hai. Boundary jagged; overfitting ka risk.</div><div class="callout gold"><strong>Very large k:</strong> local pattern ignore ho sakta hai; majority class everywhere win karne lage. Boundary too smooth; underfitting ka risk.</div></div>
+          <p><strong>Important evaluation correction:</strong> <span class="regression-math-inline" data-regression-math-inline="k"></span> tune karne ke liye validation set ya cross-validation use karo. Final test set ko repeatedly dekhkar <span class="regression-math-inline" data-regression-math-inline="k"></span> choose karoge to test score biased ho jayega.</p>
+        </article>
+        <article class="panel">
+          <h3>Decision surface ka matlab</h3>
+          <p>Two features ko graph par plot karo. Har possible location par trained KNN se class predict karke us area ko colour do. Same-colour areas <strong>decision regions</strong> hain; jahan colour change hota hai, woh <strong>decision boundary</strong> hai. Lecture ne isi visual se dikhaya: <span class="regression-math-inline" data-regression-math-inline="k=1"></span> par chhote-chhote regions; <span class="regression-math-inline" data-regression-math-inline="k"></span> badhne par boundary smoother.</p>
+          <p>Ye surface 2D me explain karna easy hai. Actual breast-cancer demo ke 30 features ko directly 2D me nahi dikha sakte; lecture ne visualisation ke liye two features liye.</p>
+        </article>
+        <article class="panel">
+          <h3>Lecture ke six caution points</h3>
+          <div class="table-wrap"><table><thead><tr><th>Situation</th><th>KNN ko kya problem?</th></tr></thead><tbody>
+            <tr><td>Very large training data</td><td>Prediction par many distances calculate karne padte hain; latency badh sakti hai.</td></tr>
+            <tr><td>Very high dimensions</td><td>Distance ke basis par “close” aur “far” differentiate karna harder hota hai (curse of dimensionality).</td></tr>
+            <tr><td>Outliers/noise</td><td>Especially small <span class="regression-math-inline" data-regression-math-inline="k"></span> par local vote wrong direction me ja sakta hai.</td></tr>
+            <tr><td>Different feature scales</td><td>Large-scale column distance dominate karta hai; scaling needed.</td></tr>
+            <tr><td>Imbalanced classes</td><td>Majority class local votes me bhi dominate kar sakti hai; accuracy alone misleading ho sakti hai.</td></tr>
+            <tr><td>Explanation/inference</td><td>Nearby examples dikha sakte ho, but simple coefficients jaise “CGPA ka effect kitna” directly nahi milte.</td></tr>
+          </tbody></table></div>
+          <p>KNN simple prediction baseline hai, lekin “simple” ka matlab har dataset par best nahi. Distance, scale, <span class="regression-math-inline" data-regression-math-inline="k"></span>, class balance aur prediction speed check karo.</p>
+        </article>
+      </section>
+
+      <section class="section searchable" id="lecture-92" data-title="support vector machine svm geometric intuition hyperplane maximum margin support vectors">
+        <div class="section-head"><div class="section-title-wrap"><span class="section-index">92</span><div><h2>Support Vector Machines — Geometric Intuition</h2><p class="section-intro">Classes ko separate karne wali kisi bhi line ke bajay, widest safe gap wali line choose karo.</p></div></div><label class="lecture-complete"><input type="checkbox" data-lecture="92"> Complete</label></div>
+        <article class="panel">
+          <h3>Many separating lines: best kaunsi?</h3>
+          <p>Do classes of points ke beech multiple lines draw ho sakti hain. Sirf training points correctly separate hona enough nahi: ek line ek class ke bilkul paas se guzar sakti hai, so new point par small change se answer flip ho sakta hai. SVM aisi boundary chahta hai jiske <strong>dono classes ke nearest points se gap maximum</strong> ho. Isi gap ko <strong>margin</strong> bolte hain.</p>
+          <figure class="lecture-figure svm-margin-figure"><img src="assets/lecture-92-svm-margin-board.png" alt="Lecture board with central decision boundary pi, positive margin line pi plus touching the nearest green points, negative margin line pi minus touching the nearest red points, and margin d"><figcaption>Lecture board ko order me padho: beech ki <span class="regression-math-inline" data-regression-math-inline="\pi"></span> decision boundary green aur red classes ko separate karti hai. Isi boundary ke parallel line positive side ki taraf le jao—jo <strong>nearest green point</strong> ko pehle touch kare, woh <span class="regression-math-inline" data-regression-math-inline="\pi_+"></span> hai. Negative side par <strong>nearest red point</strong> ko touch karne wali line <span class="regression-math-inline" data-regression-math-inline="\pi_-"></span> hai. In touching points ko <strong>support vectors</strong> kehte hain.</figcaption></figure>
+          <p><span class="regression-math-inline" data-regression-math-inline="\pi_+"></span> aur <span class="regression-math-inline" data-regression-math-inline="\pi_-"></span> ke beech ka perpendicular gap <span class="regression-math-inline" data-regression-math-inline="d"></span> <strong>margin</strong> hai. SVM decision boundary ki position aur direction aise choose karta hai ki ye gap maximum ho.</p>
+          <p>2D me decision boundary ek line, 3D me plane, aur more features me <strong>hyperplane</strong> hai. Boundary ke one side class <span class="regression-math-inline" data-regression-math-inline="+1"></span>, doosri side class <span class="regression-math-inline" data-regression-math-inline="-1"></span>:</p>
+          <div class="regression-math" data-regression-math="w^\top x+b=0\qquad\Longrightarrow\qquad \hat y=\operatorname{sign}(w^\top x+b)"></div>
+          <p><span class="regression-math-inline" data-regression-math-inline="w"></span> boundary ko perpendicular direction deta hai; <span class="regression-math-inline" data-regression-math-inline="b"></span> uski position shift karta hai. Boundary se kisi point ki perpendicular distance <span class="regression-math-inline" data-regression-math-inline="|w^\top x+b|/\lVert w\rVert"></span> hai. Isi liye margin actual geometric distance hai—not just raw model score.</p>
+        </article>
+        <article class="panel">
+          <h3>Support vectors boundary ko “support” kaise karte hain?</h3>
+          <p>Positive aur negative side par jo <strong>closest training points</strong> hain, woh margin edges touch karte hain. Unhe <strong>support vectors</strong> bolte hain. Agar kisi far-away point ko thoda move karo, best boundary often same rahegi; nearest support vector ko move karo to margin aur boundary change ho sakti hai.</p>
+          <div class="callout teal"><strong>Lecture ka core idea:</strong> separating hyperplane choose karo → nearest points identify karo → unse minimum distance ko as large as possible rakho. “Maximum-margin classifier” naam isi se aata hai.</div>
+          <p>Ye geometric story perfectly separable points ke liye clean hai. Real data me overlap, noise ya outliers hon to every point ko outside-margin rakhna possible nahi; us case ka solution soft-margin SVM me aayega.</p>
+        </article>
+        <article class="panel">
+          <h3>SVM ke advantages</h3>
+          <div class="table-wrap"><table><thead><tr><th>Advantage</th><th>Simple meaning</th></tr></thead><tbody>
+            <tr><td><strong>Outliers ko tolerate kar sakta hai</strong></td><td><strong>Soft-margin SVM</strong> kuch noisy/outlier points ko margin ke andar ya wrong side par allow karta hai, taaki boundary har ek unusual point ke peeche na bhaage. Hard-margin SVM automatically outlier-robust nahi hai; soft-margin me <span class="regression-math-inline" data-regression-math-inline="C"></span> ka choice matter karta hai (Lecture 94).</td></tr>
+            <tr><td><strong>Non-linear data par bhi kaam</strong></td><td>Jab straight line classes ko separate na kar sake, <strong>kernel</strong> ki help se original feature space me curved decision boundary mil sakti hai (Lecture 95).</td></tr>
+            <tr><td><strong>Classification aur regression dono</strong></td><td>Class label predict karna ho to <strong>SVC</strong>; continuous value predict karni ho to <strong>SVR</strong>. Dono SVM family ke methods hain.</td></tr>
+          </tbody></table></div>
+        </article>
+      </section>
+
+      <section class="section searchable" id="lecture-93" data-title="svm hard margin mathematics hyperplane support planes distance optimization constraints">
+        <div class="section-head"><div class="section-title-wrap"><span class="section-index">93</span><div><h2>Mathematics of SVM — Hard Margin</h2><p class="section-intro">Maximum-margin intuition ko equation aur constrained optimization me convert karo.</p></div></div><label class="lecture-complete"><input type="checkbox" data-lecture="93"> Complete</label></div>
+        <article class="panel">
+          <h3>Step 1 — decision boundary aur labels</h3>
+          <p>Har training point <span class="regression-math-inline" data-regression-math-inline="x_i"></span> ka label <span class="regression-math-inline" data-regression-math-inline="y_i\in\{-1,+1\}"></span>. <strong>General form:</strong> 2D me decision boundary <span class="regression-math-inline" data-regression-math-inline="w_1x+w_2y+b=0"></span> hai (vector form <span class="regression-math-inline" data-regression-math-inline="w^\top x+b=0"></span>). Kisi point ke coordinates put karke score <span class="regression-math-inline" data-regression-math-inline="w^\top x_i+b"></span> nikalo. Lecture ka prediction rule:</p>
+          <div class="regression-math" data-regression-math="\hat y_i=\begin{cases}+1,&amp;\text{if }w^\top x_i+b\ge0\\-1,&amp;\text{if }w^\top x_i+b<0\end{cases}"></div>
+          <p>Score zero ho to point exactly decision boundary par hai; lecture ke <span class="regression-math-inline" data-regression-math-inline="\ge0"></span> convention se prediction <span class="regression-math-inline" data-regression-math-inline="+1"></span> milegi. Yahan coordinate <span class="regression-math-inline" data-regression-math-inline="y"></span> aur class label <span class="regression-math-inline" data-regression-math-inline="y_i"></span> alag cheezein hain.</p>
+          <h4>Numeric example — point ko classify kaise karein?</h4>
+          <p>Maan lo decision boundary <span class="regression-math-inline" data-regression-math-inline="2x+3y+3=0"></span> hai. Yahan <span class="regression-math-inline" data-regression-math-inline="w=(2,3),\ b=3"></span>. Har point ke <span class="regression-math-inline" data-regression-math-inline="(x,y)"></span> coordinates formula me put karke score nikalo:</p>
+          <ol>
+            <li><strong>Point <span class="regression-math-inline" data-regression-math-inline="(-1,0)"></span>:</strong>
+              <div class="regression-math" data-regression-math="2(-1)+3(0)+3=+1\ge0"></div>
+              <p>Score positive hai → <strong>prediction +1</strong>.</p>
+            </li>
+            <li><strong>Point <span class="regression-math-inline" data-regression-math-inline="(-2,0)"></span>:</strong>
+              <div class="regression-math" data-regression-math="2(-2)+3(0)+3=-1<0"></div>
+              <p>Score negative hai → <strong>prediction −1</strong>.</p>
+            </li>
+            <li><strong>Point <span class="regression-math-inline" data-regression-math-inline="(-1.5,0)"></span>:</strong>
+              <div class="regression-math" data-regression-math="2(-1.5)+3(0)+3=0"></div>
+              <p>Point exactly boundary par hai. Lecture ke <span class="regression-math-inline" data-regression-math-inline="\ge0"></span> rule se <strong>prediction +1</strong>.</p>
+            </li>
+          </ol>
+          <p>Ye numbers calculation samjhane ke liye hain; trained model <span class="regression-math-inline" data-regression-math-inline="w,b"></span> data se seekhta hai.</p>
+          <figure class="lecture-figure svm-margin-figure"><img src="assets/lecture-93-hard-margin-planes.png" alt="Lecture board showing green positive and red negative points around three parallel SVM lines: w transpose x plus b equals positive one, zero, and negative one"><figcaption>Lecture board: solid middle line <span class="regression-math-inline" data-regression-math-inline="w^\top x+b=0"></span> decision boundary hai. Upper dashed line <span class="regression-math-inline" data-regression-math-inline="w^\top x+b=+1"></span> positive margin edge aur lower dashed line <span class="regression-math-inline" data-regression-math-inline="w^\top x+b=-1"></span> negative margin edge hai. In edges ko touch karne wale nearest points support vectors hain.</figcaption></figure>
+          <p><strong>Prediction rule</strong> me zero se side decide hoti hai. Neeche wali <span class="regression-math-inline" data-regression-math-inline="+1,-1"></span> conditions <strong>hard-margin training</strong> ke liye hain: training points ko boundary ke sirf correct side par nahi, margin ke bahar bhi rakhna hai.</p>
+          <div class="grid-2"><div class="callout teal"><strong>Positive class</strong><br><span class="regression-math-inline" data-regression-math-inline="y_i=+1,\quad w^\top x_i+b\ge1"></span></div><div class="callout gold"><strong>Negative class</strong><br><span class="regression-math-inline" data-regression-math-inline="y_i=-1,\quad w^\top x_i+b\le-1"></span></div></div>
+          <h4>In dono conditions ko ek equation mein kaise likhein?</h4>
+          <ol>
+            <li><strong>Positive point:</strong> label <span class="regression-math-inline" data-regression-math-inline="y_i=+1"></span> hai. Uski condition <span class="regression-math-inline" data-regression-math-inline="w^\top x_i+b\ge1"></span> ko <span class="regression-math-inline" data-regression-math-inline="+1"></span> se multiply karo:
+              <div class="regression-math" data-regression-math="(+1)(w^\top x_i+b)\ge1"></div>
+            </li>
+            <li><strong>Negative point:</strong> label <span class="regression-math-inline" data-regression-math-inline="y_i=-1"></span> hai. Uski condition <span class="regression-math-inline" data-regression-math-inline="w^\top x_i+b\le-1"></span> ko <span class="regression-math-inline" data-regression-math-inline="-1"></span> se multiply karo. <strong>Negative number se multiply karte waqt inequality ulat jaati hai:</strong>
+              <div class="regression-math" data-regression-math="(-1)(w^\top x_i+b)\ge(-1)(-1)=1"></div>
+            </li>
+          </ol>
+          <p>Ab positive case me <span class="regression-math-inline" data-regression-math-inline="+1"></span> aur negative case me <span class="regression-math-inline" data-regression-math-inline="-1"></span>—dono jagah wahi point ka label <span class="regression-math-inline" data-regression-math-inline="y_i"></span> hai. Isliye lecture ke dono rules ek hi condition ban jaate hain:</p>
+          <div class="regression-math" data-regression-math="y_i(w^\top x_i+b)\ge1\qquad\text{for every training point }i"></div>
+          <h4>Support vector ke liye <span class="regression-math-inline" data-regression-math-inline="=1"></span> kahan se aaya?</h4>
+          <p><span class="regression-math-inline" data-regression-math-inline="\ge1"></span> <strong>sab training points</strong> ke liye rule hai. Jo nearest point margin line ko <strong>exactly touch</strong> karta hai, uska score boundary value par hota hai:</p>
+          <div class="grid-2"><div class="callout teal"><strong>Positive margin par point</strong><br><span class="regression-math-inline" data-regression-math-inline="w^\top x_i+b=+1,\quad y_i=+1"></span><br><span class="regression-math-inline" data-regression-math-inline="y_i(w^\top x_i+b)=(+1)(+1)=1"></span></div><div class="callout gold"><strong>Negative margin par point</strong><br><span class="regression-math-inline" data-regression-math-inline="w^\top x_i+b=-1,\quad y_i=-1"></span><br><span class="regression-math-inline" data-regression-math-inline="y_i(w^\top x_i+b)=(-1)(-1)=1"></span></div></div>
+          <p>Isliye hard-margin SVM me <strong>support vectors</strong> ke liye <span class="regression-math-inline" data-regression-math-inline="y_i(w^\top x_i+b)=1"></span>; margin se aur door sahi side par points ke liye value <span class="regression-math-inline" data-regression-math-inline=">1"></span> hoti hai. <span class="regression-math-inline" data-regression-math-inline="=1"></span> koi naya rule nahi—upar wali <span class="regression-math-inline" data-regression-math-inline="\ge1"></span> condition ka <strong>touching/equality case</strong> hai.</p>
+        </article>
+        <article class="panel">
+          <h3>Step 2 — two support planes ke beech distance</h3>
+          <figure class="lecture-figure svm-margin-figure svm-derivation-figure">
+            <svg viewBox="0 0 760 420" role="img" aria-labelledby="svm-projection-title svm-projection-desc">
+              <title id="svm-projection-title">SVM margin: blue displacement and orange perpendicular gap</title>
+              <desc id="svm-projection-desc">Red support vector x1 lies on the lower margin and green support vector x2 lies on the upper margin. A blue arrow connects them. An orange arrow from x1 reaches point P on the upper margin at a right angle. The grey segment from P to x2 runs along the margin and does not contribute to the perpendicular gap d.</desc>
+              <defs>
+                <marker id="svm-note-blue-arrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 Z" fill="var(--svm-graph-blue)" /></marker>
+                <marker id="svm-note-orange-arrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 Z" fill="var(--svm-graph-orange)" /></marker>
+              </defs>
+              <line x1="60" y1="385" x2="645" y2="385" stroke="var(--line)" stroke-width="1.5" />
+              <line x1="60" y1="385" x2="60" y2="35" stroke="var(--line)" stroke-width="1.5" />
+              <line x1="80" y1="111" x2="620" y2="219" stroke="var(--muted)" stroke-width="2" stroke-dasharray="9 7" />
+              <line x1="80" y1="181" x2="620" y2="289" stroke="var(--ink-2)" stroke-width="2" />
+              <line x1="80" y1="251" x2="620" y2="359" stroke="var(--muted)" stroke-width="2" stroke-dasharray="9 7" />
+              <text class="graph-label" x="628" y="222">+1 margin</text>
+              <text class="graph-label" x="628" y="292">0 boundary</text>
+              <text class="graph-label" x="628" y="362">−1 margin</text>
+              <g stroke="var(--svm-graph-green)" stroke-width="2.5">
+                <path d="M143 53 L157 67 M157 53 L143 67" /><path d="M208 69 L222 83 M222 69 L208 83" /><path d="M263 68 L277 82 M277 68 L263 82" /><path d="M328 98 L342 112 M342 98 L328 112" /><path d="M443 118 L457 132 M457 118 L443 132" />
+              </g>
+              <g stroke="var(--svm-graph-red)" stroke-width="2.5">
+                <path d="M153 313 L167 327 M167 313 L153 327" /><path d="M218 323 L232 337 M232 323 L218 337" /><path d="M298 338 L312 352 M312 338 L298 352" /><path d="M363 343 L377 357 M377 343 L363 357" /><path d="M533 383 L547 397 M547 383 L533 397" />
+              </g>
+              <line x1="480" y1="331" x2="390" y2="173" stroke="var(--svm-graph-blue)" stroke-width="4" marker-end="url(#svm-note-blue-arrow)" />
+              <line x1="480" y1="331" x2="507" y2="196" stroke="var(--svm-graph-orange)" stroke-width="4" marker-end="url(#svm-note-orange-arrow)" />
+              <line x1="390" y1="173" x2="507" y2="196" stroke="var(--muted)" stroke-width="2" stroke-dasharray="5 5" />
+              <circle cx="390" cy="173" r="13" fill="var(--paper-2)" stroke="var(--svm-graph-green)" stroke-width="3" />
+              <path d="M384 167 L396 179 M396 167 L384 179" stroke="var(--svm-graph-green)" stroke-width="2.5" />
+              <circle cx="480" cy="331" r="13" fill="var(--paper-2)" stroke="var(--svm-graph-red)" stroke-width="3" />
+              <path d="M474 325 L486 337 M486 325 L474 337" stroke="var(--svm-graph-red)" stroke-width="2.5" />
+              <circle cx="507" cy="196" r="5" fill="var(--ink)" />
+              <text class="graph-label" x="405" y="159">x₂</text>
+              <text class="graph-label" x="496" y="345">x₁</text>
+              <text class="graph-label" x="517" y="188">P</text>
+              <text class="graph-label" x="322" y="275">blue: x₂ − x₁</text>
+              <text class="graph-label" x="525" y="246">orange: perpendicular</text>
+              <text class="graph-secondary" x="455" y="149">grey: along the line</text>
+              <line x1="165" y1="268" x2="192" y2="133" stroke="var(--svm-graph-orange)" stroke-width="4" marker-end="url(#svm-note-orange-arrow)" />
+              <text class="graph-label" x="95" y="213">orange: d</text>
+            </svg>
+            <figcaption><strong>Colour key:</strong> red <span class="regression-math-inline" data-regression-math-inline="x_1"></span>, green <span class="regression-math-inline" data-regression-math-inline="x_2"></span>, blue <span class="regression-math-inline" data-regression-math-inline="x_2-x_1"></span>, orange perpendicular gap <span class="regression-math-inline" data-regression-math-inline="d"></span>. Grey dashed piece upper line ke along hai.</figcaption>
+          </figure>
+          <ol>
+            <li><strong>Red, green aur blue ko pehle dekho.</strong> Red <span class="regression-math-inline" data-regression-math-inline="x_1"></span> lower <span class="regression-math-inline" data-regression-math-inline="-1"></span> line par aur green <span class="regression-math-inline" data-regression-math-inline="x_2"></span> upper <span class="regression-math-inline" data-regression-math-inline="+1"></span> line par hai. <strong>Blue arrow</strong> <span class="regression-math-inline" data-regression-math-inline="x_1\to x_2"></span> poora displacement <span class="regression-math-inline" data-regression-math-inline="x_2-x_1"></span> hai; uski poori length <span class="regression-math-inline" data-regression-math-inline="\lVert x_2-x_1\rVert"></span> hai. Ye slanted hai, so poori blue length margin gap nahi hai.</li>
+            <li><strong>Orange line kaise bani?</strong> Red <span class="regression-math-inline" data-regression-math-inline="x_1"></span> se upper margin tak <strong>perpendicular</strong> line draw karo. Upper line par jahan mile, use <span class="regression-math-inline" data-regression-math-inline="P"></span> kaha hai. Orange <span class="regression-math-inline" data-regression-math-inline="x_1\to P"></span> ki length hi gap <span class="regression-math-inline" data-regression-math-inline="d"></span> hai. Left par orange <span class="regression-math-inline" data-regression-math-inline="d"></span> arrow bhi yehi gap doosri jagah dikhata hai. <span class="regression-math-inline" data-regression-math-inline="P"></span> se green <span class="regression-math-inline" data-regression-math-inline="x_2"></span> tak grey dashed movement <strong>upper line ke along</strong> hai, so gap mein count nahi hota.</li>
+            <li><strong><span class="regression-math-inline" data-regression-math-inline="w"></span> ka orange se link:</strong> Teenon lines ka form <span class="regression-math-inline" data-regression-math-inline="w^\top x+b=\text{constant}"></span> hai. Line ke along chalne par score same rehta hai; <span class="regression-math-inline" data-regression-math-inline="w"></span> score badhne wali <strong>perpendicular direction</strong> mein hota hai—orange line ki direction bhi wahi hai. <span class="regression-math-inline" data-regression-math-inline="\lVert w\rVert"></span> <strong><span class="regression-math-inline" data-regression-math-inline="w"></span> vector ki length</strong> hai, blue arrow ki length nahi. 2D mein <span class="regression-math-inline" data-regression-math-inline="w=(w_1,w_2)"></span> ho to <span class="regression-math-inline" data-regression-math-inline="\lVert w\rVert=\sqrt{w_1^2+w_2^2}"></span>. Divide karne se <span class="regression-math-inline" data-regression-math-inline="w/\lVert w\rVert"></span> same direction ka length-1 (unit) vector banta hai. <strong>Orange arrow ki direction</strong> ye unit vector hai; graph mein orange segment ki actual length <span class="regression-math-inline" data-regression-math-inline="d"></span> hai, <span class="regression-math-inline" data-regression-math-inline="1"></span> nahi.</li>
+            <li><strong>Blue ko orange + grey mein todo.</strong> Blue <span class="regression-math-inline" data-regression-math-inline="x_1\to x_2"></span> ka matlab pehle orange <span class="regression-math-inline" data-regression-math-inline="x_1\to P"></span>, phir grey <span class="regression-math-inline" data-regression-math-inline="P\to x_2"></span> jaane ke barabar hai:
+              <div class="regression-math" data-regression-math="x_2-x_1=(P-x_1)+(x_2-P)"></div>
+              <p>Blue vector ko unit perpendicular direction <span class="regression-math-inline" data-regression-math-inline="w/\lVert w\rVert"></span> par project (dot) karo. Grey part us direction se perpendicular hai, so uska contribution <span class="regression-math-inline" data-regression-math-inline="0"></span>; orange part ka contribution uski length <span class="regression-math-inline" data-regression-math-inline="d"></span> hai:</p>
+              <div class="regression-math" data-regression-math="d=(x_2-x_1)\cdot\frac{w}{\lVert w\rVert}=\frac{w^\top x_2-w^\top x_1}{\lVert w\rVert}"></div>
+            </li>
+            <li><strong>Ab graph ke touching points ki equations likho.</strong> Green <span class="regression-math-inline" data-regression-math-inline="x_2"></span> upper <span class="regression-math-inline" data-regression-math-inline="+1"></span> line par aur red <span class="regression-math-inline" data-regression-math-inline="x_1"></span> lower <span class="regression-math-inline" data-regression-math-inline="-1"></span> line par hai:
+              <div class="regression-math" data-regression-math="w^\top x_2+b=+1\quad\Rightarrow\quad w^\top x_2=1-b"></div>
+              <div class="regression-math" data-regression-math="w^\top x_1+b=-1\quad\Rightarrow\quad w^\top x_1=-1-b"></div>
+            </li>
+            <li><strong>In values ko gap mein put karo.</strong> <span class="regression-math-inline" data-regression-math-inline="b"></span> cancel ho jaata hai:
+              <div class="regression-math" data-regression-math="d=\frac{(1-b)-(-1-b)}{\lVert w\rVert}=\frac{1-b+1+b}{\lVert w\rVert}=\frac{2}{\lVert w\rVert}"></div>
+            </li>
+          </ol>
+        </article>
+        <article class="panel">
+          <h3>Step 3 — lecture ka final goal: best boundary kaise choose hoti hai?</h3>
+          <p>Abhi graph se margin width <span class="regression-math-inline" data-regression-math-inline="d=2/\lVert w\rVert"></span> nikli. SVM different possible boundaries try karke <strong>sabse wide valid margin</strong> wali boundary choose karta hai. Lecture ne ise aise likha:</p>
+          <div class="regression-math" data-regression-math="(w^*,b^*)=\underset{w,b}{\operatorname{arg\,max}}\;\frac{2}{\lVert w\rVert}\quad\text{such that}\quad y_i(w^\top x_i+b)\ge1\quad\forall i"></div>
+          <h4>Formula ko tukdon mein padho</h4>
+          <ul>
+            <li><span class="regression-math-inline" data-regression-math-inline="w"></span> boundary ki direction/tilt set karne wala <strong>weight vector</strong> hai; <span class="regression-math-inline" data-regression-math-inline="b"></span> boundary ki position shift karta hai. Dono milkar <span class="regression-math-inline" data-regression-math-inline="w^\top x+b=0"></span> banate hain. <span class="regression-math-inline" data-regression-math-inline="w^*,b^*"></span> mein star ka matlab <strong>final best values</strong>.</li>
+            <li><span class="regression-math-inline" data-regression-math-inline="\lVert w\rVert"></span> <span class="regression-math-inline" data-regression-math-inline="w"></span> ki length hai. Graph se derived <span class="regression-math-inline" data-regression-math-inline="2/\lVert w\rVert"></span> <strong>physical margin width</strong> hai; numerator <span class="regression-math-inline" data-regression-math-inline="2"></span> upper score <span class="regression-math-inline" data-regression-math-inline="+1"></span> minus lower score <span class="regression-math-inline" data-regression-math-inline="-1"></span> se aaya.</li>
+            <li><strong>argmax</strong> poochta hai: “Kaunse <span class="regression-math-inline" data-regression-math-inline="w,b"></span> lene se <span class="regression-math-inline" data-regression-math-inline="2/\lVert w\rVert"></span> sabse bada hoga?” Ye <strong>best pair <span class="regression-math-inline" data-regression-math-inline="(w^*,b^*)"></span></strong> return karta hai, sirf gap ka number nahi. <span class="regression-math-inline" data-regression-math-inline="b"></span> fraction mein nahi dikhta, lekin boundary ki location aur neeche diye rule par asar karta hai.</li>
+            <li><strong>such that</strong> ke baad formula batata hai ki <strong>kaunse boundaries allowed hain</strong>. <span class="regression-math-inline" data-regression-math-inline="x_i"></span> training row <span class="regression-math-inline" data-regression-math-inline="i"></span> ka feature vector, <span class="regression-math-inline" data-regression-math-inline="y_i\in\{-1,+1\}"></span> uska actual class label, aur <span class="regression-math-inline" data-regression-math-inline="w^\top x_i+b"></span> us row ka score hai. <span class="regression-math-inline" data-regression-math-inline="\forall i"></span> means <strong>har training row</strong> ko ye rule pass karna hai.</li>
+          </ul>
+          <p><strong>Rule ko dono classes par check karo:</strong> positive row mein <span class="regression-math-inline" data-regression-math-inline="y_i=+1"></span>, so score <span class="regression-math-inline" data-regression-math-inline="\ge+1"></span> chahiye. Negative row mein <span class="regression-math-inline" data-regression-math-inline="y_i=-1"></span>, so score <span class="regression-math-inline" data-regression-math-inline="\le-1"></span> chahiye. Koi point margin ke andar ho to candidate boundary reject. Jo nearest support vectors margin edge touch karte hain, unke liye <span class="regression-math-inline" data-regression-math-inline="y_i(w^\top x_i+b)=1"></span> exactly hota hai.</p>
+          <div class="callout gold"><strong>Hard-margin limitation:</strong> constraints demand that all points cleanly separate hon. Classes overlap karen ya ek outlier wrong side par ho, to feasible solution nahi mil sakta. Next lecture constraints ko relax karega.</div>
+        </article>
+      </section>
+
+      <section class="section searchable" id="lecture-94" data-title="svm soft margin slack variables C tradeoff margin violations">
+        <div class="section-head"><div class="section-title-wrap"><span class="section-index">94</span><div><h2>Mathematics of SVM — Soft Margin</h2><p class="section-intro">Real data me some points margin ke andar ya wrong side par ho sakte hain—controlled violations allow karo.</p></div></div><label class="lecture-complete"><input type="checkbox" data-lecture="94"> Complete</label></div>
+        <article class="panel">
+          <h3>Board ka starting point — hard-margin ka argmax</h3>
+          <p>Previous lecture mein do classes ke beech <strong>sabse bada perpendicular gap</strong> choose kiya tha. Board par lecturer ne hard-margin goal isi tarah likha:</p>
+          <div class="regression-math" data-regression-math="(w^*,b^*)=\underset{w,b}{\operatorname{arg\,max}}\;\frac{2}{\lVert w\rVert}\quad\text{such that}\quad y_i(w^\top x_i+b)\ge1\quad\forall i"></div>
+          <p>Yahan <span class="regression-math-inline" data-regression-math-inline="w,b"></span> boundary set karte hain; <span class="regression-math-inline" data-regression-math-inline="w^*,b^*"></span> best values hain. <span class="regression-math-inline" data-regression-math-inline="2/\lVert w\rVert"></span> dono margin lines ka gap hai. Lekin condition <span class="regression-math-inline" data-regression-math-inline="y_i(w^\top x_i+b)\ge1"></span> <strong>har training point</strong> ke liye pass honi chahiye: positive point <span class="regression-math-inline" data-regression-math-inline="+1"></span> line par ya uske bahar, negative point <span class="regression-math-inline" data-regression-math-inline="-1"></span> line par ya uske bahar.</p>
+          <p><strong>Board ka problem:</strong> Agar classes overlap kar rahi hain, ya koi red point green side mein aa gaya hai, to sabhi points ko margin ke bahar rakhne wali line milna mushkil ya impossible ho sakta hai. Hard margin ka strict rule isi jagah fail hota hai. Soft margin kuch points ko margin ke andar ya wrong side par aane deta hai, lekin unki error count karta hai.</p>
+        </article>
+        <article class="panel">
+          <h3>Hard-margin rule ko relax karo — <span class="regression-math-inline" data-regression-math-inline="\xi_i"></span> kya hai?</h3>
+          <p>Hard margin bolta hai: positive point ka score kam se kam <span class="regression-math-inline" data-regression-math-inline="+1"></span> aur negative point ka score zyada se zyada <span class="regression-math-inline" data-regression-math-inline="-1"></span> ho. Agar kisi point par ye rule fail ho, hard-margin boundary allowed nahi. Soft margin rule ko todne ki <em>limited permission</em> deta hai, aur uski amount note karta hai.</p>
+          <p>Har training point <span class="regression-math-inline" data-regression-math-inline="i"></span> ke liye ek non-negative <strong>slack/error amount</strong> <span class="regression-math-inline" data-regression-math-inline="\xi_i"></span> rakho. Hard-margin ka <span class="regression-math-inline" data-regression-math-inline="\ge1"></span> rule ab point ki error ke hisaab se relax hoga:</p>
+          <div class="regression-math" data-regression-math="y_i(w^\top x_i+b)\ge1-\xi_i,\qquad \xi_i\ge0"></div>
+          <figure class="lecture-figure svm-margin-figure svm-derivation-figure">
+            <svg viewBox="0 0 760 430" role="img" aria-labelledby="svm-slack-title svm-slack-desc">
+              <title id="svm-slack-title">Soft-margin error from the positive margin line to a misplaced positive point</title>
+              <desc id="svm-slack-desc">Three parallel horizontal lines have scores plus one, zero, and minus one. A green actual-positive point is below the zero decision boundary at score minus 0.5, among red negative points. An orange perpendicular arrow goes from the positive margin line at plus one to this point. Its score gap is 1.5, so the minimum slack xi is 1.5. The geometric distance is 1.5 divided by the length of w.</desc>
+              <defs>
+                <marker id="svm-slack-orange-arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 L9 5 L0 10 Z" fill="var(--svm-graph-orange)" /></marker>
+              </defs>
+              <rect x="16" y="16" width="728" height="398" rx="14" fill="none" stroke="var(--line)" />
+              <text class="graph-label" x="45" y="51">Actual +1 point wrong side par kaise?</text>
+              <line x1="72" y1="125" x2="610" y2="125" stroke="var(--svm-graph-green)" stroke-width="3" stroke-dasharray="11 9" />
+              <line x1="72" y1="230" x2="610" y2="230" stroke="var(--ink)" stroke-width="3" />
+              <line x1="72" y1="335" x2="610" y2="335" stroke="var(--svm-graph-red)" stroke-width="3" stroke-dasharray="11 9" />
+              <text class="graph-label" x="623" y="131">π+ : score +1</text>
+              <text class="graph-label" x="623" y="236">π : score 0</text>
+              <text class="graph-label" x="623" y="341">π− : score −1</text>
+              <circle cx="185" cy="102" r="10" fill="var(--svm-graph-green)" />
+              <circle cx="285" cy="119" r="10" fill="var(--svm-graph-green)" />
+              <path d="M164 357l18 18m0-18l-18 18M290 344l18 18m0-18l-18 18M535 358l18 18m0-18l-18 18" stroke="var(--svm-graph-red)" stroke-width="4" stroke-linecap="round" />
+              <circle cx="425" cy="282.5" r="17" fill="var(--paper-2)" stroke="var(--svm-graph-green)" stroke-width="4" />
+              <circle cx="425" cy="282.5" r="6" fill="var(--svm-graph-green)" />
+              <text class="graph-label" x="450" y="279">actual +1, score −0.5</text>
+              <text class="graph-secondary" x="450" y="302">score &lt; 0 → predicted −1</text>
+              <line x1="425" y1="128" x2="425" y2="258" stroke="var(--svm-graph-orange)" stroke-width="5" marker-end="url(#svm-slack-orange-arrow)" />
+              <path d="M425 125h-18v18" fill="none" stroke="var(--svm-graph-orange)" stroke-width="3" />
+              <text class="graph-label" x="77" y="398" fill="var(--svm-graph-orange)">π+ se point tak score gap: +1 − (−0.5) = 1.5</text>
+            </svg>
+            <figcaption><strong>Colour key:</strong> green = actual positive, red crosses = actual negative, orange = positive margin line <span class="regression-math-inline" data-regression-math-inline="\pi_+"></span> se misplaced green point tak perpendicular measurement. Is example mein green point ki prediction negative hai; point ka <strong>actual label</strong> phir bhi <span class="regression-math-inline" data-regression-math-inline="+1"></span> hai.</figcaption>
+          </figure>
+          <p><strong>Graph ka calculation:</strong> Green point ka actual label <span class="regression-math-inline" data-regression-math-inline="y_i=+1"></span> aur score <span class="regression-math-inline" data-regression-math-inline="w^\top x_i+b=-0.5"></span> hai. Hard-margin rule <span class="regression-math-inline" data-regression-math-inline="-0.5\ge1"></span> false hai. Ab soft-margin rule mein values put karo:</p>
+          <div class="regression-math" data-regression-math="(+1)(-0.5)\ge1-\xi_i\quad\Longrightarrow\quad\xi_i\ge1.5"></div>
+          <p>Minimum error amount <span class="regression-math-inline" data-regression-math-inline="\xi_i=1.5"></span> hai: <span class="regression-math-inline" data-regression-math-inline="+1"></span> margin score se point ke <span class="regression-math-inline" data-regression-math-inline="-0.5"></span> score tak gap. <strong>Important:</strong> <span class="regression-math-inline" data-regression-math-inline="\xi_i"></span> score units mein hai, direct physical distance nahi. Graph ki orange perpendicular distance general case mein <span class="regression-math-inline" data-regression-math-inline="\xi_i/\lVert w\rVert=1.5/\lVert w\rVert"></span> hogi; agar <span class="regression-math-inline" data-regression-math-inline="\lVert w\rVert=1"></span>, tab distance bhi <span class="regression-math-inline" data-regression-math-inline="1.5"></span> hai.</p>
+          <p>Agar point apni correct margin line par ya uske bahar hai, <span class="regression-math-inline" data-regression-math-inline="\xi_i=0"></span> ho sakta hai. Margin ke andar aane par <span class="regression-math-inline" data-regression-math-inline="\xi_i"></span> positive chahiye; boundary ke wrong side par jaane par aur bada. Yaani <span class="regression-math-inline" data-regression-math-inline="\xi_i"></span> sirf wrong classification nahi, <strong>margin violation bhi</strong> measure karta hai. Saare points ki error <span class="regression-math-inline" data-regression-math-inline="\sum_{i=1}^{n}\xi_i"></span> se add hoti hai.</p>
+        </article>
+        <article class="panel">
+          <h3>Board ka final idea — margin error + classification error</h3>
+          <p>Hard margin mein <span class="regression-math-inline" data-regression-math-inline="2/\lVert w\rVert"></span> ko <strong>maximum</strong> kar rahe the. Ye positive quantity hai, isliye uska reciprocal <span class="regression-math-inline" data-regression-math-inline="\lVert w\rVert/2"></span> <strong>minimum</strong> karna same wide-margin direction mein le jaata hai. Lecture board par isi ko <span class="regression-math-inline" data-regression-math-inline="\max f\Longleftrightarrow\min(1/f)"></span> likha hai.</p>
+          <p>Ab lecturer wide margin ke goal ke saath points ki total error bhi add karte hain:</p>
+          <div class="regression-math" data-regression-math="(w^*,b^*,\xi^*)=\underset{w,b,\xi}{\operatorname{arg\,min}}\;\left[\underbrace{\frac{\lVert w\rVert}{2}}_{\text{margin error}}+\underbrace{\sum_{i=1}^{n}\xi_i}_{\text{point violations}}\right]\quad\text{such that}\quad y_i(w^\top x_i+b)\ge1-\xi_i,\;\xi_i\ge0"></div>
+          <p><strong>First part</strong> chhota karoge to gap bada milega. <strong>Second part</strong> chhota karoge to margin ke andar/wrong side wale points kam ya less severe honge. Soft margin dono ko saath dekhkar boundary choose karta hai. Board ke formula mein <span class="regression-math-inline" data-regression-math-inline="\xi_i=0"></span> us point ke liye hai jo apni correct margin line par ya uske bahar hai.</p>
+          <div class="callout gold"><strong>Lecture wording:</strong> Board par ise “margin error + classification error” kaha hai. Yahan <span class="regression-math-inline" data-regression-math-inline="\sum_i\xi_i"></span> margin ke andar aane wale points ko bhi count karta hai—even if woh decision boundary ki correct side par hon.</div>
+        </article>
+        <article class="panel">
+          <h3><span class="regression-math-inline" data-regression-math-inline="C"></span> hyperparameter — error kitni mehengi rakhein?</h3>
+          <p>Board ka goal <strong>wide margin + kam violations</strong> tha. <span class="regression-math-inline" data-regression-math-inline="C"></span> ko error wale part ke aage lagao: ye decide karta hai ki margin ko wide karne ke mukable <span class="regression-math-inline" data-regression-math-inline="\xi_i"></span> wali violations ko kitni penalty mile. <span class="regression-math-inline" data-regression-math-inline="C"></span> <strong>training se learn nahi hota</strong>; training se pehle choose kiya jaane wala hyperparameter hai.</p>
+          <div class="regression-math" data-regression-math="\underset{w,b,\xi}{\operatorname{arg\,min}}\;\left[\underbrace{\frac{\lVert w\rVert}{2}}_{\text{margin term}}+\underbrace{C\sum_{i=1}^{n}\xi_i}_{\text{violation penalty}}\right]\quad\text{such that}\quad y_i(w^\top x_i+b)\ge1-\xi_i,\;\xi_i\ge0"></div>
+          <p><strong>Same data, different <span class="regression-math-inline" data-regression-math-inline="C"></span>:</strong> Neeche red crosses negative class, green dots positive class hain. Orange circle wala red point baaki red points se alag, green group ke paas hai. Solid blue line decision boundary aur dashed blue lines margin edges hain.</p>
+          <figure class="lecture-figure svm-derivation-figure svm-c-figure">
+            <svg viewBox="0 0 930 420" role="img" aria-labelledby="svm-c-title svm-c-desc">
+              <title id="svm-c-title">Small C and large C change the soft-margin SVM boundary on the same points</title>
+              <desc id="svm-c-desc">Both panels repeat identical data. With small C, the decision boundary is farther left and the two dashed margin edges are wide apart; one unusual red negative point lies on the positive side, so its violation is accepted. With large C, the boundary shifts right and the margin edges become narrower; the unusual red point is on the negative side and avoids that violation. This is an illustrative trade-off, not a guaranteed result for every dataset.</desc>
+              <defs>
+                <g id="svm-c-same-points">
+                  <path d="M95 139l16 16m0-16l-16 16M130 212l16 16m0-16l-16 16M162 168l16 16m0-16l-16 16M110 270l16 16m0-16l-16 16M236 205l16 16m0-16l-16 16" fill="none" stroke="var(--svm-graph-red)" stroke-width="4" stroke-linecap="round" />
+                  <circle cx="281" cy="167" r="8" fill="var(--svm-graph-green)" />
+                  <circle cx="309" cy="244" r="8" fill="var(--svm-graph-green)" />
+                  <circle cx="338" cy="196" r="8" fill="var(--svm-graph-green)" />
+                  <circle cx="331" cy="115" r="8" fill="var(--svm-graph-green)" />
+                  <circle cx="244" cy="213" r="19" fill="none" stroke="var(--svm-graph-orange)" stroke-width="3" />
+                </g>
+              </defs>
+              <rect x="12" y="16" width="438" height="385" rx="14" fill="none" stroke="var(--line)" />
+              <rect x="480" y="16" width="438" height="385" rx="14" fill="none" stroke="var(--line)" />
+              <text class="graph-label" x="40" y="52">Small C — violation relatively cheap</text>
+              <text class="graph-label" x="508" y="52">Large C — violation expensive</text>
+              <g transform="translate(22 54)"><use href="#svm-c-same-points" /></g>
+              <g transform="translate(490 54)"><use href="#svm-c-same-points" /></g>
+              <line x1="204" y1="90" x2="204" y2="330" stroke="var(--svm-graph-blue)" stroke-width="2.5" stroke-dasharray="9 8" />
+              <line x1="258" y1="90" x2="258" y2="330" stroke="var(--svm-graph-blue)" stroke-width="4" />
+              <line x1="312" y1="90" x2="312" y2="330" stroke="var(--svm-graph-blue)" stroke-width="2.5" stroke-dasharray="9 8" />
+              <line x1="738" y1="90" x2="738" y2="330" stroke="var(--svm-graph-blue)" stroke-width="2.5" stroke-dasharray="9 8" />
+              <line x1="749" y1="90" x2="749" y2="330" stroke="var(--svm-graph-blue)" stroke-width="4" />
+              <line x1="760" y1="90" x2="760" y2="330" stroke="var(--svm-graph-blue)" stroke-width="2.5" stroke-dasharray="9 8" />
+              <text class="graph-secondary" x="58" y="354">Wide margin; circled red point</text>
+              <text class="graph-secondary" x="58" y="376">wrong side par allowed</text>
+              <text class="graph-secondary" x="518" y="354">Narrower margin; circled red</text>
+              <text class="graph-secondary" x="518" y="376">point correct side par</text>
+            </svg>
+            <figcaption><strong>Same points, different learned lines.</strong> Small <span class="regression-math-inline" data-regression-math-inline="C"></span> mein wide margin ke badle circled red point ki error accept ho sakti hai. Large <span class="regression-math-inline" data-regression-math-inline="C"></span> mein us error ko avoid karne ke liye line shift aur margin narrow ho sakta hai. Ye <strong>trade-off ka illustration</strong> hai; har dataset mein exact line ya margin aise hi badlegi, ye guarantee nahi.</figcaption>
+          </figure>
+          <p><strong>Yaad rakho:</strong> <span class="regression-math-inline" data-regression-math-inline="C"></span> badalne se data points move nahi hote—model ki <strong>chosen boundary aur margin</strong> change ho sakti hai. Small <span class="regression-math-inline" data-regression-math-inline="C"></span> error ko relatively cheap banata hai (bahut small ho to underfit kar sakta hai); large <span class="regression-math-inline" data-regression-math-inline="C"></span> error ko costly banata hai (noisy points ko fit karne ki koshish mein overfit kar sakta hai). Large <span class="regression-math-inline" data-regression-math-inline="C"></span> ka matlab hamesha zero mistakes nahi, especially jab classes overlap karti hain.</p>
+        </article>
+      </section>
+
+      <section class="section searchable" id="lecture-95" data-title="kernel trick svm geometric intuition nonlinear transformation higher dimension curved decision boundary">
+        <div class="section-head"><div class="section-title-wrap"><span class="section-index">95</span><div><h2>Kernel Trick — Geometric Intuition</h2><p class="section-intro">Original space me straight line fail ho to points ko new feature space me dekhkar separation easier banao.</p></div></div><label class="lecture-complete"><input type="checkbox" data-lecture="95"> Complete</label></div>
+        <article class="panel">
+          <h3>Original space mein straight boundary kyun fail hoti hai?</h3>
+          <p>Image ka <strong>left side</strong> dekho: red squares centre mein hain aur blue-green circles unke around hain. Ek seedhi line red group ko outer circles se alag nahi kar sakti—line jis taraf bhi rakho, dono classes mix ho jayengi. Lecturer ke board par bhi yahi non-linear data problem dikhayi gayi hai: current dimension mein simple straight separator nahi milta.</p>
+          <figure class="lecture-figure" style="max-width:900px;margin-left:auto;margin-right:auto"><img src="assets/lecture-95-kernel-trick.webp" alt="Kernel trick intuition: in 2D red centre points are surrounded by blue-green outer points; after a higher-dimensional transformation a flat decision surface separates the groups"><figcaption><strong>Left → right:</strong> original 2D view mein red centre ko outer circles se straight line se separate nahi kar sakte. Kernel-based higher-dimensional view mein points ki arrangement badalti hai, jahan ek flat decision surface unhe separate kar sakti hai.</figcaption></figure>
+        </article>
+        <article class="panel">
+          <h3>Kernel lagane ke baad kya change hota hai?</h3>
+          <ol>
+            <li><strong>Data ko new view mein dekho:</strong> kernel function points ke relationships ko aise represent karta hai jaise hum lower-dimensional data ko higher-dimensional space mein le gaye hon. Board par 1D points ko 2D mein utha kar aur image mein 2D points ko 3D surface par dekh kar isi idea ko samjhaya hai.</li>
+            <li><strong>Wahan boundary banao:</strong> new view mein jo classes pehle mixed lag rahi thi, unke beech ek straight line ya flat plane fit ho sakta hai. Image ka right side wahi flat <em>decision surface</em> dikhata hai.</li>
+            <li><strong>Original view se link:</strong> higher-dimensional view ka flat separator original space mein dekhne par curved/non-linear boundary ke jaisa behave karta hai. Isliye original data ko ek straight line se separate na kar paane ke baad bhi SVM useful ho sakta hai.</li>
+          </ol>
+          <p><strong>Kernel trick ka main point:</strong> higher-dimensional representation ka effect milta hai; har extra dimension ko manually column bana kar store karna zaroori nahi. Lecture board par teen kernel choices likhi hain. Ye <strong>teen consecutive steps nahi</strong> hain—model ke liye inmein se ek kernel choose karte hain:</p>
+          <ul>
+            <li><strong>RBF:</strong> paas-paas ke points ko zyada similar maanta hai. Isse local, rounded/curved boundaries ban sakti hain—image mein centre aur outer ring jaisi arrangement ko sochne ke liye useful intuition.</li>
+            <li><strong>Polynomial:</strong> features ke combinations/interactions ko importance deta hai. Degree badalne par boundary ki shape aur complexity badal sakti hai.</li>
+            <li><strong>Sigmoid:</strong> points ke combined signal ko S-shaped response ke through compare karta hai, neural-network activation jaisi intuition. Iska boundary behaviour RBF aur polynomial se alag ho sakta hai.</li>
+          </ul>
+          <p>Board par <strong>GridSearchCV</strong> bhi likha hai: practical work mein kernel aur uski settings ko validation par compare karke choose karte hain. Lecture ka focus yahan <strong>intuition</strong> tha, in kernels ki mathematical derivation nahi.</p>
+          <div class="callout teal"><strong>One-line intuition:</strong> Original space mein data non-linear hai → kernel se higher-dimensional view milta hai → us view mein SVM separating boundary dhundhta hai.</div>
+        </article>
+      </section>
+
+      <section class="section searchable" id="lecture-96" data-title="svm kernel trick rbf practical code demo make circles linear svm nonlinear boundary polynomial kernel">
+        <div class="section-head"><div class="section-title-wrap"><span class="section-index">96</span><div><h2>Kernel Trick — RBF Practical Demo</h2><p class="section-intro">Non-linear circles data par linear SVM aur RBF kernel ka difference, pehle graph se aur phir code ke result se samjho.</p></div></div><label class="lecture-complete"><input type="checkbox" data-lecture="96"> Complete</label></div>
+        <article class="panel">
+          <h3>Start: circles wale data par linear SVM</h3>
+          <p>Lecturer pehle sample-generator se aisa two-class dataset banate hain jisme <strong>ek class centre ke paas</strong> aur <strong>doosri uske around ring</strong> mein hai. Original graph 2D hai: har point ke paas do coordinates aur ek class label hai. Ye Lecture 95 ki image wala hi non-linear pattern hai.</p>
+          <p>Pehle <code>SVC(kernel='linear')</code> train karke decision boundary plot karte hain. Linear SVM sirf <strong>straight line</strong> de sakta hai. Centre aur outer ring ko ek straight line cleanly separate nahi kar sakti, so kuch points wrong side par rahenge. Problem model ko fit karne ke code mein nahi; <strong>boundary ki shape data ke pattern se match nahi karti</strong>.</p>
+          <div class="callout gold"><strong>Graph ko kaise read karein:</strong> Agar red centre ke charon taraf doosri class hai, straight line ek side ke points ko alag karegi, poore centre-vs-ring pattern ko nahi. Isi wajah se lecturer linear boundary se start karke uski limitation dikhate hain.</div>
+        </article>
+        <article class="panel">
+          <h3>Intuition demo: 2D points ko upar lift karke dekho</h3>
+          <p>Ab lecturer har original point ke liye <strong>ek extra height</strong> calculate karke 3D scatter plot dikhate hain. RBF-type transformation centre ke paas wale points ko comparatively <strong>upar</strong> aur door/ring wale points ko <strong>neeche</strong> rakhti hai. Original 2D mein jo classes ek doosre ke around thi, 3D view mein unke heights alag dikhne lagte hain.</p>
+          <figure class="lecture-figure" style="max-width:900px;margin-left:auto;margin-right:auto"><img src="assets/lecture-95-kernel-trick.webp" alt="Centre-versus-ring points in original 2D view and lifted higher-dimensional view with a separating plane"><figcaption>Lecture 95 ki image ko ab code-demo ke saath padho: left mein straight line fail; right mein centre aur ring alag heights par dikhte hain, so ek flat plane unke beech aa sakta hai.</figcaption></figure>
+          <p><strong>Important difference:</strong> Ye 3D plot lecturer ne <em>samjhane</em> ke liye banaya hai. Isse dikhta hai ki transformation ke baad flat separating surface kyun possible hoti hai. Iska matlab ye nahi ki SVM chalane se pehle hume manually 3D graph ya extra column banana hi padega.</p>
+        </article>
+        <article class="panel">
+          <h3>Kernel trick: same effect, manual 3D transformation ke bina</h3>
+          <p>Har point ko explicitly higher-dimensional columns mein convert karna large data par costly ho sakta hai. Lecturer ka practical step: original 2D features hi SVM ko do aur kernel option <code>kernel='rbf'</code> choose karo. Kernel trick higher-dimensional separation ka effect internally use karta hai; 3D scatter plot training input nahi banta.</p>
+          <p>RBF model ko original 2D graph par plot karne se <strong>curved decision boundary</strong> mil sakti hai jo centre ko outer ring se alag karti hai. Compare karo: <code>kernel='linear'</code> mein boundary straight thi; <code>kernel='rbf'</code> mein data ke circular/non-linear pattern ko follow karne wali boundary possible hui. Lecture demo ka point ye shape difference aur improved classification dikhana hai, koi universal accuracy percentage promise karna nahi.</p>
+          <div class="callout teal"><strong>Actual workflow:</strong> Same original data → linear SVM fit aur boundary dekho → RBF-kernel SVM fit aur boundary dekho → performance compare karo. Beech ka 3D lift <strong>visual intuition</strong> hai, required preprocessing step nahi.</div>
+        </article>
+        <article class="panel">
+          <h3>Polynomial kernel aur settings ka comparison</h3>
+          <p>Lecture mein <code>kernel='poly'</code> bhi try kiya gaya hai. Polynomial aur RBF <strong>different kernel choices</strong> hain; dono ek saath sequentially apply nahi hote. Polynomial kernel ke saath <code>degree</code> setting boundary ko affect karti hai, isliye ek degree par weak result aane se poore polynomial option ko reject nahi karna chahiye. Lecturer settings change karke results compare karne ki baat karte hain.</p>
+          <p><strong>Final takeaway:</strong> Non-linear data ke liye pehle graph dekho. Straight separator fail ho to suitable kernel try karo; kernel aur uski settings ko result se compare karo. Higher-dimensional lift ko visualize karna useful hai, lekin kernel trick ka practical benefit ye hai ki wahi idea <strong>explicit extra feature columns banaye bina</strong> use ho sakta hai.</p>
+        </article>
+      </section>
+
       <footer class="footer">
-        <p><strong>Progress:</strong> Lectures 1–90 ka revision trail yahan maintain kiya gaya hai.</p>
+        <p><strong>Progress:</strong> Lectures 1–96 ka revision trail yahan maintain kiya gaya hai.</p>
         <p>Source: provided NoteGPT transcripts. Auto-caption errors ko lecture context ke according clean Hinglish me reorganize kiya gaya hai.</p>
       </footer>
     </main>
