@@ -858,11 +858,15 @@
         <a href="#lecture-94"><span class="num">94</span><span>SVM: Soft Margin</span></a>
         <a href="#lecture-95"><span class="num">95</span><span>Kernel Trick: Geometric Intuition</span></a>
         <a href="#lecture-96"><span class="num">96</span><span>Kernel Trick: RBF Code Demo</span></a>
+        <a href="#lecture-97"><span class="num">97</span><span>Decision Trees: Intuition &amp; Splitting</span></a>
+        <a href="#lecture-98"><span class="num">98</span><span>Decision Tree Hyperparameters</span></a>
+        <a href="#lecture-99"><span class="num">99</span><span>Decision Tree Regression</span></a>
+        <a href="#lecture-100"><span class="num">100</span><span>Visualizing Decision Trees</span></a>
       </nav>
       <div class="side-progress">
         <strong>Batch progress</strong>
         <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
-        <span id="progress-label">0 of 96 lectures complete</span>
+        <span id="progress-label">0 of 100 lectures complete</span>
       </div>
     </aside>
 
@@ -4372,8 +4376,185 @@ print(accuracy_score(y_test, y_pred))</code></pre>
         </article>
       </section>
 
+      <section class="section searchable" id="lecture-97" data-title="decision tree intuition root leaf categorical numerical entropy information gain gini CART">
+        <div class="section-head"><div class="section-title-wrap"><span class="section-index">97</span><div><h2>Decision Trees — Intuition &amp; Best Split</h2><p class="section-intro">Repeated questions se data ko chhote groups mein baantna, phir samajhna ki next question kaise choose hota hai.</p></div></div><label class="lecture-complete"><input type="checkbox" data-lecture="97"> Complete</label></div>
+        <article class="panel">
+          <h3>Table se tree: Play karein ya nahi?</h3>
+          <figure class="lecture-figure"><img src="assets/lecture-97-weather-tree.png" alt="Lecture 97 weather table beside a decision tree starting with Outlook and ending in Play Yes or No leaves"><figcaption>Left: weather ki training rows. Right: tree pehle <strong>Outlook</strong> poochta hai; jis branch mein answer clear nahi, wahin ek aur question aata hai. Last box <strong>Play = Yes/No</strong> prediction hai.</figcaption></figure>
+          <p>New day ke liye <strong>sirf uska path</strong> follow karo: Outlook ka answer → us branch ka next question (agar ho) → final Play result. Har column par question poochna zaroori nahi. Yehi nested <code>if–else</code> ka visual form hai.</p>
+        </article>
+        <article class="panel">
+          <h3>Number aaye to threshold poochho</h3>
+          <figure class="lecture-figure"><img src="assets/lecture-97-numerical-tree.png" alt="Flower measurements table and a decision tree asking whether petal length is below 2.0, then whether sepal length is below 1.5"><figcaption>Numerical example: pehla question <strong>Petal Length &lt; 2.0?</strong> Yes → Setosa. No → <strong>Sepal Length &lt; 1.5?</strong> Yes → Versicolor; No → Virginica. Ye image ka example threshold hai, har dataset ke liye fixed rule nahi.</figcaption></figure>
+          <figure class="lecture-figure"><img src="assets/lecture-97-geometric-intuition.png" alt="Two-feature flower scatter plot with a vertical cut at petal length 2.0 and a horizontal cut at sepal length 1.5"><figcaption><strong>Same questions, graph par:</strong> Petal Length 2.0 ka cut <strong>vertical red line</strong> hai. Uske right wale group mein Sepal Length 1.5 ka cut <strong>horizontal blue line</strong> hai. Har final region ek leaf/prediction se link hota hai.</figcaption></figure>
+          <p>Training mein tree candidate thresholds compare karke useful cut choose karta hai; prediction mein bas chosen questions follow karta hai.</p>
+        </article>
+        <article class="panel">
+          <h3>Diagram ke naam</h3>
+          <figure class="lecture-figure"><img src="assets/lecture-97-tree-terminology.png" alt="Decision tree diagram marking the root node, splitting, branch or subtree, decision node and leaf node"><figcaption><strong>Root</strong> = first question; <strong>branch</strong> = answer ke baad ka raasta; <strong>decision node</strong> = next question; <strong>leaf</strong> = final class. Image mein circled part ek subtree hai.</figcaption></figure>
+        </article>
+        <article class="panel">
+          <h3>Entropy — group kitna mixed hai?</h3>
+          <figure class="lecture-figure"><img src="assets/lecture-97-entropy-intuition.png" alt="Two groups of red and green points: the left group is more mixed while the right group is mostly red, illustrating lower class uncertainty"><figcaption><strong>Left:</strong> red aur green points kaafi mixed hain—group dekhkar class ka guess mushkil. <strong>Right:</strong> red points zyada dominate karte hain—guess relatively easy. Image <em>do group-mixes ki comparison</em> hai; dots ki class badal nahi rahi.</figcaption></figure>
+          <p>Tree har question par rows ko groups mein baantta hai. Achha question woh hai jiske baad groups mein classes <strong>kam mixed</strong> hon. Socho 10 rows mein 5 Yes aur 5 No hain: bina question answer uncertain hai. Agar ek question unhe 5 Yes aur 5 No ke <em>alag-alag</em> groups mein rakh de, dono groups ka answer clear ho gaya. Agar dono naye groups bhi half Yes/half No rahen, question se koi faayda nahi.</p>
+          <p>Is mixed-ness ko <strong>entropy</strong> bolte hain: ek class hi ho to 0; binary classes 50–50 hon to sabse zyada (1). <strong>Information gain</strong> ka seedha matlab hai: <em>question se pehle kitni uncertainty thi − question ke baad kitni bachi?</em> Jis question se zyada uncertainty ghate, tree use prefer karta hai.</p>
+        </article>
+        <article class="panel">
+          <h3>Ab wahi idea numbers mein</h3>
+          <p>Entropy nikalne ke liye pehle group mein <strong>Yes aur No count karo</strong>. Neeche left table ki 5 rows mein 2 Yes aur 3 No hain. Isliye <strong>Yes ka share = 2/5</strong> aur <strong>No ka share = 3/5</strong>. Formula mein <code>pₖ</code> ka matlab bas kisi ek class ka yahi share hai:</p>
+          <div class="regression-math" data-regression-math="H=-\sum_{k=1}^{K}p_k\log_2 p_k"></div>
+          <figure class="lecture-figure"><img src="assets/lecture-97-entropy-example.png" alt="Two five-row purchase datasets: the first has 2 Yes and 3 No with entropy about 0.97; the second has 1 Yes and 4 No with entropy about 0.72"><figcaption><strong>Lecture example:</strong> left group mein 5 mein se 2 <strong>Yes</strong> aur 3 <strong>No</strong> hain, so shares <code>2/5</code> aur <code>3/5</code> → entropy lagbhag <strong>0.97</strong>. Right group mein 1 Yes aur 4 No hain, so shares <code>1/5</code> aur <code>4/5</code> → entropy lagbhag <strong>0.72</strong>.</figcaption></figure>
+          <p>Left mein Yes aur No ka mix zyada even hai; right mein 5 mein se 4 answers No hain. Isliye right group ka next Purchase answer guess karna relatively easy hai, aur uski entropy kam hai. Filhaal entropy nikalne ke liye sirf <strong>Purchase ke Yes/No counts</strong> use ho rahe hain—Salary aur Age nahi.</p>
+          <div class="callout teal"><strong>Simple rule:</strong> Ek group mein <strong>Yes aur No lagbhag barabar</strong> hon to answer uncertain hai → <strong>entropy zyada</strong>. Ek hi answer, jaise <strong>No, zyada baar</strong> aaye to guess easy hai → <strong>entropy kam</strong>. Agar sab rows ka answer same ho, entropy <strong>0</strong>.</div>
+          <h4>Lecture observations</h4>
+          <ul>
+            <li><strong>Uncertainty zyada → entropy zyada:</strong> classes jitni evenly mixed hongi, next label guess karna utna mushkil hoga.</li>
+            <li><strong>Do classes, log₂ ke saath:</strong> entropy minimum <strong>0</strong> (saare labels same) aur maximum <strong>1</strong> (dono classes half-half) hai.</li>
+            <li><strong>Do se zyada classes:</strong> minimum ab bhi <strong>0</strong> hai, lekin maximum <strong>1 se zyada ho sakta hai</strong>. Log₂ use karne par equally distributed <code>K</code> classes ka maximum <code>log₂(K)</code> hota hai.</li>
+            <li><strong>Log base:</strong> <code>log₂</code> ya <code>ln</code> (logₑ) dono se entropy nikal sakte hain. Bas numerical scale badalta hai: do classes ke liye maximum <code>log₂</code> par <strong>1</strong>, <code>ln</code> par lagbhag <strong>0.693</strong>. Ek comparison mein same base use karo.</li>
+          </ul>
+          <figure class="lecture-figure"><img src="assets/lecture-97-entropy-vs-probability.png" alt="Binary entropy curve versus probability of the positive class: zero entropy at probabilities 0 and 1 and maximum entropy 1 at probability 0.5"><figcaption><strong>Entropy vs probability:</strong> horizontal axis <code>p(+)</code> = positive class ka share; negative class ka share <code>1 − p(+)</code> hai. <code>p(+)=0</code> ya <code>1</code> par group pure hai, so entropy <strong>0</strong>. <code>p(+)=0.5</code> par dono classes barabar hain, so entropy maximum <strong>1</strong> hai (log₂ base).</figcaption></figure>
+          <h4>Lecture quiz — continuous values mein uncertainty</h4>
+          <figure class="lecture-figure"><img src="assets/lecture-97-continuous-entropy-quiz.png" alt="Two sample house-price tables and two continuous distributions: a narrow peaked curve and a broad flatter curve"><figcaption>House-price tables mein target <strong>Price</strong> ek continuous number hai. Side ke graph mein grey curve ek chhoti range mein zyada concentrated hai; blue curve wider range mein spread hai.</figcaption></figure>
+          <p><strong>Lecture quiz ka answer:</strong> <strong>peaked curve → entropy kam</strong>; <strong>less-peaked, zyada spread curve → entropy zyada</strong>. Spread values ko guess karna harder hota hai, isliye uncertainty zyada hoti hai. Is graph mein blue curve ki entropy grey curve se zyada hai.</p>
+          <p><strong>Is graph ko kaise samjhein:</strong> Price jaisi continuous value ka yeh example <strong>spread aur uncertainty ki intuition</strong> deta hai. Upar wala Yes/No formula class labels ke shares ke liye hai; regression tree ke split calculation mein continuous target ke liye squared error/variance dekhenge.</p>
+        </article>
+        <article class="panel">
+          <h3>Information Gain — split kitna useful hai?</h3>
+          <p>Information Gain batata hai ki split karne ke baad uncertainty kitni kam hui. Lecture wali simple form:</p>
+          <div class="regression-math" data-regression-math="\text{Information Gain}=\text{Entropy of Parent}-\text{Weighted Average Entropy of Children}"></div>
+          <p>Matlab: pehle parent ki entropy lo, phir har child ki entropy ko us child ke row-count ke hisaab se weight karke average banao, aur us average ko parent entropy se ghatao.</p>
+          <div class="callout teal"><strong>Split choose karne ka rule:</strong> Har feature ka Information Gain compare karo; <strong>highest IG</strong> wala feature next split banta hai. Phir har child par ye process repeat hota hai.</div>
+          <h4>Play Tennis example — step by step</h4>
+          <p>Ab <strong>Outlook</strong> feature par split karke dekhenge ki uncertainty kitni kam hoti hai. Dataset mein target <strong>Play Tennis</strong> hai.</p>
+          <figure class="lecture-figure"><img src="assets/lecture-97-play-tennis-ig-data.png" alt="Fourteen Play Tennis training examples, used to calculate information gain for an Outlook split"><figcaption>14 total rows: <strong>9 Yes</strong> aur <strong>5 No</strong>. Outlook ke teen values—Sunny, Overcast, Rainy—split ke baad teen child groups banayenge.</figcaption></figure>
+          <p><strong>Step 1 — Parent entropy:</strong> split se pehle poore dataset ke Yes/No proportions use karo:</p>
+          <div class="regression-math" data-regression-math="H(P)=-\frac{9}{14}\log_2\frac{9}{14}-\frac{5}{14}\log_2\frac{5}{14}\approx0.94"></div>
+          <p><strong>Step 2 — Har child ki entropy:</strong> Outlook ke mutabik rows alag karke Yes/No count karo. Sunny mein 5 rows (2 Yes, 3 No); Overcast mein 4 rows (4 Yes, 0 No); Rainy mein 5 rows (3 Yes, 2 No):</p>
+          <figure class="lecture-figure"><img src="assets/lecture-97-information-gain-step-2.png" alt="Lecture Step 2: the Play Tennis data divided into Sunny, Overcast, and Rain groups after splitting on Outlook"><figcaption><strong>Lecture ka Step 2:</strong> Outlook ke teen branches—Sunny, Overcast, Rain—par data alag hua. Ab in child tables se har group ke Yes/No counts lekar entropy calculate karo.</figcaption></figure>
+          <div class="regression-math" data-regression-math="\begin{aligned}H(\text{Sunny})&=-\frac{2}{5}\log_2\frac{2}{5}-\frac{3}{5}\log_2\frac{3}{5}\approx0.97\\H(\text{Overcast})&=-\frac{4}{4}\log_2\frac{4}{4}=0\\H(\text{Rainy})&=-\frac{3}{5}\log_2\frac{3}{5}-\frac{2}{5}\log_2\frac{2}{5}\approx0.97\end{aligned}"></div>
+          <p>Overcast group mein sab <strong>Yes</strong> hain, isliye uncertainty nahi aur entropy 0 hai.</p>
+          <p><strong>Step 3 — Weighted child entropy:</strong> har child ki entropy ko uske rows ke fraction se multiply karke add karo:</p>
+          <div class="regression-math" data-regression-math="H_{children}=\frac{5}{14}(0.97)+\frac{4}{14}(0)+\frac{5}{14}(0.97)\approx0.69"></div>
+          <p><strong>Step 4 — Information Gain:</strong> parent entropy mein se weighted child entropy ghatao:</p>
+          <div class="regression-math" data-regression-math="IG(Outlook)=H(P)-H_{children}\approx0.94-0.69=0.25"></div>
+          <div class="callout gold"><strong>Slide ke number mein arithmetic mismatch:</strong> screenshot final IG ko <code>0.28</code> kehta hai, par shown values <code>0.94 − 0.69</code> se <strong>0.25</strong> aata hai. Exact calculation lagbhag <strong>0.246</strong>, round karke <strong>0.25</strong> hai.</div>
+          <div class="callout teal"><strong>Meaning:</strong> Outlook se split karne par entropy <code>0.94</code> se <code>0.69</code> ho gayi—yaani <strong>0.25 kam</strong>. Har possible feature ka IG isi tarah compare hota hai; <strong>highest IG wala feature next split</strong> banta hai. Phir har child node par process repeat karo. Pure child, jaise Overcast, leaf ban sakta hai.</div>
+        </article>
+        <article class="panel">
+          <h3>Gini impurity aur lecture ka takeaway</h3>
+          <p>Gini bhi <strong>group kitna mixed hai</strong> naapta hai—entropy jaisa hi idea, bas calculation alag. Ek group sirf ek class ka ho to Gini 0; Yes/No half-half hon to binary case mein Gini maximum 0.5 hota hai.</p>
+          <div class="regression-math" data-regression-math="G=1-\sum_{k=1}^{K}p_k^2"></div>
+          <p><strong>Chhota calculation:</strong> 4 Yes aur 2 No, total 6 rows. Shares <code>4/6</code> aur <code>2/6</code> hain:</p>
+          <div class="regression-math" data-regression-math="G=1-\left(\frac{4}{6}\right)^2-\left(\frac{2}{6}\right)^2=\frac{4}{9}\approx0.44"></div>
+          <ul>
+            <li><strong>Gini ka range (2 classes):</strong> 3 Yes aur 3 No hon to <code>G=1−(0.5²+0.5²)=0.5</code>—maximum mixed. Saare 6 ek hi class hon to <code>G=1−1²−0²=0</code>—pure.</li>
+            <li><strong>Entropy se compare:</strong> binary Yes/No ke liye Gini <strong>0–0.5</strong> hota hai; log₂ entropy <strong>0–1</strong>. Entropy mein logarithm calculate karna padta hai, isliye haath se calculation thodi lambi hoti hai. Gini mein class shares ko square karke subtract karte hain. Computer par dono practical hain; dono split ke baad purer groups prefer karte hain.</li>
+            <li><strong>Decision tree ka strength:</strong> questions samajhna aur kisi prediction ka path trace karna easy; feature scaling usually essential nahi.</li>
+            <li><strong>Limitation / CART:</strong> bahut deep tree training noise yaad karke overfit kar sakta hai; class imbalance ka bhi dhyan rakho. CART ka full name <em>Classification and Regression Trees</em> hai—agle lecture mein isi idea ka regression version aata hai.</li>
+          </ul>
+        </article>
+        <article class="panel">
+          <h3>Numerical feature par split kaise dhoondte hain?</h3>
+          <p>Ab <strong>User Rating</strong> ek number hai, lekin target <strong>Downloaded</strong> ab bhi Yes/No hai. Isliye har proposed rating cutoff ke baad dono groups ke Yes/No labels gin kar entropy/Gini aur Information Gain nikalte hain. Rating ko category-by-category exact match nahi karte; ek cutoff se left/right groups bante hain.</p>
+          <figure class="lecture-figure"><img src="assets/lecture-97-rating-data.png" alt="User Rating values and Downloaded Yes or No labels in the lecture's example dataset"><figcaption>Lecture ka dataset: numerical input <strong>User Rating</strong>, aur class label <strong>Downloaded</strong>. Values ko ascending order mein rakhna candidate cutoffs dekhne mein madad karta hai.</figcaption></figure>
+          <p><strong>Step 1 — Parent ka baseline:</strong> split se pehle 12 rows mein 7 Yes aur 5 No hain. Parent entropy lagbhag <strong>0.98</strong> hai:</p>
+          <div class="regression-math" data-regression-math="H(parent)=-\frac{7}{12}\log_2\frac{7}{12}-\frac{5}{12}\log_2\frac{5}{12}\approx0.98"></div>
+          <p><strong>Step 2 — Har candidate cutoff try karo:</strong> ratings ko sort karke lecture har observed value par question test karta hai—jaise <code>rating &gt; 1.6?</code>, <code>rating &gt; 1.9?</code>, <code>rating &gt; 2.9?</code>. Har question data ko do children mein baantta hai: <code>D1: rating ≤ cutoff</code> aur <code>D2: rating &gt; cutoff</code>. Cutoff badalta hai, isliye dono taraf jaane wali rows aur Yes/No mix bhi badal sakta hai.</p>
+          <figure class="lecture-figure"><img src="assets/lecture-97-rating-threshold-16.png" alt="Lecture example split at user rating greater than 1.6"><figcaption>Candidate cutoff <code>rating &gt; 1.6</code>: condition ke dono taraf ke rows ko alag child groups mein rakho.</figcaption></figure>
+          <figure class="lecture-figure"><img src="assets/lecture-97-rating-threshold-19.png" alt="Lecture example split at user rating greater than 1.9"><figcaption>Agla candidate <code>rating &gt; 1.9</code> hai. Rows phir se baantengi; is naye split ka score alag se nikalna hoga.</figcaption></figure>
+          <figure class="lecture-figure"><img src="assets/lecture-97-rating-threshold-29.png" alt="Lecture example split at user rating greater than 2.9"><figcaption>Ek aur candidate <code>rating &gt; 2.9</code>. Neeche isi split ka calculation poora karke dikhaya hai.</figcaption></figure>
+          <p><strong>Step 3 — Dono children ki entropy:</strong> <code>rating &gt; 2.9</code> par left group <code>≤2.9</code> mein 5 rows: <strong>4 Yes, 1 No</strong>. Right group <code>&gt;2.9</code> mein 7 rows: <strong>3 Yes, 4 No</strong>.</p>
+          <div class="regression-math" data-regression-math="\begin{aligned}H(D1)&=-\frac{4}{5}\log_2\frac{4}{5}-\frac{1}{5}\log_2\frac{1}{5}\approx0.72\\H(D2)&=-\frac{3}{7}\log_2\frac{3}{7}-\frac{4}{7}\log_2\frac{4}{7}\approx0.99\end{aligned}"></div>
+          <p><strong>Step 4 — Children ka weighted average:</strong> left mein 5/12 rows aur right mein 7/12 rows hain, isliye har child ki entropy ko uske row-share se weight karo:</p>
+          <div class="regression-math" data-regression-math="H(children)=\frac{5}{12}(0.72)+\frac{7}{12}(0.99)\approx0.88"></div>
+          <p><strong>Step 5 — Is cutoff ka Information Gain:</strong> parent entropy se weighted child entropy ghatao. Is example mein <code>rating &gt; 2.9</code> ka IG lagbhag <strong>0.10</strong> hai:</p>
+          <div class="regression-math" data-regression-math="IG(2.9)=H(parent)-H(children)\approx0.98-0.88=0.10"></div>
+          <figure class="lecture-figure"><img src="assets/lecture-97-rating-candidate-splits.png" alt="Lecture diagram: for every candidate numerical value, split dataset into two children, calculate child entropies, weighted entropy, and information gain"><figcaption>Yahi calculation har proposed cutoff par repeat hoti hai: <strong>D1/D2 → E1/E2 → weighted child entropy → IG</strong>.</figcaption></figure>
+          <p><strong>Information Gain ka formula:</strong></p>
+          <div class="regression-math" data-regression-math="\text{Information Gain}=\text{Entropy of Parent}-\text{Weighted Average Entropy of Children}"></div>
+          <p><strong>Isi formula ka actual calculation — cutoff <code>2.9</code>:</strong> D1 mein 5/12 rows aur D2 mein 7/12 rows hain, isliye dono child entropies ko unke row-share se weight karte hain:</p>
+          <div class="regression-math" data-regression-math="IG(2.9)=H(parent)-\left[\frac{5}{12}H(D1)+\frac{7}{12}H(D2)\right]\approx0.98-\left[\frac{5}{12}(0.72)+\frac{7}{12}(0.99)\right]\approx0.10"></div>
+          <p>Yaani <code>rating &gt; 2.9</code> split parent ki uncertainty ko lagbhag <strong>0.10</strong> kam karta hai. Har doosre candidate cutoff ka bhi isi tarah IG nikalke compare karte hain.</p>
+          <p><strong>Step 6 — Sab candidate IG compare karo:</strong> jis cutoff ka Information Gain sabse bada ho, wahi next split banta hai. Sirf pehla ya dikhaya hua cutoff automatically best nahi hota—sab candidates score karne padte hain.</p>
+          <figure class="lecture-figure"><img src="assets/lecture-97-rating-compare-ig.png" alt="Choose the maximum information gain among candidate numerical thresholds, then repeat recursively"><figcaption>Lecture ka rule: <strong>maximum IG</strong> wala cutoff choose karo, phir naye child groups ke andar bhi wahi process recursively chalao—jab tak leaf nodes na milen.</figcaption></figure>
+          <div class="callout teal"><strong>Short version:</strong> numeric feature ko sort karo → har candidate value par <code>feature &gt; value?</code> test karo → dono children ki impurity nikalo → row-count se weighted average banao → parent impurity se ghatao → highest IG wala cutoff choose karo → repeat.</div>
+          <p><strong>Scope note:</strong> yahan feature numeric hai aur label categorical (Yes/No), isliye entropy/Gini use ho rahe hain. Agar target khud continuous number ho—jaise house price—regression tree squared error/variance se split judge karta hai; woh agle regression lecture ka case hai.</p>
+          <figure class="lecture-figure"><img src="assets/lecture-97-rating-recursion.png" alt="Lecture's final recursive step: repeat the selected split process until leaf nodes are reached"><figcaption>Best split choose karne ke baad process har child par repeat hota hai; tree leaf nodes tak grow karta hai.</figcaption></figure>
+        </article>
+      </section>
+
+      <section class="section searchable" id="lecture-98" data-title="decision tree hyperparameters overfitting max depth min samples split leaf max features max leaf nodes impurity">
+        <div class="section-head"><div class="section-title-wrap"><span class="section-index">98</span><div><h2>Decision Tree — Overfitting &amp; Hyperparameters</h2><p class="section-intro">Tree ko kitna grow karna hai? Lecture ke boundary plots aur controls ko saath samjho.</p></div></div><label class="lecture-complete"><input type="checkbox" data-lecture="98"> Complete</label></div>
+        <article class="panel">
+          <h3>Graph mein underfit aur overfit kaise dikhte hain?</h3>
+          <ul>
+            <li><strong>Underfitting:</strong> tree bahut shallow hai; simple boundary classes ka pattern miss karke mixed regions chhodti hai.</li>
+            <li><strong>Overfitting:</strong> tree bahut deep hai; complex boundary individual training points/noise tak fit kar sakti hai, isliye naye data par weak ho sakti hai.</li>
+            <li><strong>Graph mein:</strong> kam splits → simple boundary; zyada splits → chhote, complex regions.</li>
+          </ul>
+          <figure class="lecture-figure"><img src="assets/lecture-98-geometric-overfitting.png" alt="Geometric illustration of overfitting: a decision tree creates many small rectangular regions around individual points"><figcaption><strong>Overfitting:</strong> bahut saare chhote rectangular regions training points ko closely fit karte hain. Boundary unnecessarily complex ho sakti hai aur noise tak fit karke naye data par galti kar sakti hai.</figcaption></figure>
+          <figure class="lecture-figure"><img src="assets/lecture-98-geometric-underfitting.png" alt="Geometric illustration of underfitting: one simple vertical split leaves red and green classes mixed on both sides"><figcaption><strong>Underfitting:</strong> ek bahut simple split dono taraf red aur green points ko mixed chhodta hai. Tree pattern ko enough detail mein capture nahi kar pa raha.</figcaption></figure>
+          <p>Goal sabse complex boundary banana nahi; woh tree choose karna hai jo <strong>unseen rows</strong> par bhi achha kaam kare. Neeche controls isi complexity ko affect karte hain:</p>
+          <div class="table-wrap"><table><thead><tr><th>Control</th><th>Seedha matlab</th><th>Badhaane par aam asar</th></tr></thead><tbody>
+            <tr><td><code>max_depth</code></td><td>Root se leaf tak maximum question-levels</td><td>Zyada splits possible; bahut zyada ho to overfit</td></tr>
+            <tr><td><code>min_samples_split</code></td><td>Node ko split karne ke liye minimum rows</td><td>Chhote nodes split nahi honge; tree simpler</td></tr>
+            <tr><td><code>min_samples_leaf</code></td><td>Har resulting leaf mein minimum rows</td><td>Tiny leaves band; prediction smoother</td></tr>
+            <tr><td><code>max_leaf_nodes</code></td><td>Total final leaves ki upper limit</td><td>More leaves allowed; finer partitions possible</td></tr>
+            <tr><td><code>min_impurity_decrease</code></td><td>Split se minimum required impurity reduction</td><td>Weak improvements reject; tree smaller</td></tr>
+            <tr><td><code>max_features</code></td><td>Har split par consider hone wale features ki limit</td><td>More candidate features available at each node</td></tr>
+          </tbody></table></div>
+          <p><code>max_features</code> poore dataset se permanently columns delete nahi karta: <strong>har node ke split search</strong> mein kitne features consider honge, ye control karta hai. <code>min_samples_split</code> parent node ko check karta hai, jabki <code>min_samples_leaf</code> naye leaves ko. Dono same setting nahi hain.</p>
+        </article>
+        <article class="panel">
+          <h3>Split choose karne ki settings</h3>
+          <p><code>criterion</code> batata hai split quality kaise measure karni hai—classification mein lecture ke <strong>Gini</strong> aur <strong>entropy</strong> options. <code>splitter='best'</code> candidate splits mein best dhoondhta hai; <code>'random'</code> mein candidate choice mein randomness hoti hai. Random ka matlab guaranteed better test result nahi.</p>
+          <div class="callout gold"><strong>Choose kaise karein?</strong> Ek single training graph ko dekhkar “best depth” declare mat karo. Depth, leaf size, criterion jaise options ko validation/cross-validation par compare karo; held-out test set final check ke liye rakho. Bahut strict limits underfit bhi kara sakti hain.</div>
+        </article>
+      </section>
+
+      <section class="section searchable" id="lecture-99" data-title="decision tree regression continuous target leaf mean mse squared error thresholds hyperparameters">
+        <div class="section-head"><div class="section-title-wrap"><span class="section-index">99</span><div><h2>Decision Tree Regression</h2><p class="section-intro">Questions wahi tree wale, lekin leaf par class nahi—continuous number predict hota hai.</p></div></div><label class="lecture-complete"><input type="checkbox" data-lecture="99"> Complete</label></div>
+        <article class="panel">
+          <h3>Classification tree se kya badla?</h3>
+          <p>Exam marks ya house price jaisa target number ho to leaf par <em>Yes/No</em> label nahi de sakte. Regression tree feature threshold se rows ko baantta hai aur <strong>har leaf mein training target values ka average</strong> predict karta hai (squared-error criterion mein). New row jis leaf tak pahunche, us leaf ka mean output milta hai. Isliye one-feature graph par prediction straight sloped line nahi, <strong>step-like flat segments</strong> jaisi dikh sakti hai.</p>
+          <p>Do features hon to pehle ek feature par cut, uske baad kisi branch mein doosre feature par cut ho sakta hai. Graph mein axis-parallel regions bante hain; har region apna predicted number rakhta hai. Lecturer ka point hai ki same recursive questions nonlinear-looking target pattern ko piecewise approximate kar sakte hain.</p>
+        </article>
+        <article class="panel">
+          <h3>Best numerical split ka calculation</h3>
+          <ol>
+            <li>Ek candidate threshold lo; rows ko <code>≤ threshold</code> aur <code>&gt; threshold</code> mein baanto.</li>
+            <li>Left targets ka mean aur right targets ka mean nikalo. Ye dono proposed leaves ki predictions hain.</li>
+            <li>Har row ka <strong>actual target − apne leaf ka mean</strong> nikalo, us error ko square karo, phir total/average error nikalo.</li>
+            <li>Doosre thresholds ke errors se compare karo. Jis cut ka combined squared error sabse kam ho, use choose karo; phir children par repeat karo.</li>
+          </ol>
+          <div class="regression-math" data-regression-math="\operatorname{SSE}(t)=\sum_{i\in L(t)}(y_i-\bar y_L)^2+\sum_{i\in R(t)}(y_i-\bar y_R)^2"></div>
+          <p><code>t</code> candidate threshold, <code>y_i</code> actual value, aur <code>ȳ_L</code>/<code>ȳ_R</code> proposed left/right leaf ke means hain. Sab candidate cuts mein same parent rows hon to total squared error ya uska average—dono ka winning threshold same hoga. Classification ke entropy/Gini ki jagah yahan continuous target ki prediction error compare hoti hai.</p>
+        </article>
+        <article class="panel">
+          <h3>Practical demo aur overfitting</h3>
+          <p>Lecture mein housing-type data par <code>DecisionTreeRegressor</code> fit karke predictions, score aur hyperparameters compare kiye jaate hain. <code>max_depth</code>, <code>min_samples_split</code>, <code>min_samples_leaf</code> jaise controls yahan bhi tree ko limit karte hain. Bahut deep tree almost har row ke liye alag region bana kar training error ghata sakta hai, par test performance kharab ho sakti hai.</p>
+          <p>Squared-error splitting mein leaf prediction <strong>mean</strong> hoti hai. Absolute-error criterion mein leaf prediction <strong>median</strong> hoti hai—ye loss choice se aata hai, koi arbitrary rule nahi. Practical tuning mein cross-validation se settings compare ki ja sakti hain. Feature importance tree ke impurity/error reduction ka summary hai; ise feature ka causal effect mat samjho.</p>
+        </article>
+      </section>
+
+      <section class="section searchable" id="lecture-100" data-title="dtreeviz decision tree visualization iris classification regression prediction path feature space">
+        <div class="section-head"><div class="section-title-wrap"><span class="section-index">100</span><div><h2>Decision Trees ko Visualize Karna</h2><p class="section-intro">Tree diagram mein split, data distribution, leaf answer aur new row ka path kaise padhein.</p></div></div><label class="lecture-complete"><input type="checkbox" data-lecture="100"> Complete</label></div>
+        <article class="panel">
+          <h3>Basic diagram se richer visualization tak</h3>
+          <p>Lecture mein trained trees ko <strong>dtreeviz</strong> se visualize kiya gaya hai. Basic tree plot ki tarah sirf boxes aur thresholds nahi: ye feature names, node par data ka distribution aur leaf ka final answer bhi graphically dikhata hai. Library tree ko <strong>train nahi</strong> karti; pehle sklearn decision tree fit hota hai, phir us fitted model aur training data se visualization banti hai. <a href="https://github.com/parrt/dtreeviz" target="_blank" rel="noopener noreferrer">dtreeviz documentation</a> mein current API aur examples milte hain.</p>
+          <p>Iris classification demo mein top/root se start karo. Node par feature aur threshold padhkar matching branch follow karo; distribution se dekho ki kaunsi class ke points kidhar ja rahe hain. Leaf par predicted class dikhai deti hai. Shallow tree ke kam questions aur deeper tree ke zyada questions ko side-by-side sochkar complexity samajh sakte ho.</p>
+        </article>
+        <article class="panel">
+          <h3>Regression plot mein kya alag dikhega?</h3>
+          <p>Housing regression example mein nodes par feature-versus-target scatter aur cut point dikh sakta hai. Leaf par class name nahi, <strong>predicted numerical value</strong>—us region ke target ka mean—hota hai. Graph padho: kaunsa threshold rows ko baant raha hai, har side par values kitni spread hain, aur akhir mein new row kis mean tak pahunchti hai.</p>
+          <p>Lecture new observation ka <strong>prediction path highlight</strong> karna bhi dikhata hai: poori tree mein khojne ke bajaye sirf visited nodes dekho, taaki “is row ko ye answer kyun mila?” clear ho. Node details hide/show karna, 1D/2D feature-space views aur feature-importance display bhi visualization options hain. Ye samajhne ke tools hain; sundar diagram apne aap generalization proof nahi hota—validation performance alag se check karni hoti hai.</p>
+          <div class="callout teal"><strong>Read a tree:</strong> Node ka question → branch ka answer → next node → leaf ki prediction. Classification leaf class deta hai; regression leaf number deta hai.</div>
+        </article>
+      </section>
+
       <footer class="footer">
-        <p><strong>Progress:</strong> Lectures 1–96 ka revision trail yahan maintain kiya gaya hai.</p>
+        <p><strong>Progress:</strong> Lectures 1–100 ka revision trail yahan maintain kiya gaya hai.</p>
         <p>Source: provided NoteGPT transcripts. Auto-caption errors ko lecture context ke according clean Hinglish me reorganize kiya gaya hai.</p>
       </footer>
     </main>
